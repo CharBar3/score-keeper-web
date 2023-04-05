@@ -14,9 +14,10 @@ const SignUpFrom: FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleSignUp = () => {
-    createAccount(email, password);
+    createAccount(email, password, username);
   };
 
   const handleChange = (
@@ -26,6 +27,8 @@ const SignUpFrom: FC = () => {
       setEmail(e.target.value);
     } else if (e.target.name === "Password") {
       setPassword(e.target.value);
+    } else if (e.target.name === "Username") {
+      setUsername(e.target.value);
     }
   };
 
@@ -39,6 +42,13 @@ const SignUpFrom: FC = () => {
       spacing={3}
     >
       <Typography variant="h2">Sign Up</Typography>
+      <TextField
+        // id="outlined-basic"
+        label="Username"
+        name="Username"
+        variant="outlined"
+        onChange={(e) => handleChange(e)}
+      />
       <TextField
         // id="outlined-basic"
         label="Email"

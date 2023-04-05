@@ -1,0 +1,38 @@
+"use client";
+import { FC, ReactNode, createContext, useEffect } from "react";
+import { redirect } from "next/navigation";
+import { UserAuth } from "./AuthContext";
+
+const ProtectedContext = createContext(null);
+
+interface ProtectedContextProviderProps {
+  children: ReactNode;
+}
+export const ProtectedContextProvider: FC<ProtectedContextProviderProps> = ({
+  children,
+}) => {
+  const { user, isLoading } = UserAuth();
+
+  useEffect(() => {
+    if (isLoading) {
+      console.log("loading");
+    } else if (!user) {
+      alert("Not Logged In!");
+      redirect("/login");
+    }
+    // first;
+    // return () => {
+    //   second;
+    // };
+  }, [user, isLoading]);
+
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
+
+  return (
+    <ProtectedContext.Provider value={null}>
+      {children}
+    </ProtectedContext.Provider>
+  );
+};
