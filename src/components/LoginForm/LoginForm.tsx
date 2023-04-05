@@ -6,12 +6,17 @@ import Button from "@mui/material/Button";
 import { Stack, Typography } from "@mui/material";
 import { UserAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import MuiLink from "@mui/material/Link";
 import { redirect } from "next/navigation";
+import useStyles from "./LoginForm.styles";
 
 // interface LoginFormProps {}
 
 const LoginForm: FC = () => {
+  const { classes, cx } = useStyles();
+
+  // const className = cx(classes.buttonError, classes.root);
+  // const className = cx({[classes.buttonError]: !email});
+
   const { loginWithEmailPassword } = UserAuth();
 
   const [email, setEmail] = useState("");
@@ -35,7 +40,6 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     if (user) {
-      alert("you're already logged in! Sending you to your dashboard.");
       redirect("/dashboard");
     }
 
@@ -46,12 +50,13 @@ const LoginForm: FC = () => {
 
   return (
     <Stack
-      sx={{
-        maxWidth: { sm: "300px", md: "500px", lg: "700px" },
-        width: "100%",
-        margin: "auto",
-      }}
+      // sx={{
+      //   maxWidth: { sm: "300px", md: "500px", lg: "700px" },
+      //   width: "100%",
+      //   margin: "auto",
+      // }}
       spacing={3}
+      className={classes.root}
     >
       <Typography variant="h2">Login</Typography>
       <TextField

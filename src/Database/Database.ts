@@ -7,12 +7,18 @@ import {
   getDocs,
   doc,
   setDoc,
+  getDoc,
 } from "firebase/firestore";
 
 export const addUserToDatabase = async (user: User, username: string) => {
-  await setDoc(doc(db, "users", user.uid), {
-    name: username,
-  });
+  const data: DatabaseUser = {
+    id: user.uid,
+    username: username,
+    friends: [],
+    games: [],
+  };
+
+  await setDoc(doc(db, "users", user.uid), data);
 };
 
 export const getUserGames = async (userId: string) => {
@@ -21,4 +27,30 @@ export const getUserGames = async (userId: string) => {
   querySnapshot.forEach((doc) => {
     console.log(doc.id, "=>", doc.data());
   });
+};
+
+export const createGame = async (userId: string, game: Game) => {};
+
+// export const addFriend = async (userId: string) => {};
+
+interface SearchResults {
+  id: string;
+  username: string;
+}
+
+export const findFriendsByUsername = async (username: string) => {
+  const q = query(collection(db, "users"), where("username", "==", username));
+  const querySnapshot = await getDocs(q);
+
+  const results: SearchResults[] = [];
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, "=>", doc.data());
+    const document = {
+      id: doc.id,
+      username: doc.data().username,
+    };
+    results.push(document);
+  });
+
+  return results;
 };

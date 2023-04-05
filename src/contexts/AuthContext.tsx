@@ -16,7 +16,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { addUserToDatabase } from "@/Database/Database";
+import { addUserToDatabase } from "@/database/database";
 
 interface AuthContextProps {
   user: User | null;
@@ -53,12 +53,10 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   const loginWithEmailPassword = (email: string, password: string) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
-        // ...
+        alert("Login Successful!");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        alert(`Failed to login error code ${error.message}`);
       });
   };
 

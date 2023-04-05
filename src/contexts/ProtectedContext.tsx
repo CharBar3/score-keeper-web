@@ -17,7 +17,6 @@ export const ProtectedContextProvider: FC<ProtectedContextProviderProps> = ({
     if (isLoading) {
       console.log("loading");
     } else if (!user) {
-      alert("Not Logged In!");
       redirect("/login");
     }
     // first;

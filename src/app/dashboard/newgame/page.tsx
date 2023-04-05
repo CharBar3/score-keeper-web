@@ -1,9 +1,14 @@
+import CreateGameForm from "@/components/CreateGameForm/CreateGameForm";
 import { FC } from "react";
 
 interface newGameProps {}
 
 const newGame: FC<newGameProps> = () => {
-  return <h1>NewGame</h1>;
+  return (
+    <div>
+      <CreateGameForm />
+    </div>
+  );
 };
 
 export default newGame;
