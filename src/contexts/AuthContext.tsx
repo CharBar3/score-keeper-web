@@ -16,6 +16,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { addUserToDatabase } from "@/Database/Database";
 
 interface AuthContextProps {
   user: User | null;
@@ -61,11 +62,12 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
       });
   };
 
-  const createAccount = (email: string, password: string) => {
+  const createAccount = (email: string, password: string, username: string) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         // ...
+        addUserToDatabase(userCredential.user, username);
       })
       .catch((error) => {
         const errorCode = error.code;

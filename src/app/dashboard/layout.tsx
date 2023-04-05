@@ -1,3 +1,4 @@
+import DashboardNav from "@/components/DashboardNav/DashboardNav";
 import { ProtectedContextProvider } from "@/contexts/ProtectedContext";
 
 export default function DashboardLayout({
@@ -7,7 +8,10 @@ export default function DashboardLayout({
 }) {
   return (
     <section>
-      <ProtectedContextProvider>{children}</ProtectedContextProvider>
+      <ProtectedContextProvider>
+        <DashboardNav />
+        {children}
+      </ProtectedContextProvider>
     </section>
   );
 }
