@@ -6,18 +6,33 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Link from "next/link";
+import { UserAuth } from "@/contexts/AuthContext";
 
 interface NavProps {}
 
 const Nav: FC<NavProps> = () => {
+  const { user, logOut } = UserAuth();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Score Keeper
-          </Typography>
-          <Button color="inherit">Login</Button>
+          <Box sx={{ flexGrow: 1 }}>
+            <Link href="/">
+              <Typography variant="h6" component="div">
+                Score Keeper
+              </Typography>
+            </Link>
+          </Box>
+          {user ? (
+            <Button color="inherit" onClick={() => logOut()}>
+              Log Out
+            </Button>
+          ) : (
+            <Link href="/login">
+              <Button color="inherit">Login</Button>
+            </Link>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
