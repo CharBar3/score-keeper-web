@@ -1,7 +1,8 @@
 "use client";
-import { getUserGames } from "@/Database/Database";
-import { Button, Link, MenuItem, MenuList, Paper } from "@mui/material";
+import { getUserGames } from "@/database/database";
 import { FC, useEffect } from "react";
+import { Button, MenuItem, MenuList, Paper } from "@mui/material";
+import Link from "next/link";
 
 interface DashboardNavProps {}
 
@@ -14,7 +15,7 @@ const DashboardNav: FC<DashboardNavProps> = () => {
   }, []);
 
   return (
-    <Link href="/dashboard/newgame" sx={{ all: "unset" }}>
+    <Link href="/dashboard/newgame">
       <Button variant="contained">New Game!</Button>
     </Link>
     // <Paper>
