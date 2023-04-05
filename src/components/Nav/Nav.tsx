@@ -25,9 +25,14 @@ const Nav: FC<NavProps> = () => {
             </Link>
           </Box>
           {user ? (
-            <Button color="inherit" onClick={() => logOut()}>
-              Log Out
-            </Button>
+            <Box>
+              <Link href="/dashboard">
+                <Button color="inherit">Dashboard</Button>
+              </Link>
+              <Button color="inherit" onClick={() => logOut()}>
+                Log Out
+              </Button>
+            </Box>
           ) : (
             <Link href="/login">
               <Button color="inherit">Login</Button>
