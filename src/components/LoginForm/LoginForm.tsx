@@ -1,12 +1,13 @@
 "use client";
 
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Stack, Typography } from "@mui/material";
 import { UserAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import MuiLink from "@mui/material/Link";
+import { redirect } from "next/navigation";
 
 // interface LoginFormProps {}
 
@@ -29,6 +30,19 @@ const LoginForm: FC = () => {
       setPassword(e.target.value);
     }
   };
+
+  const { isLoading, user } = UserAuth();
+
+  useEffect(() => {
+    if (user) {
+      alert("you're already logged in! Sending you to your dashboard.");
+      redirect("/dashboard");
+    }
+
+    // return () => {
+    //   second
+    // }
+  }, [user, isLoading]);
 
   return (
     <Stack
