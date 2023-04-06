@@ -1,5 +1,6 @@
 "use client";
-import { findFriendsByUsername } from "@/database/database";
+
+import { DatabaseService } from "@/services/database-service";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { FC, useState } from "react";
 
@@ -13,7 +14,9 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
 
   const handleClick = async () => {
     console.log(searchWord);
-    const searchResults = await findFriendsByUsername(searchWord);
+    const searchResults = await DatabaseService.findFriendsByUsername(
+      searchWord
+    );
 
     setResults(searchResults);
   };
