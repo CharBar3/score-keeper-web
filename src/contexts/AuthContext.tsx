@@ -16,7 +16,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { addUserToDatabase } from "@/database/database";
+import { DatabaseService } from "@/services/database-service";
 
 interface AuthContextProps {
   user: User | null;
@@ -65,7 +65,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
       .then((userCredential) => {
         // Signed in
         // ...
-        addUserToDatabase(userCredential.user, username);
+        DatabaseService.addUserToDatabase(userCredential.user, username);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -86,6 +86,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log("current user " + currentUser);
       setUser(currentUser);
       setIsLoading(false);
       console.log(currentUser);

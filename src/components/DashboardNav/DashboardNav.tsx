@@ -1,14 +1,15 @@
 "use client";
-import { getUserGames } from "@/database/database";
+
 import { FC, useEffect } from "react";
 import { Button, MenuItem, MenuList, Paper } from "@mui/material";
 import Link from "next/link";
+import { DatabaseService } from "@/services/database-service";
 
 interface DashboardNavProps {}
 
 const DashboardNav: FC<DashboardNavProps> = () => {
   useEffect(() => {
-    getUserGames("1");
+    DatabaseService.getUserGames("1");
     // return () => {
     //   second
     // }
