@@ -1,4 +1,4 @@
-import SearchAddFriend from "@/components/AddFriend/SearchAddFriend";
+import AddFriendForm from "@/components/AddFriendForm/AddFriendForm";
 import { FC } from "react";
 
 interface AddFriendProps {}
@@ -6,7 +6,7 @@ interface AddFriendProps {}
 const AddFriend: FC<AddFriendProps> = () => {
   return (
     <div>
-      <SearchAddFriend />
+      <AddFriendForm />
     </div>
   );
 };

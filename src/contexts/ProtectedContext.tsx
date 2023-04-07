@@ -1,6 +1,6 @@
 "use client";
-import { FC, ReactNode, createContext, useEffect } from "react";
 import { redirect } from "next/navigation";
+import { FC, ReactNode, createContext, useEffect } from "react";
 import { UserAuth } from "./AuthContext";
 
 const ProtectedContext = createContext(null);

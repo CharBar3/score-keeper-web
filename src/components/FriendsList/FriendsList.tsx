@@ -1,6 +1,14 @@
 "use client";
 
-import { Box, Stack, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -23,21 +31,33 @@ const seedData = [
 
 const showFriends = seedData.map(({ friendUsername, friendId }, index) => {
   return (
-    <Box key={index}>
-      <Typography variant="h6">{friendUsername}</Typography>
-    </Box>
+    <div key={index}>
+      <ListItem>
+        <ListItemText primary={friendUsername} />
+      </ListItem>
+      <Divider />
+    </div>
   );
 });
 
 const FriendsList: FC<FriendsListProps> = () => {
   return (
-    <div>
+    <Box
+      sx={{
+        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
+        width: "100%",
+        // margin: "auto",
+      }}
+    >
       <Typography variant="h2">FriendsList</Typography>
-      <Stack spacing={2}>{showFriends}</Stack>
+      <List>
+        <Divider key={1} />
+        {showFriends}
+      </List>
       <Link href="/dashboard/addfriend">
         <Button variant="contained">Add Friend</Button>
       </Link>
-    </div>
+    </Box>
   );
 };
 

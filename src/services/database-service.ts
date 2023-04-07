@@ -8,6 +8,8 @@ import {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 interface SearchResults {
@@ -36,11 +38,11 @@ export class DatabaseService {
   };
 
   public static findFriendsByUsername = async (username: string) => {
-    const q = query(collection(db, "users"), where("username", "==", username));
+    const q = query(collection(db, "users"), where("username", ">=", username));
     const querySnapshot = await getDocs(q);
     const results: SearchResults[] = [];
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
+      // console.log(doc.id, "=>", doc.data());
       const document = {
         id: doc.id,
         username: doc.data().username,
@@ -48,5 +50,15 @@ export class DatabaseService {
       results.push(document);
     });
     return results;
+  };
+
+  public static addFriend = async (
+    friendUserId: string,
+    userId: string
+  ): Promise<void> => {
+    const ref = await doc(db, "users", userId);
+    await updateDoc(ref, {
+      friends: arrayUnion(friendUserId),
+    });
   };
 }
