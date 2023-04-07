@@ -7,12 +7,12 @@ import { Stack, Typography } from "@mui/material";
 import { UserAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import useStyles from "./LoginForm.styles";
+// import useStyles from "./LoginForm.styles";
 
 // interface LoginFormProps {}
 
 const LoginForm: FC = () => {
-  const { classes, cx } = useStyles();
+  // const { classes, cx } = useStyles();
 
   // const className = cx(classes.buttonError, classes.root);
   // const className = cx({[classes.buttonError]: !email});
@@ -50,13 +50,13 @@ const LoginForm: FC = () => {
 
   return (
     <Stack
-      // sx={{
-      //   maxWidth: { sm: "300px", md: "500px", lg: "700px" },
-      //   width: "100%",
-      //   margin: "auto",
-      // }}
+      sx={{
+        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
+        width: "100%",
+        margin: "auto",
+      }}
       spacing={3}
-      className={classes.root}
+      // className={classes.root}
     >
       <Typography variant="h2">Login</Typography>
       <TextField

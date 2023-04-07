@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  FC,
-  ReactNode,
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-} from "react";
-import { auth } from "../config/firebase";
+import { DatabaseService } from "@/services/database-service";
 import {
   User,
   createUserWithEmailAndPassword,
@@ -16,7 +8,15 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { DatabaseService } from "@/services/database-service";
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { auth } from "../config/firebase";
 
 interface AuthContextProps {
   user: User | null;

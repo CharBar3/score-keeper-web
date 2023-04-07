@@ -20,7 +20,7 @@ const Nav: FC<NavProps> = () => {
           <Box sx={{ flexGrow: 1 }}>
             <Link href="/">
               <Typography variant="h6" component="div">
-                Score Keeper
+                Tally Board
               </Typography>
             </Link>
           </Box>
