@@ -17,7 +17,7 @@ interface SearchAddFriendProps {}
 
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
   const { user } = UserAuth();
-  const { firestoreUser, friendsList, getFriends } = useDataStore();
+  const { friendsList, getFriends } = useDataStore();
 
   const [searchWord, setSearchWord] = useState("");
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
@@ -37,30 +37,41 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     }
   };
 
-  const handleAddFriend = async (newFriendId: string) => {
+  const handleAddFriend = async (
+    e: React.SyntheticEvent,
+    newFriendId: string
+  ) => {
     if (!user) {
       return;
     }
-    DatabaseService.addFriend(newFriendId, user.uid);
-    getFriends();
+    e.currentTarget.textContent = "Friend Added!";
+    try {
+      await DatabaseService.addFriend(newFriendId, user.uid);
+      getFriends();
+    } catch (error) {
+      alert("failed to add friend");
+    }
   };
 
   const showSearchResults = searchResults?.map(
     ({ friendId, friendUsername }, index) => {
-      if (firestoreUser) {
-        if (
-          friendId === firestoreUser.id ||
-          firestoreUser.friends.includes(friendId)
-        ) {
-          return;
-        }
+      console.log("loop reload check");
+
+      if (!user) {
+        return;
+      }
+      if (friendId === user.uid) {
+        return;
       }
 
       return (
         <div key={index}>
           <ListItem>
             <ListItemText primary={friendUsername} />
-            <Button variant="text" onClick={() => handleAddFriend(friendId)}>
+            <Button
+              variant="text"
+              onClick={(e) => handleAddFriend(e, friendId)}
+            >
               Add Friend
             </Button>
           </ListItem>

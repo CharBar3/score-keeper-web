@@ -11,6 +11,7 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 
 export class DatabaseService {
@@ -84,6 +85,16 @@ export class DatabaseService {
     });
   };
 
+  public static removeUserFriend = async (
+    friendUserId: string,
+    userId: string
+  ): Promise<void> => {
+    const ref = await doc(db, "users", userId);
+    await updateDoc(ref, {
+      friends: arrayRemove(friendUserId),
+    });
+  };
+
   // public static getUserFriendIds = async (
   //   currentUserId: string
   // ): Promise<string[]> => {
@@ -108,18 +119,24 @@ export class DatabaseService {
    * }
    * ]
    */
-  public static getUserFriendsList = async (
-    friendIds: string[]
-  ): Promise<Friend[]> => {
+  public static fetchUserFriendsList = async (
+    userId: string
+  ): Promise<Friend[] | null> => {
     const friendsList = [];
 
-    for (const id of friendIds) {
+    const user = await this.fetchFirestoreUser(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    for (const id of user.friends) {
       const docRef = doc(db, "users", id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const friend = {
-          friendId: docSnap.data().uid,
+          friendId: docSnap.data().id,
           friendUsername: docSnap.data().username,
         };
 
