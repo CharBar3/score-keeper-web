@@ -1,6 +1,7 @@
 "use client";
 
 import { UserAuth } from "@/contexts/AuthContext";
+import { useDataStore } from "@/providers/DataStore";
 import { DatabaseService } from "@/services/database-service";
 import {
   Button,
@@ -10,53 +11,68 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 interface SearchAddFriendProps {}
 
-interface AddFriendSearchResults {
-  username: string;
-  id: string;
-}
-
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
   const { user } = UserAuth();
+  const { firestoreUser, friendsList, getFriends } = useDataStore();
 
   const [searchWord, setSearchWord] = useState("");
-  const [searchResults, setSearchResults] = useState<
-    AddFriendSearchResults[] | []
-  >([]);
+  const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
 
   const handleClick = async () => {
-    const firebaseResponse = await DatabaseService.findFriendsByUsername(
-      searchWord
+    if (!user) {
+      return;
+    }
+    const firebaseResponse = await DatabaseService.findFriendByUsername(
+      searchWord,
+      user.uid
     );
     if (firebaseResponse.length === 0) {
-      setSearchResults([{ username: "No Results", id: "No ID" }]);
+      setSearchResults(null);
     } else {
       setSearchResults(firebaseResponse);
     }
   };
 
   const handleAddFriend = async (newFriendId: string) => {
-    if (user) {
-      DatabaseService.addFriend(newFriendId, user.uid);
+    if (!user) {
+      return;
     }
+    DatabaseService.addFriend(newFriendId, user.uid);
+    getFriends();
   };
 
-  const showSearchResults = searchResults.map(({ username, id }, index) => {
-    return (
-      <div key={index}>
-        <ListItem>
-          <ListItemText primary={username} />
-          <Button variant="text" onClick={() => handleAddFriend(id)}>
-            Add Friend
-          </Button>
-        </ListItem>
-        <Divider />
-      </div>
-    );
-  });
+  const showSearchResults = searchResults?.map(
+    ({ friendId, friendUsername }, index) => {
+      if (firestoreUser) {
+        if (
+          friendId === firestoreUser.id ||
+          firestoreUser.friends.includes(friendId)
+        ) {
+          return;
+        }
+      }
+
+      return (
+        <div key={index}>
+          <ListItem>
+            <ListItemText primary={friendUsername} />
+            <Button variant="text" onClick={() => handleAddFriend(friendId)}>
+              Add Friend
+            </Button>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+  );
+
+  useEffect(() => {
+    return () => {};
+  }, [friendsList]);
 
   return (
     <Stack

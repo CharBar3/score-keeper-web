@@ -1,4 +1,5 @@
 import { db } from "@/config/firebase";
+import { UserAuth } from "@/contexts/AuthContext";
 import { User } from "firebase/auth";
 import {
   collection,
@@ -12,14 +13,25 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 
-interface SearchResults {
-  id: string;
-  username: string;
-}
-
 export class DatabaseService {
-  public static addUserToDatabase = async (user: User, username: string) => {
-    const data: DatabaseUser = {
+  public static fetchFirestoreUser = async (
+    userId: string
+  ): Promise<FirestoreUser | null> => {
+    const ref = doc(db, "users", userId);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      return snap.data() as FirestoreUser;
+    } else {
+      return null;
+    }
+  };
+
+  public static addUserToDatabase = async (
+    user: User,
+    username: string
+  ): Promise<void> => {
+    const data: FirestoreUser = {
       id: user.uid,
       username: username,
       friends: [],
@@ -37,19 +49,29 @@ export class DatabaseService {
     });
   };
 
-  public static findFriendsByUsername = async (username: string) => {
+  /**
+   * findFriendsByUsername
+   * accepts the username you're searching for and the current logged in user id
+   *
+   */
+
+  public static findFriendByUsername = async (
+    username: string,
+    userId: string
+  ): Promise<Friend[]> => {
     const q = query(collection(db, "users"), where("username", ">=", username));
     const querySnapshot = await getDocs(q);
-    const results: SearchResults[] = [];
+
+    const searchResults: Friend[] = [];
     querySnapshot.forEach((doc) => {
-      // console.log(doc.id, "=>", doc.data());
       const document = {
-        id: doc.id,
-        username: doc.data().username,
+        friendId: doc.id,
+        friendUsername: doc.data().username,
       };
-      results.push(document);
+
+      searchResults.push(document);
     });
-    return results;
+    return searchResults;
   };
 
   public static addFriend = async (
@@ -60,5 +82,50 @@ export class DatabaseService {
     await updateDoc(ref, {
       friends: arrayUnion(friendUserId),
     });
+  };
+
+  // public static getUserFriendIds = async (
+  //   currentUserId: string
+  // ): Promise<string[]> => {
+  //   const docRef = doc(db, "users", currentUserId);
+  //   const docSnap = await getDoc(docRef);
+  //   if (docSnap.exists()) {
+  //     return docSnap.data().friends;
+  //   } else {
+  //     console.log("The document did not exist");
+  //     return ["no doc"];
+  //   }
+  // };
+
+  /**
+   * getUserFriendsList
+   * Accepts an array of friend Id's
+   * Retruns an array of friends
+   * format [
+   * {
+   * friendId: string;
+   * friendUsername: string;
+   * }
+   * ]
+   */
+  public static getUserFriendsList = async (
+    friendIds: string[]
+  ): Promise<Friend[]> => {
+    const friendsList = [];
+
+    for (const id of friendIds) {
+      const docRef = doc(db, "users", id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const friend = {
+          friendId: docSnap.data().uid,
+          friendUsername: docSnap.data().username,
+        };
+
+        friendsList.push(friend);
+      }
+    }
+    return friendsList;
   };
 }
