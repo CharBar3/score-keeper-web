@@ -23,6 +23,11 @@ const Nav: FC<NavProps> = () => {
                 Tally Board
               </Typography>
             </Link>
+            {user ? (
+              <Typography variant="h5" component="div">
+                {user.displayName}
+              </Typography>
+            ) : null}
           </Box>
           {user ? (
             <Box>

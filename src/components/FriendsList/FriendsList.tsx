@@ -2,6 +2,7 @@
 
 import { UserAuth } from "@/contexts/AuthContext";
 import { useDataStore } from "@/providers/DataStore";
+import { DatabaseService } from "@/services/database-service";
 import {
   Box,
   Button,
@@ -16,42 +17,37 @@ import { FC, useEffect } from "react";
 
 interface FriendsListProps {}
 
-const seedData = [
-  {
-    friendUsername: "SpicyMeatball",
-    friendId: "SpicyMeatballId",
-  },
-  {
-    friendUsername: "BlandMeatball",
-    friendId: "BlandMeatballId",
-  },
-  {
-    friendUsername: "JustOkayMeatball",
-    friendId: "JustOkayMeatballId",
-  },
-];
-
 const FriendsList: FC<FriendsListProps> = () => {
+  const { user } = UserAuth();
   const { friendsList, getFriends } = useDataStore();
 
-  const showFriends = friendsList?.map(({ username, userId }, index: any) => {
-    return (
-      <div key={index}>
-        <ListItem>
-          <ListItemText primary={username} />
-        </ListItem>
-        <Divider />
-      </div>
-    );
-  });
-
-  useEffect(() => {
+  const removeFriend = async (friendId: string) => {
+    if (!user) {
+      return;
+    }
+    await DatabaseService.removeUserFriend(friendId, user.uid);
     getFriends();
+  };
 
-    // return () => {
-    //   second
-    // }
-  });
+  let showFriends = null;
+
+  if (friendsList) {
+    showFriends = friendsList?.map(
+      ({ friendUsername, friendId }, index: any) => {
+        return (
+          <div key={index}>
+            <ListItem>
+              <ListItemText primary={friendUsername} />
+              <Button variant="text" onClick={() => removeFriend(friendId)}>
+                Remove Friend
+              </Button>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+    );
+  }
 
   return (
     <Box
@@ -64,7 +60,7 @@ const FriendsList: FC<FriendsListProps> = () => {
       <Typography variant="h2">FriendsList</Typography>
       <List>
         <Divider key={1} />
-        {showFriends}
+        {showFriends ? showFriends : <>loading</>}
       </List>
       <Link href="/dashboard/addfriend">
         <Button variant="contained">Add Friend</Button>
