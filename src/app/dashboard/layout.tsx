@@ -1,5 +1,6 @@
 import DashboardNav from "@/components/DashboardNav/DashboardNav";
 import { ProtectedContextProvider } from "@/contexts/ProtectedContext";
+import { DataStoreProvider } from "@/providers/DataStore";
 
 export default function DashboardLayout({
   children,
@@ -9,8 +10,10 @@ export default function DashboardLayout({
   return (
     <section>
       <ProtectedContextProvider>
-        <DashboardNav />
-        {children}
+        <DataStoreProvider>
+          <DashboardNav />
+          {children}
+        </DataStoreProvider>
       </ProtectedContextProvider>
     </section>
   );

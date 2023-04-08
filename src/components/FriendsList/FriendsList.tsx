@@ -1,5 +1,7 @@
 "use client";
 
+import { UserAuth } from "@/contexts/AuthContext";
+import { useDataStore } from "@/providers/DataStore";
 import {
   Box,
   Button,
@@ -10,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 interface FriendsListProps {}
 
@@ -29,18 +31,28 @@ const seedData = [
   },
 ];
 
-const showFriends = seedData.map(({ friendUsername, friendId }, index) => {
-  return (
-    <div key={index}>
-      <ListItem>
-        <ListItemText primary={friendUsername} />
-      </ListItem>
-      <Divider />
-    </div>
-  );
-});
-
 const FriendsList: FC<FriendsListProps> = () => {
+  const { friendsList, getFriends } = useDataStore();
+
+  const showFriends = friendsList?.map(({ username, userId }, index: any) => {
+    return (
+      <div key={index}>
+        <ListItem>
+          <ListItemText primary={username} />
+        </ListItem>
+        <Divider />
+      </div>
+    );
+  });
+
+  useEffect(() => {
+    getFriends();
+
+    // return () => {
+    //   second
+    // }
+  });
+
   return (
     <Box
       sx={{
