@@ -1,17 +1,20 @@
 "use client";
 
-import { ChangeEvent, FC, useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { Stack, Typography } from "@mui/material";
 import { UserAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/providers/ToastProvider";
+
+import { Stack, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 // import useStyles from "./LoginForm.styles";
 
 // interface LoginFormProps {}
 
 const LoginForm: FC = () => {
+  const { showToast } = useToast();
   // const { classes, cx } = useStyles();
 
   // const className = cx(classes.buttonError, classes.root);
@@ -22,8 +25,14 @@ const LoginForm: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    loginWithEmailPassword(email, password);
+  const handleLogin = async () => {
+    try {
+      await loginWithEmailPassword(email, password);
+      console.log("this happens");
+      showToast("Login Successful!", "success");
+    } catch (error) {
+      showToast(`Login Failed! ${(error as Error).message}`, "error");
+    }
   };
 
   const handleChange = (
@@ -42,10 +51,6 @@ const LoginForm: FC = () => {
     if (user) {
       redirect("/dashboard");
     }
-
-    // return () => {
-    //   second
-    // }
   }, [user, isLoading]);
 
   return (

@@ -17,6 +17,7 @@ import {
   useState,
 } from "react";
 import { auth } from "../config/firebase";
+import { FirebaseError } from "firebase/app";
 
 interface AuthContextProps {
   user: User | null;
@@ -50,14 +51,22 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loginWithEmailPassword = (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert("Login Successful!");
-      })
-      .catch((error) => {
-        alert(`Failed to login error code ${error.message}`);
-      });
+  const loginWithEmailPassword = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      // TODO: Create error handler and pass error to it
+      if (error instanceof FirebaseError) {
+        if (
+          error.code === "auth/invalid-email" ||
+          error.code === "auth/wrong-password"
+        ) {
+          throw new Error("Invalid email or password");
+        }
+      }
+      console.error(error);
+      throw error;
+    }
   };
 
   const createAccount = (email: string, password: string, username: string) => {
@@ -74,14 +83,13 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
       });
   };
 
-  const logOut = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   useEffect(() => {

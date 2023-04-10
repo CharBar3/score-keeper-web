@@ -2,6 +2,7 @@
 
 import { UserAuth } from "@/contexts/AuthContext";
 import { useDataStore } from "@/providers/DataStore";
+import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
 import {
   Box,
@@ -13,20 +14,27 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 
 interface FriendsListProps {}
 
 const FriendsList: FC<FriendsListProps> = () => {
   const { user } = UserAuth();
   const { friendsList, getFriends } = useDataStore();
+  const { showToast } = useToast();
 
   const removeFriend = async (friendId: string) => {
     if (!user) {
       return;
     }
-    await DatabaseService.removeUserFriend(friendId, user.uid);
-    getFriends();
+
+    try {
+      await DatabaseService.removeUserFriend(friendId, user.uid);
+      showToast("Friend succesfully removed!", "success");
+      getFriends();
+    } catch (error) {
+      showToast("Failed to remove friend!", "error");
+    }
   };
 
   let showFriends = null;
