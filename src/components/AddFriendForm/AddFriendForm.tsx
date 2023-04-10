@@ -2,6 +2,7 @@
 
 import { UserAuth } from "@/contexts/AuthContext";
 import { useDataStore } from "@/providers/DataStore";
+import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
 import {
   Button,
@@ -18,6 +19,7 @@ interface SearchAddFriendProps {}
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
   const { user } = UserAuth();
   const { friendsList, getFriends } = useDataStore();
+  const { showToast } = useToast();
 
   const [searchWord, setSearchWord] = useState("");
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
@@ -37,8 +39,6 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     }
   };
 
-  const addTheFriend = async () => {};
-
   const handleAddFriend = async (
     e: React.MouseEvent<HTMLElement>,
     newFriendId: string
@@ -50,10 +50,12 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     const clickedButton = e.currentTarget;
     try {
       await DatabaseService.addFriend(newFriendId, user.uid);
+      showToast("Friend added succesfully!", "success");
       clickedButton.innerText = "Friend Added";
+
       getFriends();
     } catch (error) {
-      console.log(error);
+      showToast("Failed to add friend!", "error");
     }
   };
 

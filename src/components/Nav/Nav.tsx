@@ -8,11 +8,23 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { UserAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/providers/ToastProvider";
 
 interface NavProps {}
 
 const Nav: FC<NavProps> = () => {
   const { user, logOut } = UserAuth();
+  const { showToast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      showToast("Log Out Successful!", "success");
+    } catch (error) {
+      showToast(`Log Out Failed`, "error");
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -34,7 +46,7 @@ const Nav: FC<NavProps> = () => {
               <Link href="/dashboard">
                 <Button color="inherit">Dashboard</Button>
               </Link>
-              <Button color="inherit" onClick={() => logOut()}>
+              <Button color="inherit" onClick={() => handleLogout()}>
                 Log Out
               </Button>
             </Box>

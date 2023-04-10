@@ -2,6 +2,8 @@ import Nav from "@/components/Nav/Nav";
 import "./globals.css";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import Providers from "@/providers/Providers";
+import Toast from "@/components/Toast/Toast";
+import { ToastProvider } from "@/providers/ToastProvider";
 
 export const metadata = {
   title: "Create Next App",
@@ -17,10 +19,13 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <AuthContextProvider>
-            <Nav />
-            {children}
-          </AuthContextProvider>
+          <ToastProvider>
+            <AuthContextProvider>
+              <Nav />
+              {children}
+              <Toast />
+            </AuthContextProvider>
+          </ToastProvider>
         </Providers>
       </body>
     </html>
