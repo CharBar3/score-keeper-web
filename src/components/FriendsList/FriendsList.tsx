@@ -40,7 +40,7 @@ const FriendsList: FC<FriendsListProps> = () => {
   let showFriends = null;
 
   if (friendsList) {
-    showFriends = friendsList?.map(
+    showFriends = friendsList.map(
       ({ friendUsername, friendId }, index: any) => {
         return (
           <div key={index}>
