@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "em": "firebase emulators:start --import=./emulator-data --export-on-exit"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",

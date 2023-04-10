@@ -37,26 +37,28 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     }
   };
 
+  const addTheFriend = async () => {};
+
   const handleAddFriend = async (
-    e: React.SyntheticEvent,
+    e: React.MouseEvent<HTMLElement>,
     newFriendId: string
   ) => {
     if (!user) {
       return;
     }
-    e.currentTarget.textContent = "Friend Added!";
+
+    const clickedButton = e.currentTarget;
     try {
       await DatabaseService.addFriend(newFriendId, user.uid);
+      clickedButton.innerText = "Friend Added";
       getFriends();
     } catch (error) {
-      alert("failed to add friend");
+      console.log(error);
     }
   };
 
   const showSearchResults = searchResults?.map(
     ({ friendId, friendUsername }, index) => {
-      console.log("loop reload check");
-
       if (!user) {
         return;
       }
