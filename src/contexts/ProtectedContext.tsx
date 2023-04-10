@@ -15,7 +15,6 @@ export const ProtectedContextProvider: FC<ProtectedContextProviderProps> = ({
 
   useEffect(() => {
     if (isLoading) {
-      console.log("loading");
     } else if (!user) {
       redirect("/login");
     }

@@ -12,6 +12,9 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  addDoc,
+  DocumentReference,
+  DocumentData,
 } from "firebase/firestore";
 
 export class DatabaseService {
@@ -42,12 +45,52 @@ export class DatabaseService {
     await setDoc(doc(db, "users", user.uid), data);
   };
 
-  public static getUserGames = async (userId: string) => {
-    const q = query(collection(db, "games"), where("owner", "==", userId));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
+  public static fetchUserGame = async (
+    gameId: string
+  ): Promise<Game | null> => {
+    const ref = doc(db, "games", gameId);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      return snap.data() as Game;
+    } else {
+      return null;
+    }
+  };
+
+  public static createUserGame = async (
+    userId: string,
+    gameInfo: CreateGame
+  ): Promise<void> => {
+    const loggedInUser = await this.fetchFirestoreUser(userId);
+    if (!loggedInUser) {
+      throw Error("Not logged in!");
+    }
+    const newGame: Game = {
+      title: gameInfo.title,
+      info: gameInfo.info,
+      ownerId: userId,
+      adminIds: [],
+      canEditIds: [],
+      players: [
+        {
+          playerId: userId,
+          name: loggedInUser.username,
+          isAdmin: true,
+          canEdit: true,
+        },
+      ],
+      guestPlayers: [],
+    };
+
+    const docRef: DocumentReference<DocumentData> = await addDoc(
+      collection(db, "games"),
+      newGame
+    );
+
+    console.log(docRef);
+    await this.addGame(userId, docRef.id);
+    console.log("game addition complete");
   };
 
   /**
@@ -73,6 +116,13 @@ export class DatabaseService {
       searchResults.push(document);
     });
     return searchResults;
+  };
+
+  public static addGame = async (userId: string, gameId: string) => {
+    const ref = await doc(db, "users", userId);
+    await updateDoc(ref, {
+      games: arrayUnion(gameId),
+    });
   };
 
   public static addFriend = async (
@@ -144,5 +194,51 @@ export class DatabaseService {
       }
     }
     return friendsList;
+  };
+
+  public static fetchUserGameList = async (
+    userId: string
+  ): Promise<GamePreview[] | null> => {
+    const gameList: GamePreview[] = [];
+
+    // const user = await this.fetchFirestoreUser(userId);
+
+    const q = query(collection(db, "games"), where("ownerId", "==", userId));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      // console.log(doc.id, " => ", doc.data());
+      const document = doc.data();
+
+      const game = {
+        gameId: doc.id,
+        gameTitle: document.title,
+        gameInfo: document.info,
+      };
+
+      gameList.push(game);
+    });
+
+    // if (!user) {
+    //   return null;
+    // }
+
+    // for (const id of user.games) {
+    //   const docRef = doc(db, "users", id);
+    //   const docSnap = await getDoc(docRef);
+
+    //   if (docSnap.exists()) {
+    //     const data = docSnap.data();
+    //     const game = {
+    //       gameId: data.id,
+    //       gameTitle: data.title,
+    //       gameInfo: data.info,
+    //     };
+
+    //     gameList.push(game);
+    //   }
+    // }
+    return gameList;
   };
 }
