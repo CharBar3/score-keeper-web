@@ -18,10 +18,14 @@ interface Player {
   name: string; // defaults to the players username but can be updated
   isAdmin: boolean; // admins can edit all players
   canEdit: boolean; // if they can edit their own score card or not
+  score: number;
+  notes: string;
 }
 
 interface GuestPlayer {
   name: string; // defaults to the players username but can be updated
+  score: number;
+  notes: string;
 }
 
 interface GamePreview {

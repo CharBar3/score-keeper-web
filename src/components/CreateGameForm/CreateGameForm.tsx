@@ -26,7 +26,8 @@ const CreateGameForm: FC<CreateGameFormProps> = () => {
     };
 
     try {
-      DatabaseService.createUserGame(user.uid, gameInfo);
+      await DatabaseService.createUserGame(user.uid, gameInfo);
+
       showToast("Game succesfully created!", "success");
     } catch (error) {
       showToast("Failed to create game!", "error");
