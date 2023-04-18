@@ -78,6 +78,8 @@ export class DatabaseService {
           name: loggedInUser.username,
           isAdmin: true,
           canEdit: true,
+          notes: "",
+          score: 0,
         },
       ],
       guestPlayers: [],
@@ -181,6 +183,7 @@ export class DatabaseService {
     }
 
     for (const id of user.friends) {
+      // Get all documents at once getDocs()
       const docRef = doc(db, "users", id);
       const docSnap = await getDoc(docRef);
 
@@ -219,26 +222,18 @@ export class DatabaseService {
 
       gameList.push(game);
     });
-
-    // if (!user) {
-    //   return null;
-    // }
-
-    // for (const id of user.games) {
-    //   const docRef = doc(db, "users", id);
-    //   const docSnap = await getDoc(docRef);
-
-    //   if (docSnap.exists()) {
-    //     const data = docSnap.data();
-    //     const game = {
-    //       gameId: data.id,
-    //       gameTitle: data.title,
-    //       gameInfo: data.info,
-    //     };
-
-    //     gameList.push(game);
-    //   }
-    // }
     return gameList;
+  };
+
+  public static addGuestPlayer = async (
+    gameId: string,
+    guestInfo: GuestPlayer
+  ): Promise<void> => {
+    const gameDocRef = doc(db, "users", gameId);
+    try {
+      await updateDoc(gameDocRef, {
+        guestPlayers: arrayUnion(guestInfo),
+      });
+    } catch (error) {}
   };
 }

@@ -31,8 +31,8 @@ const GameList: FC<GameListProps> = () => {
         <div key={index}>
           <ListItem>
             <ListItemText primary={gameTitle} />
-            <Link href={`dashboard/play/${gameId}`}>
-              <Button variant="text">PlayGame!</Button>
+            <Link href={`dashboard/games/${gameId}`}>
+              <Button variant="text">Play Game!</Button>
             </Link>
           </ListItem>
           <Divider />
