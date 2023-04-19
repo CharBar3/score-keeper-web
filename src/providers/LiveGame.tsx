@@ -53,6 +53,7 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
   const [liveGame, setLiveGame] = useState<Game | null>(null);
 
   useEffect(() => {
+    console.log("live game loop check");
     let unsub = () => {};
     if (gameId) {
       unsub = onSnapshot(doc(db, "games", gameId), (doc) => {
