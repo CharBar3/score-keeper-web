@@ -17,37 +17,31 @@ import { FC, useEffect, useState } from "react";
 interface SearchAddFriendProps {}
 
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
-  const { fireUser } = UserAuth();
-  const { user, friendsList, addFriend } = useDataStore();
+  const { user, friendsList, addFriend, findFriend } = useDataStore();
   const { showToast } = useToast();
 
   const [searchWord, setSearchWord] = useState("");
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
 
   const handleClick = async () => {
-    if (!fireUser) {
-      return;
-    }
-    const firebaseResponse = await DatabaseService.findFriendByUsername(
-      searchWord,
-      fireUser.uid
-    );
-    if (firebaseResponse.length === 0) {
-      setSearchResults(null);
-    } else {
-      setSearchResults(firebaseResponse);
-    }
+    try {
+      // const res = await findFriend(searchWord);
+      // if (res === undefined) {
+      //   setSearchResults(null);
+      // } else {
+      //   setSearchResults(res);
+      // }
+      setSearchResults(await findFriend(searchWord));
+    } catch (error) {}
   };
 
   const handleAddFriend = async (
     e: React.MouseEvent<HTMLElement>,
     newFriendId: string
   ) => {
-    const clickedButton = e.currentTarget;
     try {
       await addFriend(newFriendId);
       showToast("Friend added succesfully!", "success");
-      clickedButton.innerText = "Friend Added";
     } catch (error) {
       showToast("Failed to add friend!", "error");
     }

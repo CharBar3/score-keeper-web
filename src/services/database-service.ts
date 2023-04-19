@@ -23,6 +23,7 @@ export class DatabaseService {
       username: username,
       friends: [],
       games: [],
+      usernameSearchTerms: this.generateKeywords(username),
     };
 
     await setDoc(doc(db, "users", user.uid), data);
@@ -152,10 +153,17 @@ export class DatabaseService {
   };
 
   public static findFriendByUsername = async (
-    username: string,
-    userId: string
-  ): Promise<Friend[]> => {
-    const q = query(collection(db, "users"), where("username", ">=", username));
+    search: string
+  ): Promise<Friend[] | []> => {
+    const username = search.toLowerCase();
+    if (username.length === 0) {
+      return [];
+    }
+
+    const q = query(
+      collection(db, "users"),
+      where("usernameSearchTerms", "array-contains", username)
+    );
     const querySnapshot = await getDocs(q);
 
     const searchResults: Friend[] = [];
@@ -167,6 +175,7 @@ export class DatabaseService {
 
       searchResults.push(document);
     });
+
     return searchResults;
   };
 
@@ -181,4 +190,29 @@ export class DatabaseService {
       });
     } catch (error) {}
   };
+
+  static generateKeywords(name: string): string[] {
+    const words = name.split(" ");
+    const keywords = [...createKeywords(`${name}`)];
+
+    for (const word of words) {
+      keywords.push(...createKeywords(word));
+    }
+
+    const removeDuplicates = [...new Set(keywords)];
+    return removeDuplicates;
+
+    function createKeywords(text: string): string[] {
+      const arrName: string[] = [];
+      let currName = "";
+
+      for (const char of text.toLowerCase()) {
+        if (char !== " ") {
+          currName += char;
+          arrName.push(currName);
+        }
+      }
+      return arrName;
+    }
+  }
 }

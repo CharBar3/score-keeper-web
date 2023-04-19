@@ -3,4 +3,5 @@ interface User {
   username: string;
   friends: string[];
   games: string[];
+  usernameSearchTerms: string[];
 }
