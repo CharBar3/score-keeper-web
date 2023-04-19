@@ -72,9 +72,10 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   const createAccount = (email: string, password: string, username: string) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
-        // ...
-        DatabaseService.addUserToDatabase(userCredential.user, username);
+        DatabaseService.createFirestoreUserDocument(
+          userCredential.user,
+          username
+        );
       })
       .catch((error) => {
         const errorCode = error.code;

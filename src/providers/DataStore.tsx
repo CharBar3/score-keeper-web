@@ -20,6 +20,9 @@ interface DataStoreContextProps {
   gameList: Array<GamePreview> | null;
   getFriends: () => Promise<void>;
   getGames: () => Promise<void>;
+  addFriend: (friendId: string) => Promise<void>;
+  removeFriend: (friendId: string) => Promise<void>;
+  createGame: (newGame: CreateGame) => Promise<void>;
 }
 
 const DataStoreContext = createContext<DataStoreContextProps>({
@@ -30,6 +33,15 @@ const DataStoreContext = createContext<DataStoreContextProps>({
     console.log("Error: Function not added to value prop");
   },
   getGames: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  addFriend: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  removeFriend: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  createGame: async () => {
     console.log("Error: Function not added to value prop");
   },
 });
@@ -56,11 +68,45 @@ export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
   }, [user]);
 
   const getGames = useCallback(async () => {
-    if (!fireUser) {
+    if (!user) {
       return;
     }
-    setGameList(await DatabaseService.fetchUserGameList(fireUser.uid));
-  }, [fireUser]);
+    setGameList(await DatabaseService.fetchUserGames(user.games));
+  }, [user]);
+
+  const addFriend = useCallback(
+    async (friendId: string) => {
+      if (!user) {
+        return;
+      }
+      await DatabaseService.addUserFriend(friendId, user.id);
+    },
+    [user]
+  );
+
+  const removeFriend = useCallback(
+    async (friendId: string) => {
+      if (!user) {
+        return;
+      }
+      await DatabaseService.removeUserFriend(friendId, user.id);
+    },
+    [user]
+  );
+
+  const createGame = useCallback(
+    async (newGame: CreateGame) => {
+      if (!user) {
+        return;
+      }
+      try {
+        await DatabaseService.createUserGame(user, newGame);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [user]
+  );
 
   useEffect(() => {
     console.log("loop reload check datastore");
@@ -86,7 +132,16 @@ export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
 
   return (
     <DataStoreContext.Provider
-      value={{ user, friendsList, gameList, getFriends, getGames }}
+      value={{
+        user,
+        friendsList,
+        gameList,
+        getFriends,
+        getGames,
+        removeFriend,
+        addFriend,
+        createGame,
+      }}
     >
       {children}
     </DataStoreContext.Provider>

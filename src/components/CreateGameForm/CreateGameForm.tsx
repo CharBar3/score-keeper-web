@@ -1,6 +1,7 @@
 "use client";
 
 import { UserAuth } from "@/contexts/AuthContext";
+import { useDataStore } from "@/providers/DataStore";
 import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
 import { Button, Stack, TextField, Typography } from "@mui/material";
@@ -10,6 +11,7 @@ interface CreateGameFormProps {}
 
 const CreateGameForm: FC<CreateGameFormProps> = () => {
   const { fireUser: user } = UserAuth();
+  const { createGame } = useDataStore();
   const { showToast } = useToast();
 
   const [title, setTitle] = useState("");
@@ -26,8 +28,7 @@ const CreateGameForm: FC<CreateGameFormProps> = () => {
     };
 
     try {
-      await DatabaseService.createUserGame(user.uid, gameInfo);
-
+      await createGame(gameInfo);
       showToast("Game succesfully created!", "success");
     } catch (error) {
       showToast("Failed to create game!", "error");
@@ -77,3 +78,6 @@ const CreateGameForm: FC<CreateGameFormProps> = () => {
 };
 
 export default CreateGameForm;
+function DataStore(): { createGame: any } {
+  throw new Error("Function not implemented.");
+}
