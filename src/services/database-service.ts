@@ -12,7 +12,17 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
+import {
+  Friend,
+  Game,
+  GameCreateParams,
+  GamePreview,
+  GuestPlayerCreateParams,
+  Role,
+  User,
+} from "../models";
 
 export class DatabaseService {
   public static createFirestoreUserDocument = async (
@@ -52,8 +62,8 @@ export class DatabaseService {
     querySnapshot.forEach((doc) => {
       const document = doc.data();
       const friend = {
-        friendId: document.id,
-        friendUsername: document.username,
+        id: document.id,
+        username: document.username,
       };
       friends.push(friend);
     });
@@ -61,23 +71,46 @@ export class DatabaseService {
   };
 
   public static addUserFriend = async (
-    friendUserId: string,
+    friendId: string,
     userId: string
   ): Promise<void> => {
-    const ref = await doc(db, "users", userId);
-    await updateDoc(ref, {
-      friends: arrayUnion(friendUserId),
+    const batch = writeBatch(db);
+
+    // Add friendId to user friends list
+    const userRef = doc(db, "users", userId);
+    batch.update(userRef, { friends: arrayUnion(friendId) });
+
+    // Add userId to friend's friends list
+    const friendRef = doc(db, "users", friendId);
+    batch.update(friendRef, {
+      friends: arrayUnion(userId),
     });
+
+    await batch.commit();
   };
 
   public static removeUserFriend = async (
-    friendUserId: string,
+    friendId: string,
     userId: string
   ): Promise<void> => {
-    const ref = await doc(db, "users", userId);
-    await updateDoc(ref, {
-      friends: arrayRemove(friendUserId),
+    // const ref = await doc(db, "users", userId);
+    // await updateDoc(ref, {
+    //   friends: arrayRemove(friendUserId),
+    // });
+
+    const batch = writeBatch(db);
+
+    // Add friendId to user friends list
+    const userRef = doc(db, "users", userId);
+    batch.update(userRef, { friends: arrayRemove(friendId) });
+
+    // Add userId to friend's friends list
+    const friendRef = doc(db, "users", friendId);
+    batch.update(friendRef, {
+      friends: arrayRemove(userId),
     });
+
+    await batch.commit();
   };
 
   public static fetchUserGame = async (
@@ -94,20 +127,20 @@ export class DatabaseService {
   };
 
   public static fetchUserGames = async (
-    gameIds: string[]
+    userId: string
   ): Promise<GamePreview[] | []> => {
-    if (gameIds.length == 0) {
-      return [];
-    }
     const games: GamePreview[] = [];
-    const q = query(collection(db, "games"), where("id", "in", gameIds));
+    const q = query(
+      collection(db, "games"),
+      where("playerIds", "array-contains", userId)
+    );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const document = doc.data();
       const game = {
-        gameId: document.id,
-        gameInfo: document.info,
-        gameTitle: document.title,
+        id: document.id,
+        info: document.info,
+        title: document.title,
       };
       games.push(game);
     });
@@ -116,20 +149,21 @@ export class DatabaseService {
 
   public static createUserGame = async (
     user: User,
-    gameInfo: CreateGame
+    gameInfo: GameCreateParams
   ): Promise<void> => {
-    const newGame: GameCreateParams = {
+    const newGameRef = doc(collection(db, "games"));
+
+    const newGame: Game = {
+      id: newGameRef.id,
       title: gameInfo.title,
       info: gameInfo.info,
       ownerId: user.id,
-      adminIds: [],
-      canEditIds: [],
+      playerIds: [user.id],
       players: [
         {
-          playerId: user.id,
+          id: user.id,
           name: user.username,
-          isAdmin: true,
-          canEdit: true,
+          role: Role.Owner,
           notes: "",
           score: 0,
         },
@@ -137,11 +171,7 @@ export class DatabaseService {
       guestPlayers: [],
     };
 
-    const newGameRef = doc(collection(db, "games"));
-    await setDoc(newGameRef, {
-      ...newGame,
-      id: newGameRef.id,
-    });
+    await setDoc(newGameRef, newGame);
 
     await this.addGameToUserGames(user.id, newGameRef.id);
   };
@@ -170,8 +200,8 @@ export class DatabaseService {
     const searchResults: Friend[] = [];
     querySnapshot.forEach((doc) => {
       const document = {
-        friendId: doc.id,
-        friendUsername: doc.data().username,
+        id: doc.id,
+        username: doc.data().username,
       };
 
       searchResults.push(document);
@@ -182,10 +212,8 @@ export class DatabaseService {
 
   public static addGuestPlayer = async (
     gameId: string,
-    guestInfo: GuestPlayerCreatePerams
+    guestInfo: GuestPlayerCreateParams
   ): Promise<void> => {
-    console.log(gameId);
-    console.log(guestInfo);
     const gameDocRef = doc(db, "games", gameId);
     try {
       await updateDoc(gameDocRef, {

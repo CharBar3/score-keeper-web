@@ -1,6 +1,7 @@
 "use client";
 
 import { UserAuth } from "@/contexts/AuthContext";
+import { Friend } from "@/models";
 import { useDataStore } from "@/providers/DataStore";
 import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
@@ -47,31 +48,26 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     }
   };
 
-  const showSearchResults = searchResults?.map(
-    ({ friendId, friendUsername }, index) => {
-      if (!user) {
-        return;
-      }
-      if (friendId === user.id || user.friends.includes(friendId)) {
-        return;
-      }
-
-      return (
-        <div key={index}>
-          <ListItem>
-            <ListItemText primary={friendUsername} />
-            <Button
-              variant="text"
-              onClick={(e) => handleAddFriend(e, friendId)}
-            >
-              Add Friend
-            </Button>
-          </ListItem>
-          <Divider />
-        </div>
-      );
+  const showSearchResults = searchResults?.map(({ id, username }, index) => {
+    if (!user) {
+      return;
     }
-  );
+    if (id === user.id || user.friends.includes(id)) {
+      return;
+    }
+
+    return (
+      <div key={index}>
+        <ListItem>
+          <ListItemText primary={username} />
+          <Button variant="text" onClick={(e) => handleAddFriend(e, id)}>
+            Add Friend
+          </Button>
+        </ListItem>
+        <Divider />
+      </div>
+    );
+  });
 
   useEffect(() => {
     return () => {};

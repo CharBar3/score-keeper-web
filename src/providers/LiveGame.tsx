@@ -1,7 +1,9 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
+import { db } from "@/config/firebase";
+import { Game } from "@/models";
 import { DatabaseService } from "@/services/database-service";
+import { doc, onSnapshot } from "firebase/firestore";
 import {
   FC,
   ReactNode,
@@ -11,8 +13,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/config/firebase";
+import { GuestPlayerCreateParams } from "@/models";
 
 interface LiveGameContextProps {
   liveGame: Game | null;
@@ -20,7 +21,7 @@ interface LiveGameContextProps {
   // gameList: Array<GamePreview> | null;
   // getUser: () => Promise<void>;
   // getFriends: () => Promise<void>;
-  addGuestPlayer: (guestPlayerInfo: GuestPlayerCreatePerams) => Promise<void>;
+  addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
   setGameId: (value: string) => void;
 }
 
@@ -53,7 +54,7 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
   const [liveGame, setLiveGame] = useState<Game | null>(null);
 
   const addGuestPlayer = useCallback(
-    async (guestPlayerInfo: GuestPlayerCreatePerams) => {
+    async (guestPlayerInfo: GuestPlayerCreateParams) => {
       console.log();
       if (!liveGame) {
         return;

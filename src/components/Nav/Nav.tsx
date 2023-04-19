@@ -27,7 +27,7 @@ const Nav: FC<NavProps> = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" variant="elevation">
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
             <Link href={fireUser ? "/dashboard" : "/"}>
