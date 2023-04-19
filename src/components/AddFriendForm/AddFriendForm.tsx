@@ -25,6 +25,12 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
 
   const handleClick = async () => {
     try {
+      // const res = await findFriend(searchWord);
+      // if (res === undefined) {
+      //   setSearchResults(null);
+      // } else {
+      //   setSearchResults(res);
+      // }
       setSearchResults(await findFriend(searchWord));
     } catch (error) {}
   };

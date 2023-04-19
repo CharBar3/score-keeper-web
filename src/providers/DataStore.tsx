@@ -23,9 +23,7 @@ interface DataStoreContextProps {
   addFriend: (friendId: string) => Promise<void>;
   removeFriend: (friendId: string) => Promise<void>;
   createGame: (newGame: CreateGame) => Promise<void>;
-  findFriend: Function;
-  // TODO: Figure out why typescript is forceing me to add void to the return type below.
-  // findFriend: (username: string) => Promise<Friend[] | null>;
+  findFriend: (username: string) => Promise<Friend[] | []>;
 }
 
 const DataStoreContext = createContext<DataStoreContextProps>({
@@ -49,7 +47,7 @@ const DataStoreContext = createContext<DataStoreContextProps>({
   },
   findFriend: async () => {
     console.log("Error: Function not added to value prop");
-    return null;
+    return [];
   },
 });
 
@@ -117,13 +115,14 @@ export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
   const findFriend = useCallback(
     async (username: string) => {
       if (!user) {
-        return;
+        return [];
       }
+
       try {
         return await DatabaseService.findFriendByUsername(username);
       } catch (error) {
         console.log(error);
-        return null;
+        throw Error;
       }
     },
     [user]
