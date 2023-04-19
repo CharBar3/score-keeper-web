@@ -1,6 +1,6 @@
 import { db } from "@/config/firebase";
 import { UserAuth } from "@/contexts/AuthContext";
-import { User } from "firebase/auth";
+import { User as FireUser } from "firebase/auth";
 import {
   collection,
   query,
@@ -18,24 +18,44 @@ import {
 } from "firebase/firestore";
 
 export class DatabaseService {
-  public static fetchFirestoreUser = async (
-    userId: string
-  ): Promise<FirestoreUser | null> => {
+  public static fetchUser = async (userId: string): Promise<User | null> => {
     const ref = doc(db, "users", userId);
     const snap = await getDoc(ref);
 
     if (snap.exists()) {
-      return snap.data() as FirestoreUser;
+      return snap.data() as User;
     } else {
       return null;
     }
   };
 
+  public static fetchUserFriends = async (
+    friendIds: string[]
+  ): Promise<Friend[] | []> => {
+    if (friendIds.length == 0) {
+      return [];
+    }
+
+    const friends: Friend[] = [];
+
+    const q = query(collection(db, "users"), where("id", "in", friendIds));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const document = doc.data();
+      const friend = {
+        friendId: document.id,
+        friendUsername: document.username,
+      };
+      friends.push(friend);
+    });
+    return friends;
+  };
+
   public static addUserToDatabase = async (
-    user: User,
+    user: FireUser,
     username: string
   ): Promise<void> => {
-    const data: FirestoreUser = {
+    const data: User = {
       id: user.uid,
       username: username,
       friends: [],
@@ -62,7 +82,7 @@ export class DatabaseService {
     userId: string,
     gameInfo: CreateGame
   ): Promise<void> => {
-    const loggedInUser = await this.fetchFirestoreUser(userId);
+    const loggedInUser = await this.fetchUser(userId);
     if (!loggedInUser) {
       throw Error("Not logged in!");
     }
@@ -176,7 +196,7 @@ export class DatabaseService {
   ): Promise<Friend[] | null> => {
     const friendsList = [];
 
-    const user = await this.fetchFirestoreUser(userId);
+    const user = await this.fetchUser(userId);
 
     if (!user) {
       return null;

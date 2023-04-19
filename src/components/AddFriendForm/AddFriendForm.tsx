@@ -17,7 +17,7 @@ import { FC, useEffect, useState } from "react";
 interface SearchAddFriendProps {}
 
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
-  const { user } = UserAuth();
+  const { fireUser } = UserAuth();
   const { friendsList, getFriends } = useDataStore();
   const { showToast } = useToast();
 
@@ -25,12 +25,12 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
 
   const handleClick = async () => {
-    if (!user) {
+    if (!fireUser) {
       return;
     }
     const firebaseResponse = await DatabaseService.findFriendByUsername(
       searchWord,
-      user.uid
+      fireUser.uid
     );
     if (firebaseResponse.length === 0) {
       setSearchResults(null);
@@ -43,13 +43,13 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     e: React.MouseEvent<HTMLElement>,
     newFriendId: string
   ) => {
-    if (!user) {
+    if (!fireUser) {
       return;
     }
 
     const clickedButton = e.currentTarget;
     try {
-      await DatabaseService.addFriend(newFriendId, user.uid);
+      await DatabaseService.addFriend(newFriendId, fireUser.uid);
       showToast("Friend added succesfully!", "success");
       clickedButton.innerText = "Friend Added";
 
@@ -61,10 +61,10 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
 
   const showSearchResults = searchResults?.map(
     ({ friendId, friendUsername }, index) => {
-      if (!user) {
+      if (!fireUser) {
         return;
       }
-      if (friendId === user.uid) {
+      if (friendId === fireUser.uid) {
         return;
       }
 

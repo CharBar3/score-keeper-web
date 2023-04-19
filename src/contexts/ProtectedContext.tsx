@@ -11,18 +11,18 @@ interface ProtectedContextProviderProps {
 export const ProtectedContextProvider: FC<ProtectedContextProviderProps> = ({
   children,
 }) => {
-  const { user, isLoading } = UserAuth();
+  const { fireUser, isLoading } = UserAuth();
 
   useEffect(() => {
     if (isLoading) {
-    } else if (!user) {
+    } else if (!fireUser) {
       redirect("/login");
     }
     // first;
     // return () => {
     //   second;
     // };
-  }, [user, isLoading]);
+  }, [fireUser, isLoading]);
 
   if (isLoading) {
     return <h1>Loading</h1>;

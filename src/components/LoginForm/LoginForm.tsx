@@ -45,7 +45,7 @@ const LoginForm: FC = () => {
     }
   };
 
-  const { isLoading, user } = UserAuth();
+  const { isLoading, fireUser: user } = UserAuth();
 
   useEffect(() => {
     if (user) {
