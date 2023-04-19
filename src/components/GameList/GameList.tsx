@@ -26,12 +26,12 @@ const GameList: FC<GameListProps> = () => {
   let showGames = null;
 
   if (gameList) {
-    showGames = gameList.map(({ gameId, gameTitle, gameInfo }, index: any) => {
+    showGames = gameList.map(({ id, title, info }, index: any) => {
       return (
         <div key={index}>
           <ListItem>
-            <ListItemText primary={gameTitle} />
-            <Link href={`dashboard/games/${gameId}`}>
+            <ListItemText primary={title} />
+            <Link href={`dashboard/games/${id}`}>
               <Button variant="text">Play Game!</Button>
             </Link>
           </ListItem>

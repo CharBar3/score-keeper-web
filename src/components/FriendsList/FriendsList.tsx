@@ -34,21 +34,19 @@ const FriendsList: FC<FriendsListProps> = () => {
   let showFriends = null;
 
   if (friendsList) {
-    showFriends = friendsList.map(
-      ({ friendUsername, friendId }, index: any) => {
-        return (
-          <div key={index}>
-            <ListItem>
-              <ListItemText primary={friendUsername} />
-              <Button variant="text" onClick={() => handleClick(friendId)}>
-                Remove Friend
-              </Button>
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      }
-    );
+    showFriends = friendsList.map(({ username, id }, index: any) => {
+      return (
+        <div key={index}>
+          <ListItem>
+            <ListItemText primary={username} />
+            <Button variant="text" onClick={() => handleClick(id)}>
+              Remove Friend
+            </Button>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    });
   }
 
   return (
