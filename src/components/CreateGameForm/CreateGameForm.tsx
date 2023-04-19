@@ -9,7 +9,7 @@ import { ChangeEvent, FC, useState } from "react";
 interface CreateGameFormProps {}
 
 const CreateGameForm: FC<CreateGameFormProps> = () => {
-  const { user } = UserAuth();
+  const { fireUser: user } = UserAuth();
   const { showToast } = useToast();
 
   const [title, setTitle] = useState("");

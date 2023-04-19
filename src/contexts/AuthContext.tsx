@@ -20,7 +20,7 @@ import { auth } from "../config/firebase";
 import { FirebaseError } from "firebase/app";
 
 interface AuthContextProps {
-  user: User | null;
+  fireUser: User | null;
   isLoading: boolean;
   loginWithEmailPassword: Function;
   createAccount: Function;
@@ -28,7 +28,7 @@ interface AuthContextProps {
 }
 
 const AuthContext = createContext<AuthContextProps>({
-  user: null,
+  fireUser: null,
   isLoading: true,
   loginWithEmailPassword: () => {
     console.log("Make sure function is added to value prop");
@@ -48,7 +48,7 @@ interface AuthContextProviderProps {
 export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [fireUser, setFireUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const loginWithEmailPassword = async (email: string, password: string) => {
@@ -95,7 +95,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setFireUser(currentUser);
       setIsLoading(false);
     });
     return () => {
@@ -105,7 +105,13 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, loginWithEmailPassword, createAccount, logOut }}
+      value={{
+        fireUser,
+        isLoading,
+        loginWithEmailPassword,
+        createAccount,
+        logOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

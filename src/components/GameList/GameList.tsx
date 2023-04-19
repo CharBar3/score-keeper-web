@@ -19,7 +19,7 @@ import { FC } from "react";
 interface GameListProps {}
 
 const GameList: FC<GameListProps> = () => {
-  const { user } = UserAuth();
+  const { fireUser: user } = UserAuth();
   const { gameList, getFriends } = useDataStore();
   const { showToast } = useToast();
 

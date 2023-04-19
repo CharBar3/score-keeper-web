@@ -13,7 +13,7 @@ import { useToast } from "@/providers/ToastProvider";
 interface NavProps {}
 
 const Nav: FC<NavProps> = () => {
-  const { user, logOut } = UserAuth();
+  const { fireUser, logOut } = UserAuth();
   const { showToast } = useToast();
 
   const handleLogout = async () => {
@@ -30,18 +30,18 @@ const Nav: FC<NavProps> = () => {
       <AppBar position="static">
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
-            <Link href="/">
+            <Link href={fireUser ? "/dashboard" : "/"}>
               <Typography variant="h6" component="div">
                 Tally Board
               </Typography>
             </Link>
-            {user ? (
+            {fireUser ? (
               <Typography variant="h5" component="div">
-                {user.displayName}
+                {fireUser.displayName}
               </Typography>
             ) : null}
           </Box>
-          {user ? (
+          {fireUser ? (
             <Box>
               <Link href="/dashboard">
                 <Button color="inherit">Dashboard</Button>
