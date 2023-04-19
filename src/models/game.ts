@@ -4,7 +4,7 @@ interface CreateGame {
 }
 
 interface Game {
-  id?: string;
+  id: string;
   title: string; // title of the game. Example: Splendor
   info: string; // description if you want to add more info about the game (when/where)
   ownerId: string; // the logged in user who created the game
@@ -13,6 +13,8 @@ interface Game {
   players: Player[];
   guestPlayers: GuestPlayer[] | [];
 }
+
+type GameCreateParams = Omit<Game, "id">;
 
 interface Player {
   playerId: string; // the players id.
@@ -24,10 +26,13 @@ interface Player {
 }
 
 interface GuestPlayer {
-  name: string; // defaults to the players username but can be updated
+  id: string;
+  name: string;
   score: number;
   notes: string;
 }
+
+type GuestPlayerCreatePerams = Omit<GuestPlayer, "id">;
 
 interface GamePreview {
   gameId: string;

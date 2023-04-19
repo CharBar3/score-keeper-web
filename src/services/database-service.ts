@@ -1,4 +1,5 @@
 import { db } from "@/config/firebase";
+import uniqid from "uniqid";
 import { User as FireUser } from "firebase/auth";
 import {
   arrayRemove,
@@ -117,7 +118,7 @@ export class DatabaseService {
     user: User,
     gameInfo: CreateGame
   ): Promise<void> => {
-    const newGame: Game = {
+    const newGame: GameCreateParams = {
       title: gameInfo.title,
       info: gameInfo.info,
       ownerId: user.id,
@@ -181,12 +182,14 @@ export class DatabaseService {
 
   public static addGuestPlayer = async (
     gameId: string,
-    guestInfo: GuestPlayer
+    guestInfo: GuestPlayerCreatePerams
   ): Promise<void> => {
-    const gameDocRef = doc(db, "users", gameId);
+    console.log(gameId);
+    console.log(guestInfo);
+    const gameDocRef = doc(db, "games", gameId);
     try {
       await updateDoc(gameDocRef, {
-        guestPlayers: arrayUnion(guestInfo),
+        guestPlayers: arrayUnion({ ...guestInfo, id: uniqid() }),
       });
     } catch (error) {}
   };

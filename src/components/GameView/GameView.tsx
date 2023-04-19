@@ -12,15 +12,34 @@ interface GameViewProps {
 
 const GameView: FC<GameViewProps> = ({ id }) => {
   // const [game, setGame] = useState<Game | null>(null);
-  const { liveGame: game } = useLiveGame();
+  const { liveGame: game, addGuestPlayer } = useLiveGame();
 
   if (!game) {
     return <Typography variant="h1">Loading...</Typography>;
   }
 
   const showPlayers = game.players.map((player, index) => {
-    return <PlayerCard key={index} player={player} />;
+    return <PlayerCard key={player.playerId} player={player} />;
   });
+  const showGuestPlayers = game.guestPlayers.map((guestPlayer, index) => {
+    return (
+      <div key={guestPlayer.id}>
+        <h1>{guestPlayer.name}</h1>
+        <h2>{guestPlayer.score}</h2>
+        <p>{guestPlayer.notes}</p>
+      </div>
+    );
+  });
+
+  const handleClick = async () => {
+    try {
+      await addGuestPlayer({
+        name: "Guest name test",
+        notes: "guest notes test",
+        score: 699,
+      });
+    } catch (error) {}
+  };
 
   return (
     <div>
@@ -30,9 +49,10 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography variant="h5">Game Admins: {game.adminIds}</Typography>
       <ButtonGroup>
         <Button>Add Player</Button>
-        <Button>Add Guest Player</Button>
+        <Button onClick={handleClick}>Add Guest Player</Button>
       </ButtonGroup>
       {showPlayers}
+      {showGuestPlayers}
     </div>
   );
 };

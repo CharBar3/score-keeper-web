@@ -20,7 +20,7 @@ interface LiveGameContextProps {
   // gameList: Array<GamePreview> | null;
   // getUser: () => Promise<void>;
   // getFriends: () => Promise<void>;
-  // getGames: () => Promise<void>;
+  addGuestPlayer: (guestPlayerInfo: GuestPlayerCreatePerams) => Promise<void>;
   setGameId: (value: string) => void;
 }
 
@@ -34,9 +34,9 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   // getFriends: async () => {
   //   console.log("Error: Function not added to value prop");
   // },
-  // getGames: async () => {
-  //   console.log("Error: Function not added to value prop");
-  // },
+  addGuestPlayer: async () => {
+    console.log("Error: Function not added to value prop");
+  },
   setGameId: () => {
     console.log("Error: Function not added to value prop");
   },
@@ -51,6 +51,22 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
 }) => {
   const [gameId, setGameId] = useState<string | null>(null);
   const [liveGame, setLiveGame] = useState<Game | null>(null);
+
+  const addGuestPlayer = useCallback(
+    async (guestPlayerInfo: GuestPlayerCreatePerams) => {
+      console.log();
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await DatabaseService.addGuestPlayer(liveGame.id, guestPlayerInfo);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
 
   useEffect(() => {
     console.log("live game loop check");
@@ -67,8 +83,10 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
     };
   }, [gameId]);
 
+  // useEffect(() => {}, [liveGame, addGuestPlayer]);
+
   return (
-    <LiveGameContext.Provider value={{ liveGame, setGameId }}>
+    <LiveGameContext.Provider value={{ liveGame, setGameId, addGuestPlayer }}>
       {children}
     </LiveGameContext.Provider>
   );
