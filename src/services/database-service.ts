@@ -32,7 +32,6 @@ export class DatabaseService {
   public static fetchUserFriends = async (
     friendIds: string[]
   ): Promise<Friend[] | []> => {
-    console.log("friendids " + friendIds);
     if (friendIds.length == 0) {
       return [];
     }
@@ -49,8 +48,6 @@ export class DatabaseService {
       };
       friends.push(friend);
     });
-
-    console.log(friends);
     return friends;
   };
 
