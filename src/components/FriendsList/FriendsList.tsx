@@ -19,19 +19,13 @@ import { FC } from "react";
 interface FriendsListProps {}
 
 const FriendsList: FC<FriendsListProps> = () => {
-  const { fireUser } = UserAuth();
-  const { friendsList, getUser } = useDataStore();
+  const { friendsList, removeFriend } = useDataStore();
   const { showToast } = useToast();
 
-  const removeFriend = async (friendId: string) => {
-    if (!fireUser) {
-      return;
-    }
-
+  const handleClick = async (friendId: string) => {
     try {
-      await DatabaseService.removeUserFriend(friendId, fireUser.uid);
+      await removeFriend(friendId);
       showToast("Friend succesfully removed!", "success");
-      getUser();
     } catch (error) {
       showToast("Failed to remove friend!", "error");
     }
@@ -46,7 +40,7 @@ const FriendsList: FC<FriendsListProps> = () => {
           <div key={index}>
             <ListItem>
               <ListItemText primary={friendUsername} />
-              <Button variant="text" onClick={() => removeFriend(friendId)}>
+              <Button variant="text" onClick={() => handleClick(friendId)}>
                 Remove Friend
               </Button>
             </ListItem>

@@ -18,7 +18,7 @@ interface SearchAddFriendProps {}
 
 const SearchAddFriend: FC<SearchAddFriendProps> = () => {
   const { fireUser } = UserAuth();
-  const { friendsList, getFriends } = useDataStore();
+  const { user, friendsList, addFriend } = useDataStore();
   const { showToast } = useToast();
 
   const [searchWord, setSearchWord] = useState("");
@@ -43,17 +43,11 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     e: React.MouseEvent<HTMLElement>,
     newFriendId: string
   ) => {
-    if (!fireUser) {
-      return;
-    }
-
     const clickedButton = e.currentTarget;
     try {
-      await DatabaseService.addFriend(newFriendId, fireUser.uid);
+      await addFriend(newFriendId);
       showToast("Friend added succesfully!", "success");
       clickedButton.innerText = "Friend Added";
-
-      getFriends();
     } catch (error) {
       showToast("Failed to add friend!", "error");
     }
@@ -61,10 +55,10 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
 
   const showSearchResults = searchResults?.map(
     ({ friendId, friendUsername }, index) => {
-      if (!fireUser) {
+      if (!user) {
         return;
       }
-      if (friendId === fireUser.uid) {
+      if (friendId === user.id || user.friends.includes(friendId)) {
         return;
       }
 

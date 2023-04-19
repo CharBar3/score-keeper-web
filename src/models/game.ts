@@ -4,6 +4,7 @@ interface CreateGame {
 }
 
 interface Game {
+  id?: string;
   title: string; // title of the game. Example: Splendor
   info: string; // description if you want to add more info about the game (when/where)
   ownerId: string; // the logged in user who created the game
