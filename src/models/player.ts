@@ -9,3 +9,4 @@ export interface Player {
 }
 
 export type GuestPlayerCreateParams = Omit<Player, "id">;
+export type AddPlayerParams = Omit<Player, "id" | "name" | "score" | "notes">;

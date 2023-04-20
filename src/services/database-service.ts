@@ -51,13 +51,13 @@ export class DatabaseService {
   };
 
   public static fetchUserFriends = async (
-    friendIds: string[]
+    userId: string
   ): Promise<Friend[] | []> => {
-    if (friendIds.length == 0) {
-      return [];
-    }
     const friends: Friend[] = [];
-    const q = query(collection(db, "users"), where("id", "in", friendIds));
+    const q = query(
+      collection(db, "users"),
+      where("friends", "array-contains", userId)
+    );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const document = doc.data();
@@ -208,18 +208,6 @@ export class DatabaseService {
     });
 
     return searchResults;
-  };
-
-  public static addGuestPlayer = async (
-    gameId: string,
-    guestInfo: GuestPlayerCreateParams
-  ): Promise<void> => {
-    const gameDocRef = doc(db, "games", gameId);
-    try {
-      await updateDoc(gameDocRef, {
-        guestPlayers: arrayUnion({ ...guestInfo, id: uniqid() }),
-      });
-    } catch (error) {}
   };
 
   static generateKeywords(name: string): string[] {

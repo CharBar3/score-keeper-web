@@ -1,10 +1,8 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
 import { Friend } from "@/models";
 import { useDataStore } from "@/providers/DataStore";
 import { useToast } from "@/providers/ToastProvider";
-import { DatabaseService } from "@/services/database-service";
 import {
   Button,
   Divider,
@@ -13,7 +11,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 
 interface SearchAddFriendProps {}
 
@@ -26,20 +24,13 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
 
   const handleClick = async () => {
     try {
-      // const res = await findFriend(searchWord);
-      // if (res === undefined) {
-      //   setSearchResults(null);
-      // } else {
-      //   setSearchResults(res);
-      // }
       setSearchResults(await findFriend(searchWord));
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleAddFriend = async (
-    e: React.MouseEvent<HTMLElement>,
-    newFriendId: string
-  ) => {
+  const handleAddFriend = async (newFriendId: string) => {
     try {
       await addFriend(newFriendId);
       showToast("Friend added succesfully!", "success");
@@ -57,15 +48,15 @@ const SearchAddFriend: FC<SearchAddFriendProps> = () => {
     }
 
     return (
-      <div key={index}>
+      <Fragment key={id}>
         <ListItem>
           <ListItemText primary={username} />
-          <Button variant="text" onClick={(e) => handleAddFriend(e, id)}>
+          <Button variant="text" onClick={() => handleAddFriend(id)}>
             Add Friend
           </Button>
         </ListItem>
         <Divider />
-      </div>
+      </Fragment>
     );
   });
 

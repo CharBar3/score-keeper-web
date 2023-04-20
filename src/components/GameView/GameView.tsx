@@ -4,6 +4,8 @@ import { useLiveGame } from "@/providers/LiveGame";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { FC } from "react";
 import PlayerCard from "../PlayerCard/PlayerCard";
+import { Role } from "@/models";
+import AddPlayerModal from "../AddPlayerModal/AddPlayerModal";
 
 interface GameViewProps {
   id: string;
@@ -36,6 +38,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         name: "Guest name test",
         notes: "guest notes test",
         score: 699,
+        role: Role.Edit,
       });
     } catch (error) {}
   };
@@ -45,7 +48,8 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography variant="h1">{game.title}</Typography>
       <Typography variant="h4">{game.info}</Typography>
       <ButtonGroup>
-        <Button>Add Player</Button>
+        <AddPlayerModal />
+        {/* <Button>Add Player</Button> */}
         <Button onClick={handleClick}>Add Guest Player</Button>
       </ButtonGroup>
       {showPlayers}
