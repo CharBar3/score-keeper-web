@@ -69,7 +69,7 @@ export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
     if (!user) {
       return;
     }
-    setFriendsList(await DatabaseService.fetchUserFriends(user.friends));
+    setFriendsList(await DatabaseService.fetchUserFriends(user.id));
   }, [user]);
 
   const getGames = useCallback(async () => {

@@ -14,13 +14,14 @@ import {
   useState,
 } from "react";
 import { GuestPlayerCreateParams } from "@/models";
+import { GameService } from "@/services/game-service";
 
 interface LiveGameContextProps {
   liveGame: Game | null;
   // friendsList: Array<Friend> | null;
   // gameList: Array<GamePreview> | null;
   // getUser: () => Promise<void>;
-  // getFriends: () => Promise<void>;
+  addPlayer: (friendId: string, friendUsername: string) => Promise<void>;
   addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
   setGameId: (value: string) => void;
 }
@@ -32,9 +33,9 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   // getUser: async () => {
   //   console.log("Error: Function not added to value prop");
   // },
-  // getFriends: async () => {
-  //   console.log("Error: Function not added to value prop");
-  // },
+  addPlayer: async () => {
+    console.log("Error: Function not added to value prop");
+  },
   addGuestPlayer: async () => {
     console.log("Error: Function not added to value prop");
   },
@@ -61,7 +62,22 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await DatabaseService.addGuestPlayer(liveGame.id, guestPlayerInfo);
+        await GameService.addGuestPlayer(liveGame.id, guestPlayerInfo);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
+  const addPlayer = useCallback(
+    async (friendId: string, friendUsername: string) => {
+      console.log();
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await GameService.addPlayer(liveGame.id, friendId, friendUsername);
       } catch (error) {
         console.log(error);
       }
@@ -87,7 +103,9 @@ export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
   // useEffect(() => {}, [liveGame, addGuestPlayer]);
 
   return (
-    <LiveGameContext.Provider value={{ liveGame, setGameId, addGuestPlayer }}>
+    <LiveGameContext.Provider
+      value={{ liveGame, setGameId, addGuestPlayer, addPlayer }}
+    >
       {children}
     </LiveGameContext.Provider>
   );
