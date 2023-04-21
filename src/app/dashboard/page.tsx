@@ -8,7 +8,7 @@ interface DashboardProps {}
 const Dashboard: FC<DashboardProps> = () => {
   return (
     <div>
-      <FriendsList />
+      <FriendsList canRemoveFriend={false} />
       <GameList />
     </div>
   );
