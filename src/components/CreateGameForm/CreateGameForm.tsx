@@ -1,7 +1,7 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
-import { useDataStore } from "@/providers/DataStore";
+import { useAuth } from "@/providers/Auth";
+import { useDataStore } from "@/providers/User";
 import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
 import { Button, Stack, TextField, Typography } from "@mui/material";
@@ -10,7 +10,7 @@ import { ChangeEvent, FC, useState } from "react";
 interface CreateGameFormProps {}
 
 const CreateGameForm: FC<CreateGameFormProps> = () => {
-  const { fireUser: user } = UserAuth();
+  const { fireUser: user } = useAuth();
   const { createGame } = useDataStore();
   const { showToast } = useToast();
 

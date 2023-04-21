@@ -1,6 +1,6 @@
 "use client";
 import GameView from "@/components/GameView/GameView";
-import { useLiveGame } from "@/providers/LiveGame";
+import { useLiveGame } from "@/providers/Game";
 import { FC, useEffect } from "react";
 
 interface PageProps {

@@ -7,13 +7,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
-import { UserAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 
 interface NavProps {}
 
 const Nav: FC<NavProps> = () => {
-  const { fireUser, logOut } = UserAuth();
+  const { fireUser, logOut } = useAuth();
   const { showToast } = useToast();
 
   const handleLogout = async () => {

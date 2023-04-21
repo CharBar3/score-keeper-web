@@ -48,7 +48,7 @@ interface LiveGameContextProviderProps {
   children: ReactNode;
 }
 
-export const LiveGameProvider: FC<LiveGameContextProviderProps> = ({
+export const GameProvider: FC<LiveGameContextProviderProps> = ({
   children,
 }) => {
   const [gameId, setGameId] = useState<string | null>(null);

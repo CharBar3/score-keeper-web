@@ -1,4 +1,4 @@
-import { LiveGameProvider } from "@/providers/LiveGame";
+import { GameProvider } from "@/providers/Game";
 
 export default function GameLayout({
   children,
@@ -6,8 +6,8 @@ export default function GameLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LiveGameProvider>
+    <GameProvider>
       <section>{children}</section>
-    </LiveGameProvider>
+    </GameProvider>
   );
 }

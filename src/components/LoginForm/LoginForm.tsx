@@ -1,6 +1,6 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 
 import { Stack, Typography } from "@mui/material";
@@ -20,7 +20,7 @@ const LoginForm: FC = () => {
   // const className = cx(classes.buttonError, classes.root);
   // const className = cx({[classes.buttonError]: !email});
 
-  const { loginWithEmailPassword } = UserAuth();
+  const { loginWithEmailPassword } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +45,7 @@ const LoginForm: FC = () => {
     }
   };
 
-  const { isLoading, fireUser: user } = UserAuth();
+  const { isLoading, fireUser: user } = useAuth();
 
   useEffect(() => {
     if (user) {

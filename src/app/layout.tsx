@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav/Nav";
 import "./globals.css";
-import { AuthContextProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/providers/Auth";
 import Providers from "@/providers/Providers";
 import Toast from "@/components/Toast/Toast";
 import { ToastProvider } from "@/providers/ToastProvider";
@@ -20,11 +20,11 @@ export default function RootLayout({
       <body>
         <Providers>
           <ToastProvider>
-            <AuthContextProvider>
+            <AuthProvider>
               <Nav />
               {children}
               <Toast />
-            </AuthContextProvider>
+            </AuthProvider>
           </ToastProvider>
         </Providers>
       </body>

@@ -1,7 +1,7 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
-import { useDataStore } from "@/providers/DataStore";
+import { useAuth } from "@/providers/Auth";
+import { useDataStore } from "@/providers/User";
 import { useToast } from "@/providers/ToastProvider";
 import { DatabaseService } from "@/services/database-service";
 import {
@@ -19,7 +19,7 @@ import { FC } from "react";
 interface GameListProps {}
 
 const GameList: FC<GameListProps> = () => {
-  const { fireUser: user } = UserAuth();
+  const { fireUser: user } = useAuth();
   const { gameList, getFriends } = useDataStore();
   const { showToast } = useToast();
 

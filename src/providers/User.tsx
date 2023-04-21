@@ -2,7 +2,7 @@
 
 import { Friend, User, GamePreview, GameCreateParams } from "../models";
 import { db } from "@/config/firebase";
-import { UserAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/providers/Auth";
 import { DatabaseService } from "@/services/database-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -56,10 +56,10 @@ interface DataStoreContextProviderProps {
   children: ReactNode;
 }
 
-export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
+export const UserProvider: FC<DataStoreContextProviderProps> = ({
   children,
 }) => {
-  const { fireUser } = UserAuth();
+  const { fireUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
 
   const [friendsList, setFriendsList] = useState<Array<Friend> | null>(null);
@@ -140,9 +140,7 @@ export const DataStoreProvider: FC<DataStoreContextProviderProps> = ({
     }
 
     return () => {
-      if (fireUser) {
-        unsub();
-      }
+      unsub();
     };
   }, [fireUser]);
 
