@@ -1,7 +1,7 @@
 "use client";
 
-import { useDataStore } from "@/providers/DataStore";
-import { useLiveGame } from "@/providers/LiveGame";
+import { useDataStore } from "@/providers/User";
+import { useLiveGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Button from "@mui/material/Button";

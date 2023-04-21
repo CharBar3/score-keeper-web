@@ -1,6 +1,6 @@
 "use client";
 
-import { useLiveGame } from "@/providers/LiveGame";
+import { useLiveGame } from "@/providers/Game";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { FC } from "react";
 import PlayerCard from "../PlayerCard/PlayerCard";

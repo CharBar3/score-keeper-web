@@ -1,7 +1,7 @@
 "use client";
 import { redirect } from "next/navigation";
 import { FC, ReactNode, createContext, useEffect } from "react";
-import { UserAuth } from "./AuthContext";
+import { useAuth } from "./Auth";
 
 const ProtectedContext = createContext(null);
 
@@ -11,17 +11,13 @@ interface ProtectedContextProviderProps {
 export const ProtectedContextProvider: FC<ProtectedContextProviderProps> = ({
   children,
 }) => {
-  const { fireUser, isLoading } = UserAuth();
+  const { fireUser, isLoading } = useAuth();
 
   useEffect(() => {
     if (isLoading) {
     } else if (!fireUser) {
       redirect("/login");
     }
-    // first;
-    // return () => {
-    //   second;
-    // };
   }, [fireUser, isLoading]);
 
   if (isLoading) {

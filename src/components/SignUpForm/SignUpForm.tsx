@@ -1,6 +1,6 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/providers/Auth";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { ChangeEvent, FC, useState } from "react";
@@ -8,7 +8,7 @@ import { ChangeEvent, FC, useState } from "react";
 // interface LoginFormProps {}
 
 const SignUpFrom: FC = () => {
-  const { createAccount } = UserAuth();
+  const { createAccount } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

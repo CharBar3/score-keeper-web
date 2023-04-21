@@ -45,9 +45,7 @@ interface AuthContextProviderProps {
   children: ReactNode;
 }
 
-export const AuthContextProvider: FC<AuthContextProviderProps> = ({
-  children,
-}) => {
+export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
   const [fireUser, setFireUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -119,6 +117,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   );
 };
 
-export const UserAuth = () => {
+export const useAuth = () => {
   return useContext<AuthContextProps>(AuthContext);
 };

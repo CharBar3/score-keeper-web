@@ -1,6 +1,6 @@
 "use client";
 
-import { useDataStore } from "@/providers/DataStore";
+import { useDataStore } from "@/providers/User";
 import { useToast } from "@/providers/ToastProvider";
 import {
   Box,
