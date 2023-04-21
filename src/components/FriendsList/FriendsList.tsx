@@ -1,9 +1,7 @@
 "use client";
 
-import { UserAuth } from "@/contexts/AuthContext";
 import { useDataStore } from "@/providers/DataStore";
 import { useToast } from "@/providers/ToastProvider";
-import { DatabaseService } from "@/services/database-service";
 import {
   Box,
   Button,
@@ -11,14 +9,18 @@ import {
   List,
   ListItem,
   ListItemText,
+  Stack,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
 import { FC } from "react";
+import minusIcon from "../../../public/icons/minus_sign_icon.svg";
+import Image from "next/image";
 
-interface FriendsListProps {}
+interface FriendsListProps {
+  canRemoveFriend: boolean;
+}
 
-const FriendsList: FC<FriendsListProps> = () => {
+const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
   const { friendsList, removeFriend } = useDataStore();
   const { showToast } = useToast();
 
@@ -39,9 +41,24 @@ const FriendsList: FC<FriendsListProps> = () => {
         <div key={index}>
           <ListItem>
             <ListItemText primary={username} />
-            <Button variant="text" onClick={() => handleClick(id)}>
-              Remove Friend
-            </Button>
+            {canRemoveFriend && (
+              <Button
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "red",
+                  },
+                }}
+                variant="actionButton"
+                onClick={() => handleClick(id)}
+              >
+                <Image
+                  src={minusIcon}
+                  width={27}
+                  height={27}
+                  alt="remove friend icon"
+                />
+              </Button>
+            )}
           </ListItem>
           <Divider />
         </div>
@@ -50,22 +67,15 @@ const FriendsList: FC<FriendsListProps> = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
-        width: "100%",
-        // margin: "auto",
-      }}
-    >
-      <Typography variant="h2">FriendsList</Typography>
+    <Stack>
+      <Typography textAlign="center" variant="h2">
+        FriendsList
+      </Typography>
       <List>
-        <Divider key={1} />
+        <Divider />
         {showFriends ? showFriends : <>loading</>}
       </List>
-      <Link href="/dashboard/addfriend">
-        <Button variant="contained">Add Friend</Button>
-      </Link>
-    </Box>
+    </Stack>
   );
 };
 
