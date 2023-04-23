@@ -6,6 +6,7 @@ export interface Player {
   role: Role;
   score: number;
   notes: string;
+  isGuest: boolean;
 }
 
 export type GuestPlayerCreateParams = Omit<Player, "id">;

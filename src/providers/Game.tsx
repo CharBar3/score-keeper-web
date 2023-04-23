@@ -21,9 +21,11 @@ interface LiveGameContextProps {
   // friendsList: Array<Friend> | null;
   // gameList: Array<GamePreview> | null;
   // getUser: () => Promise<void>;
+  setGameId: (value: string) => void;
   addPlayer: (friendId: string, friendUsername: string) => Promise<void>;
   addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
-  setGameId: (value: string) => void;
+  increaseScore: (playerId: string, scoreIncrease: number) => Promise<void>;
+  decreaseScore: (playerId: string, scoreDecrease: number) => Promise<void>;
 }
 
 const LiveGameContext = createContext<LiveGameContextProps>({
@@ -39,7 +41,13 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   addGuestPlayer: async () => {
     console.log("Error: Function not added to value prop");
   },
-  setGameId: () => {
+  setGameId: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  increaseScore: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  decreaseScore: async () => {
     console.log("Error: Function not added to value prop");
   },
 });
@@ -69,6 +77,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
     },
     [liveGame]
   );
+
   const addPlayer = useCallback(
     async (friendId: string, friendUsername: string) => {
       console.log();
@@ -78,6 +87,37 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
       try {
         await GameService.addPlayer(liveGame.id, friendId, friendUsername);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
+
+  const increaseScore = useCallback(
+    async (playerId: string, scoreIncrease: number) => {
+      console.log();
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await GameService.increaseScore(liveGame.id, playerId, scoreIncrease);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
+  const decreaseScore = useCallback(
+    async (playerId: string, scoreDecrease: number) => {
+      console.log();
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await GameService.decreaseScore(liveGame.id, playerId, scoreDecrease);
       } catch (error) {
         console.log(error);
       }
@@ -104,13 +144,20 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   return (
     <LiveGameContext.Provider
-      value={{ liveGame, setGameId, addGuestPlayer, addPlayer }}
+      value={{
+        liveGame,
+        setGameId,
+        addGuestPlayer,
+        addPlayer,
+        increaseScore,
+        decreaseScore,
+      }}
     >
       {children}
     </LiveGameContext.Provider>
   );
 };
 
-export const useLiveGame = () => {
+export const useGame = () => {
   return useContext<LiveGameContextProps>(LiveGameContext);
 };

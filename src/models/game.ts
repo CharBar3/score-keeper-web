@@ -7,7 +7,6 @@ export interface Game {
   ownerId: string;
   playerIds: string[];
   players: Player[];
-  guestPlayers: Player[] | [];
 }
 
 export type GamePreview = Omit<
