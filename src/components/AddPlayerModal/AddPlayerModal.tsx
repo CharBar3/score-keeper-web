@@ -1,7 +1,7 @@
 "use client";
 
 import { useDataStore } from "@/providers/User";
-import { useLiveGame } from "@/providers/Game";
+import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { Divider, List, ListItem, ListItemText } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -16,7 +16,7 @@ interface AddPlayerModalProps {}
 
 const AddPlayerModal: FC<AddPlayerModalProps> = () => {
   const { friendsList } = useDataStore();
-  const { liveGame, addPlayer } = useLiveGame();
+  const { liveGame, addPlayer } = useGame();
   const { showToast } = useToast();
 
   const [open, setOpen] = useState(false);

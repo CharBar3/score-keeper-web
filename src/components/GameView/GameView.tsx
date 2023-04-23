@@ -1,6 +1,6 @@
 "use client";
 
-import { useLiveGame } from "@/providers/Game";
+import { useGame } from "@/providers/Game";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import { FC } from "react";
 import PlayerCard from "../PlayerCard/PlayerCard";
@@ -13,7 +13,7 @@ interface GameViewProps {
 
 const GameView: FC<GameViewProps> = ({ id }) => {
   // const [game, setGame] = useState<Game | null>(null);
-  const { liveGame: game, addGuestPlayer } = useLiveGame();
+  const { liveGame: game, addGuestPlayer } = useGame();
 
   if (!game) {
     return <Typography variant="h1">Loading...</Typography>;
@@ -22,15 +22,11 @@ const GameView: FC<GameViewProps> = ({ id }) => {
   const showPlayers = game.players.map((player, index) => {
     return <PlayerCard key={player.id} player={player} />;
   });
-  const showGuestPlayers = game.guestPlayers.map((guestPlayer, index) => {
-    return (
-      <div key={guestPlayer.id}>
-        <h1>{guestPlayer.name}</h1>
-        <h2>{guestPlayer.score}</h2>
-        <p>{guestPlayer.notes}</p>
-      </div>
-    );
-  });
+  // const showGuestPlayers = game.guestPlayers.map((guestPlayer, index) => {
+  //   return (
+  //     <PlayerCard key={guestPlayer.id} player={guestPlayer} gameId={game.id} />
+  //   );
+  // });
 
   const handleClick = async () => {
     try {
@@ -39,6 +35,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         notes: "guest notes test",
         score: 699,
         role: Role.Edit,
+        isGuest: true,
       });
     } catch (error) {}
   };
@@ -53,7 +50,6 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         <Button onClick={handleClick}>Add Guest Player</Button>
       </ButtonGroup>
       {showPlayers}
-      {showGuestPlayers}
     </div>
   );
 };

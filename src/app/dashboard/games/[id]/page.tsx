@@ -1,6 +1,6 @@
 "use client";
 import GameView from "@/components/GameView/GameView";
-import { useLiveGame } from "@/providers/Game";
+import { useGame } from "@/providers/Game";
 import { FC, useEffect } from "react";
 
 interface PageProps {
@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 const Page: FC<PageProps> = ({ params }) => {
-  const { setGameId } = useLiveGame();
+  const { setGameId } = useGame();
   useEffect(() => {
     setGameId(params.id);
   }, [params, setGameId]);
