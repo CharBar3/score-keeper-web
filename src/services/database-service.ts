@@ -166,9 +166,9 @@ export class DatabaseService {
           role: Role.Owner,
           notes: "",
           score: 0,
+          isGuest: false,
         },
       ],
-      guestPlayers: [],
     };
 
     await setDoc(newGameRef, newGame);
