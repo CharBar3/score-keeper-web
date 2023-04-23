@@ -46,7 +46,6 @@ const PlayerCard: FC<PlayerCardProps> = ({ player }) => {
   };
 
   const handleChangeScore = () => {
-    console.log("score action " + scoreAction);
     try {
       if (scoreAction === Action.Increase) {
         increaseScore(player.id, inputNumber);

@@ -8,7 +8,6 @@ const Friends: FC<FriendsProps> = () => {
   return (
     <div>
       <FriendsList canRemoveFriend={true} />
-      <FriendSearch />
     </div>
   );
 };
