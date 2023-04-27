@@ -23,7 +23,7 @@ interface GameListProps {}
 const GameList: FC<GameListProps> = () => {
   const { showToast } = useToast();
   const { gameList, getFriends } = useDataStore();
-  const [isPending, startTransition] = useTransition();
+  // const [isPending, startTransition] = useTransition();
   const [gameFilter, setGameFilter] = useState<string>("");
 
   let showGames = null;
@@ -33,11 +33,11 @@ const GameList: FC<GameListProps> = () => {
       .filter(({ title }) =>
         title.toLowerCase().includes(gameFilter.toLowerCase())
       )
-      .map(({ id, title, info }) => {
+      .map(({ id, title, playerIds, color }) => {
         return (
-          <Grid key={id} xs={6} sm={6} md={6} lg={6} xl={6}>
+          <Grid key={id} xs={6} sm={6} md={6} lg={4} xl={4}>
             <Link href={`dashboard/game/${id}`}>
-              <GameCard key={id} title={title} />
+              <GameCard title={title} playerIds={playerIds} color={color} />
             </Link>
           </Grid>
         );
@@ -45,13 +45,13 @@ const GameList: FC<GameListProps> = () => {
   }
 
   const filterGames = (searchTerm: string | null) => {
-    startTransition(() => {
-      if (searchTerm) {
-        setGameFilter(searchTerm);
-      } else {
-        setGameFilter("");
-      }
-    });
+    // startTransition(() => {
+    if (searchTerm) {
+      setGameFilter(searchTerm);
+    } else {
+      setGameFilter("");
+    }
+    // });
   };
 
   return (
@@ -63,7 +63,7 @@ const GameList: FC<GameListProps> = () => {
       />
       <Grid
         container
-        spacing={{ xs: 1, sm: 2, md: 4, lg: 4 }}
+        spacing={{ xs: 2, sm: 2, md: 4, lg: 4 }}
         sx={{
           margin: "auto",
           maxWidth: "1536px",

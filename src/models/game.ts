@@ -7,14 +7,17 @@ export interface Game {
   ownerId: string;
   playerIds: string[];
   players: Player[];
+  color: Color;
 }
 
-export type GamePreview = Omit<
-  Game,
-  "ownerId" | "playerIds" | "players" | "guestPlayers"
->;
+export interface Color {
+  red: number;
+  green: number;
+  blue: number;
+  // alpha: number;
+}
 
 export type GameCreateParams = Omit<
   Game,
-  "id" | "ownerId" | "playerIds" | "players" | "guestPlayers"
+  "id" | "ownerId" | "playerIds" | "players" | "guestPlayers" | "color"
 >;

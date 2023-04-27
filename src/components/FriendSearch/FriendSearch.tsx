@@ -27,7 +27,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import SearchIcon from "../../../public/updated/Magnifying_glass_icon-09.svg";
 import PlusIcon from "../../../public/icons/plus_sign_icon.svg";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -175,7 +174,8 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
       />
 
       <Divider />
-      {isSearching ? <h1>Loading...</h1> : showSearchResults}
+      {isSearching && <h1>Loading...</h1>}
+      {showSearchResults}
     </Stack>
   );
 };
