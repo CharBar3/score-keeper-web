@@ -18,6 +18,9 @@ declare module "@mui/material/Button" {
 
 export const theme = responsiveFontSizes(
   createTheme({
+    // breakpoints: {
+    //   down: []
+    // },
     palette: {
       primary: {
         main: "#787D8C",
@@ -32,7 +35,7 @@ export const theme = responsiveFontSizes(
       MuiStack: {
         defaultProps: {
           sx: {
-            maxWidth: { sm: "600px", md: "700px", lg: "800px" },
+            maxWidth: { sm: "600px", md: "800px", lg: "1000px", xl: "1200px" },
             width: "100%",
             margin: "auto",
             // backgroundColor: "blue",

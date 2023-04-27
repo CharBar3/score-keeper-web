@@ -1,15 +1,32 @@
 import { db } from "@/config/firebase";
-import { GuestPlayerCreateParams, Player, Role } from "@/models";
+import {
+  Game,
+  GameCreateParams,
+  GuestPlayerCreateParams,
+  Player,
+  Role,
+  User,
+} from "@/models";
+import { green } from "@mui/material/colors";
 import {
   arrayUnion,
+  collection,
   doc,
   getDoc,
+  setDoc,
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
 import uniqid from "uniqid";
 
 export class GameService {
+  public static addGameToUserGames = async (userId: string, gameId: string) => {
+    const ref = await doc(db, "users", userId);
+    await updateDoc(ref, {
+      games: arrayUnion(gameId),
+    });
+  };
+
   public static addPlayer = async (
     gameId: string,
     friendId: string,
@@ -102,5 +119,50 @@ export class GameService {
     } else {
       console.log("no player exists");
     }
+  };
+  public static createUserGame = async (
+    user: User,
+    gameInfo: GameCreateParams
+  ): Promise<void> => {
+    const newGameRef = doc(collection(db, "games"));
+
+    const color = this.colorGenerator();
+
+    const newGame: Game = {
+      id: newGameRef.id,
+      title: gameInfo.title,
+      info: gameInfo.info,
+      ownerId: user.id,
+      playerIds: [user.id],
+      color: color,
+      players: [
+        {
+          id: user.id,
+          name: user.username,
+          role: Role.Owner,
+          notes: "",
+          score: 0,
+          isGuest: false,
+        },
+      ],
+    };
+
+    await setDoc(newGameRef, newGame);
+
+    await this.addGameToUserGames(user.id, newGameRef.id);
+  };
+
+  public static colorGenerator = () => {
+    const randomNumber = () => {
+      return Math.floor(Math.random() * 256);
+    };
+
+    return {
+      red: randomNumber(),
+      green: randomNumber(),
+      blue: randomNumber(),
+    };
+
+    // return `rgb(${randomNumber()}, ${randomNumber()}, ${randomNumber()})`;
   };
 }

@@ -1,5 +1,5 @@
 import { InputBase, styled } from "@mui/material";
-import SearchIcon from "../../../public/updated/Magnifying_glass_icon-09.svg";
+import SearchIcon from "../../../public/icons/Magnifying_glass_icon-09.svg";
 import { theme } from "../../config/theme";
 
 const StyledSearchBox = styled("div")(({ theme }) => ({
@@ -49,7 +49,7 @@ interface SearchInputProps {
   placeholder: string;
   onChangeSearch: (value: string | null) => void;
   debounce: number | null;
-  setIsSearching: React.Dispatch<React.SetStateAction<boolean>> | null;
+  setIsSearching?: React.Dispatch<React.SetStateAction<boolean>> | null;
   // Leaving this as an example for how i'd implement
   // searching on click of the search icon
   // onClickSearch?: (value: string) => void;
@@ -73,9 +73,7 @@ const SearchBar: FC<SearchInputProps> = ({
     let searchTimer: NodeJS.Timeout | undefined;
 
     if (debounce && setIsSearching) {
-      if (searchString && searchString != "") {
-        setIsSearching(true);
-      }
+      setIsSearching(true);
       searchTimer = setTimeout(() => {
         onChangeSearch(searchString);
       }, debounce);

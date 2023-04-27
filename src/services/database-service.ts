@@ -18,7 +18,6 @@ import {
   Friend,
   Game,
   GameCreateParams,
-  GamePreview,
   GuestPlayerCreateParams,
   Role,
   User,
@@ -128,8 +127,8 @@ export class DatabaseService {
 
   public static fetchUserGames = async (
     userId: string
-  ): Promise<GamePreview[] | []> => {
-    const games: GamePreview[] = [];
+  ): Promise<Game[] | []> => {
+    const games: Game[] = [];
     const q = query(
       collection(db, "games"),
       where("playerIds", "array-contains", userId)
@@ -139,48 +138,16 @@ export class DatabaseService {
       const document = doc.data();
       const game = {
         id: document.id,
-        info: document.info,
         title: document.title,
+        info: document.info,
+        ownerId: document.ownerId,
+        playerIds: document.playerIds,
+        players: document.playerIds,
+        color: document.color,
       };
       games.push(game);
     });
     return games;
-  };
-
-  public static createUserGame = async (
-    user: User,
-    gameInfo: GameCreateParams
-  ): Promise<void> => {
-    const newGameRef = doc(collection(db, "games"));
-
-    const newGame: Game = {
-      id: newGameRef.id,
-      title: gameInfo.title,
-      info: gameInfo.info,
-      ownerId: user.id,
-      playerIds: [user.id],
-      players: [
-        {
-          id: user.id,
-          name: user.username,
-          role: Role.Owner,
-          notes: "",
-          score: 0,
-          isGuest: false,
-        },
-      ],
-    };
-
-    await setDoc(newGameRef, newGame);
-
-    await this.addGameToUserGames(user.id, newGameRef.id);
-  };
-
-  public static addGameToUserGames = async (userId: string, gameId: string) => {
-    const ref = await doc(db, "users", userId);
-    await updateDoc(ref, {
-      games: arrayUnion(gameId),
-    });
   };
 
   public static findFriendByUsername = async (

@@ -1,9 +1,10 @@
 "use client";
 
-import { Friend, User, GamePreview, GameCreateParams } from "../models";
+import { Friend, User, GameCreateParams, Game } from "../models";
 import { db } from "@/config/firebase";
 import { useAuth } from "@/providers/Auth";
 import { DatabaseService } from "@/services/database-service";
+import { GameService } from "@/services/game-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
   FC,
@@ -18,7 +19,7 @@ import {
 interface DataStoreContextProps {
   user: User | null;
   friendsList: Array<Friend> | null;
-  gameList: Array<GamePreview> | null;
+  gameList: Array<Game> | null;
   getFriends: () => Promise<void>;
   getGames: () => Promise<void>;
   addFriend: (friendId: string) => Promise<void>;
@@ -63,7 +64,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
   const [user, setUser] = useState<User | null>(null);
 
   const [friendsList, setFriendsList] = useState<Array<Friend> | null>(null);
-  const [gameList, setGameList] = useState<Array<GamePreview> | null>(null);
+  const [gameList, setGameList] = useState<Array<Game> | null>(null);
 
   const getFriends = useCallback(async () => {
     if (!user) {
@@ -105,7 +106,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
         return;
       }
       try {
-        await DatabaseService.createUserGame(user, newGame);
+        await GameService.createUserGame(user, newGame);
       } catch (error) {
         console.log(error);
       }

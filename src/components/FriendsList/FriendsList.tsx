@@ -13,8 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import { FC } from "react";
-import minusIcon from "../../../public/icons/minus_sign_icon.svg";
-import Image from "next/image";
 import MinusIcon from "../../../public/icons/minus_sign_icon.svg";
 
 interface FriendsListProps {
