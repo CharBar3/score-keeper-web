@@ -17,9 +17,19 @@ import {
   styled,
 } from "@mui/material";
 import Image from "next/image";
-import { FC, Fragment, useEffect, useState } from "react";
-import searchIcon from "../../../public/icons/magnifying_glass_icon.svg";
-import plusIcon from "../../../public/icons/plus_sign_icon.svg";
+import {
+  ChangeEvent,
+  FC,
+  FormEvent,
+  Fragment,
+  Suspense,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import SearchIcon from "../../../public/updated/Magnifying_glass_icon-09.svg";
+import PlusIcon from "../../../public/icons/plus_sign_icon.svg";
+import SearchBar from "../SearchBar/SearchBar";
 
 interface SearchAddFriendProps {}
 
@@ -30,7 +40,6 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
   display: "flex",
   justifyContent: "space-between",
-  marginBottom: theme.spacing(1),
   // backgroundColor: alpha(theme.palette.common.white, 0.15),
   // "&:hover": {
   //   backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -56,8 +65,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
 
   "& .MuiInputBase-input": {
+    border: "3px solid red",
     display: "flex",
     width: "unset",
+    color: "black",
     flexGrow: 1,
     paddingLeft: theme.spacing(2),
   },
@@ -66,17 +77,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const FriendSearch: FC<SearchAddFriendProps> = () => {
   const { user, friendsList, addFriend, findFriend } = useDataStore();
   const { showToast } = useToast();
-
-  const [searchWord, setSearchWord] = useState("");
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleClick = async () => {
-    try {
-      setSearchResults(await findFriend(searchWord));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleSearch = useCallback(
+    async (searchTerm: string | null) => {
+      try {
+        if (searchTerm) {
+          setSearchResults(await findFriend(searchTerm));
+        } else {
+          setSearchResults(null);
+        }
+        setIsSearching(false);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [findFriend]
+  );
 
   const handleAddFriend = async (newFriendId: string) => {
     try {
@@ -111,12 +129,13 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
             variant="actionButton"
             onClick={() => handleAddFriend(id)}
           >
-            <Image
+            {/* <Image
               src={plusIcon}
               width={27}
               height={27}
               alt="add friend icon"
-            />
+            /> */}
+            <PlusIcon width="27px" height="27px" />
           </Button>
         </ListItem>
         <Divider />
@@ -130,20 +149,33 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
 
   return (
     <Stack>
-      <Search>
+      {/* <Search
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setSearchWord(e.target.value)
+        }
+        onClick={() => {
+          console.log("yeet");
+        }}
+      >
         <StyledInputBase
           placeholder="SEARCH FOR FRIENDS!"
           sx={{ fontSize: "20pt", color: "#999999" }}
           inputProps={{ "aria-label": "search" }}
-          onChange={(e) => setSearchWord(e.target.value)}
+          name="input"
         />
         <SearchIconWrapper onClick={() => handleClick()}>
-          {/* <SearchIcon /> */}
-          <Image src={searchIcon} width={27} height={27} alt="search icon" />
+          <SearchIcon color="red" height="80%" />
         </SearchIconWrapper>
-      </Search>
+      </Search> */}
+      <SearchBar
+        placeholder="Find Friends"
+        onChangeSearch={handleSearch}
+        debounce={1000}
+        setIsSearching={setIsSearching}
+      />
+
       <Divider />
-      {showSearchResults}
+      {isSearching ? <h1>Loading...</h1> : showSearchResults}
     </Stack>
   );
 };

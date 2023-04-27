@@ -4,76 +4,74 @@ import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
 import {
   Box,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
+  InputBase,
+  Stack,
+  TextField,
   Typography,
+  styled,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import Image from "next/image";
+import plusIcon from "../../../public/icons/plus_sign_icon.svg";
+import { FC, useState, useTransition } from "react";
+import GameCard from "../GameCard/GameCard";
 import Link from "next/link";
-import { FC } from "react";
+import SearchBar from "../SearchBar/SearchBar";
 
 interface GameListProps {}
 
 const GameList: FC<GameListProps> = () => {
-  const { gameList, getFriends } = useDataStore();
   const { showToast } = useToast();
+  const { gameList, getFriends } = useDataStore();
+  const [isPending, startTransition] = useTransition();
+  const [gameFilter, setGameFilter] = useState<string>("");
 
   let showGames = null;
 
-  // if (gameList) {
-  //   showGames = gameList.map(({ id, title, info }) => {
-  //     return (
-  //       <div key={id}>
-  //         <ListItem>
-  //           <ListItemText primary={title} />
-  //           <Link href={`dashboard/games/${id}`}>
-  //             <Button variant="text">Play Game!</Button>
-  //           </Link>
-  //         </ListItem>
-  //         <Divider />
-  //       </div>
-  //     );
-  //   });
-  // }
-
   if (gameList) {
-    showGames = gameList.map(({ id, title, info }) => {
-      return (
-        <Box
-          key={id}
-          sx={{
-            border: "5px solid orange",
-            borderRadius: "7px",
-            width: "130px",
-            height: "140px",
-            boxShadow: "0px 20px 0px darkorange",
-            marginBottom: "20px",
-          }}
-        >
-          <Typography>{title}</Typography>
-          <Typography>{info}</Typography>
-        </Box>
-      );
-    });
+    showGames = gameList
+      .filter(({ title }) =>
+        title.toLowerCase().includes(gameFilter.toLowerCase())
+      )
+      .map(({ id, title, info }) => {
+        return (
+          <Grid key={id} xs={6} sm={6} md={6} lg={6} xl={6}>
+            <Link href={`dashboard/game/${id}`}>
+              <GameCard key={id} title={title} />
+            </Link>
+          </Grid>
+        );
+      });
   }
 
+  const filterGames = (searchTerm: string | null) => {
+    startTransition(() => {
+      if (searchTerm) {
+        setGameFilter(searchTerm);
+      } else {
+        setGameFilter("");
+      }
+    });
+  };
+
   return (
-    <Box
-      sx={{
-        // maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
-        width: "100%",
-        // margin: "auto",
-      }}
-    >
-      <Typography variant="h2">GameList</Typography>
-      {/* <List>
-        <Divider key={1} />
-        {showGames ? showGames : <>loading</>}
-      </List> */}
-      {showGames ? showGames : <>loading</>}
-    </Box>
+    <Stack spacing={1}>
+      <SearchBar
+        placeholder="Search Games"
+        onChangeSearch={filterGames}
+        debounce={null}
+      />
+      <Grid
+        container
+        spacing={{ xs: 1, sm: 2, md: 4, lg: 4 }}
+        sx={{
+          margin: "auto",
+          maxWidth: "1536px",
+        }}
+      >
+        {showGames}
+      </Grid>
+    </Stack>
   );
 };
 

@@ -15,6 +15,7 @@ import {
 import { FC } from "react";
 import minusIcon from "../../../public/icons/minus_sign_icon.svg";
 import Image from "next/image";
+import MinusIcon from "../../../public/icons/minus_sign_icon.svg";
 
 interface FriendsListProps {
   canRemoveFriend: boolean;
@@ -51,12 +52,7 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
                 variant="actionButton"
                 onClick={() => handleClick(id)}
               >
-                <Image
-                  src={minusIcon}
-                  width={27}
-                  height={27}
-                  alt="remove friend icon"
-                />
+                <MinusIcon width="27px" height="27px" />
               </Button>
             )}
           </ListItem>
