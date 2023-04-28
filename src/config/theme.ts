@@ -5,22 +5,24 @@ import { createTheme, responsiveFontSizes } from "@mui/material";
 //   }
 // }
 
-declare module "@mui/material/Paper" {
-  interface PaperPropsVariantOverrides {
-    playerCard: true;
+declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xxs: true;
   }
 }
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     actionButton: true;
+    customStyle: true;
   }
 }
 
 export const theme = responsiveFontSizes(
   createTheme({
-    // breakpoints: {
-    //   down: []
-    // },
+    breakpoints: {
+      keys: ["xxs", "xs", "sm", "md", "lg", "xl"],
+      values: { xxs: 0, xs: 400, sm: 600, md: 900, lg: 1200, xl: 1536 },
+    },
     palette: {
       primary: {
         main: "#787D8C",
@@ -58,20 +60,19 @@ export const theme = responsiveFontSizes(
               // },
             },
           },
-          // {
-          //   props: { variant: "text" },
-          //   style: {
-          //     backgroundColor: "#EBEBEB",
-          //     color: "#5A5A5A",
-          //     fontSize: "15pt",
-          //     borderRadius: "8px",
-          //     paddingTop: "10px",
-          //     paddingBottom: "10px",
-          //     // "&:hover": {
-          //     //   backgroundColor: "black",
-          //     // },
-          //   },
-          // },
+          {
+            props: { variant: "customStyle" },
+            style: {
+              backgroundColor: "#C0C5CA",
+              color: "#9A9FA4",
+              display: "flex",
+              flexGrow: 1,
+              height: "25px",
+              boxShadow: "0px 3px #9A9FA4",
+              // marginBottom: "3px",
+              minWidth: "unset",
+            },
+          },
         ],
       },
       MuiDivider: {
@@ -102,14 +103,6 @@ export const theme = responsiveFontSizes(
       //       variant: "outlined",
       //       style: {},
       //     },
-      //   },
-      //   MuiCard: {
-      //     variants: [
-      //       {
-      //         props: { variant: "playerCard" },
-      //         style: { backgroundColor: "red", maxWidth: "400px" },
-      //       },
-      //     ],
       //   },
     },
   })

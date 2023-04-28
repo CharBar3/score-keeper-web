@@ -1,3 +1,4 @@
+import { Color } from "./game";
 import { Role } from "./role";
 
 export interface Player {
@@ -7,6 +8,7 @@ export interface Player {
   score: number;
   notes: string;
   isGuest: boolean;
+  color: Color;
 }
 
 export type GuestPlayerCreateParams = Omit<Player, "id">;
