@@ -26,7 +26,7 @@ const Nav: FC<NavProps> = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, marginBottom: 3 }}>
       <AppBar position="static" variant="elevation">
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
@@ -45,6 +45,12 @@ const Nav: FC<NavProps> = () => {
             <Box>
               <Link href="/dashboard">
                 <Button color="inherit">Dashboard</Button>
+              </Link>
+              <Link href="/dashboard/newgame">
+                <Button color="inherit">New Game</Button>
+              </Link>
+              <Link href="/dashboard/friends">
+                <Button color="inherit">Friends</Button>
               </Link>
               <Button color="inherit" onClick={() => handleLogout()}>
                 Log Out

@@ -72,8 +72,7 @@ const SearchBar: FC<SearchInputProps> = ({
   useEffect(() => {
     let searchTimer: NodeJS.Timeout | undefined;
 
-    if (debounce && setIsSearching) {
-      setIsSearching(true);
+    if (debounce) {
       searchTimer = setTimeout(() => {
         onChangeSearch(searchString);
       }, debounce);
@@ -85,7 +84,7 @@ const SearchBar: FC<SearchInputProps> = ({
         clearTimeout(searchTimer);
       }
     };
-  }, [searchString, onChangeSearch, debounce, setIsSearching]);
+  }, [searchString, onChangeSearch, debounce]);
 
   return (
     <StyledSearchBox>
@@ -93,7 +92,13 @@ const SearchBar: FC<SearchInputProps> = ({
         placeholder={placeholder}
         inputProps={{ "aria-label": "search" }}
         onChange={(e) => {
-          setSearchString(e.currentTarget.value);
+          const searchInput = e.currentTarget.value;
+          if (setIsSearching) {
+            setIsSearching(true);
+          }
+
+          setSearchString(searchInput);
+
           // if (onChangeSearch) {
           // onChangeSearch(e.currentTarget.value);
           // }

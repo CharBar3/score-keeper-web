@@ -12,26 +12,40 @@ const FriendNav: FC<FriendNavProps> = () => {
 
   if (pathname === "/dashboard/friends") {
     return (
-      <div>
+      <div
+        style={{
+          marginBottom: "16px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <ButtonGroup variant="contained">
           <Link href="/dashboard/friends">
-            <Button sx={{ backgroundColor: "red" }}>My Friends</Button>
+            <Button>My Friends</Button>
           </Link>
           <Link href="/dashboard/friends/add">
-            <Button>Add New Friends</Button>
+            <Button sx={{ backgroundColor: "lightGrey" }}>
+              Add New Friends
+            </Button>
           </Link>
         </ButtonGroup>
       </div>
     );
   } else {
     return (
-      <div>
+      <div
+        style={{
+          marginBottom: "16px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <ButtonGroup variant="contained">
           <Link href="/dashboard/friends">
-            <Button>My Friends</Button>
+            <Button sx={{ backgroundColor: "lightGrey" }}>My Friends</Button>
           </Link>
           <Link href="/dashboard/friends/add">
-            <Button sx={{ backgroundColor: "red" }}>Add New Friends</Button>
+            <Button>Add New Friends</Button>
           </Link>
         </ButtonGroup>
       </div>

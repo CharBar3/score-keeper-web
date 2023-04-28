@@ -35,7 +35,7 @@ const GameList: FC<GameListProps> = () => {
       )
       .map(({ id, title, playerIds, color }) => {
         return (
-          <Grid key={id} xs={6} sm={6} md={6} lg={4} xl={4}>
+          <Grid key={id} xxs={6} xs={6} sm={6} md={6} lg={4} xl={4}>
             <Link href={`dashboard/game/${id}`}>
               <GameCard title={title} playerIds={playerIds} color={color} />
             </Link>
@@ -63,7 +63,7 @@ const GameList: FC<GameListProps> = () => {
       />
       <Grid
         container
-        spacing={{ xs: 2, sm: 2, md: 4, lg: 4 }}
+        spacing={{ xxs: 1, xs: 2, sm: 2, md: 4, lg: 4 }}
         sx={{
           margin: "auto",
           maxWidth: "1536px",

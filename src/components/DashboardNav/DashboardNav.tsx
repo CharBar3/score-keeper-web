@@ -9,20 +9,13 @@ interface DashboardNavProps {}
 const DashboardNav: FC<DashboardNavProps> = () => {
   return (
     <div>
-      <Link href="/dashboard/newgame">
+      {/* <Link href="/dashboard/newgame">
         <Button variant="contained">New Game!</Button>
       </Link>
       <Link href="/dashboard/friends">
         <Button variant="contained">Add Friend</Button>
-      </Link>
+      </Link> */}
     </div>
-    // <Paper>
-    //   <MenuList>
-    //     <MenuItem>New Game</MenuItem>
-    //     <MenuItem>My Games</MenuItem>
-    //     <MenuItem>Logout</MenuItem>
-    //   </MenuList>
-    // </Paper>
   );
 };
 

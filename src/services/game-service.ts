@@ -53,6 +53,7 @@ export class GameService {
       role: Role.Edit,
       score: 0,
       isGuest: false,
+      color: this.colorGenerator(),
     };
 
     const gameRef = doc(db, "games", gameId);
@@ -143,6 +144,7 @@ export class GameService {
           notes: "",
           score: 0,
           isGuest: false,
+          color: this.colorGenerator(),
         },
       ],
     };

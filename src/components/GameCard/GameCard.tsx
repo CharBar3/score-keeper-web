@@ -22,7 +22,7 @@ interface GameCardProps {
 
 const GameCard: FC<GameCardProps> = ({ title, playerIds, color }) => {
   const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
-  const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .8)`;
+  const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .7)`;
 
   const StyledGameCard = styled("div")(({ theme }) => ({
     borderColor: borderColor,
