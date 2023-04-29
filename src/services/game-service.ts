@@ -1,9 +1,12 @@
 import { db } from "@/config/firebase";
 import {
+  Color,
+  Friend,
   Game,
   GameCreateParams,
   GuestPlayerCreateParams,
   Player,
+  PlayerAddParams,
   Role,
   User,
 } from "@/models";
@@ -20,12 +23,15 @@ import {
 import uniqid from "uniqid";
 
 export class GameService {
-  public static addGameToUserGames = async (userId: string, gameId: string) => {
-    const ref = await doc(db, "users", userId);
-    await updateDoc(ref, {
-      games: arrayUnion(gameId),
-    });
-  };
+  // public static addGameToUsersGames = async (
+  //   gameId: string,
+  //   playerIds: string[]
+  // ) => {
+  //   const ref = await doc(db, "users", userId);
+  //   await updateDoc(ref, {
+  //     games: arrayUnion(gameId),
+  //   });
+  // };
 
   public static addPlayer = async (
     gameId: string,
@@ -52,7 +58,6 @@ export class GameService {
       notes: "",
       role: Role.Edit,
       score: 0,
-      isGuest: false,
       color: this.colorGenerator(),
     };
 
@@ -122,39 +127,76 @@ export class GameService {
     }
   };
   public static createUserGame = async (
-    user: User,
-    gameInfo: GameCreateParams
+    title: string,
+    info: string,
+    owner: User,
+    players: PlayerAddParams[],
+    playerIds: string[],
+    color: Color
   ): Promise<void> => {
     const newGameRef = doc(collection(db, "games"));
 
-    const color = this.colorGenerator();
+    playerIds.push(owner.id);
+
+    const processedPlayers: Player[] = [
+      {
+        id: owner.id,
+        name: owner.username,
+        role: Role.Owner,
+        notes: "",
+        score: 0,
+        color: this.colorGenerator(),
+      },
+    ];
+
+    for (const player of players) {
+      processedPlayers.push({
+        id: player.id,
+        name: player.name,
+        role: player.role,
+        notes: "",
+        score: 0,
+        color: this.colorGenerator(),
+      });
+    }
+
+    // for (const guestPlayer of guestPlayers) {
+    //   players.push({
+    //     id: uniqid(),
+    //     name: guestPlayer,
+    //     role: Role.Guest,
+    //     score: 0,
+    //     notes: "",
+    //     color: this.colorGenerator(),
+    //   });
+    // }
 
     const newGame: Game = {
       id: newGameRef.id,
-      title: gameInfo.title,
-      info: gameInfo.info,
-      ownerId: user.id,
-      playerIds: [user.id],
+      title: title,
+      info: info,
+      ownerId: owner.id,
+      playerIds: playerIds,
+      players: processedPlayers,
       color: color,
-      players: [
-        {
-          id: user.id,
-          name: user.username,
-          role: Role.Owner,
-          notes: "",
-          score: 0,
-          isGuest: false,
-          color: this.colorGenerator(),
-        },
-      ],
     };
 
-    await setDoc(newGameRef, newGame);
+    const batch = writeBatch(db);
 
-    await this.addGameToUserGames(user.id, newGameRef.id);
+    batch.set(newGameRef, newGame);
+    // await setDoc(newGameRef, newGame);
+
+    for (const playerId of playerIds) {
+      const ref = doc(db, "users", playerId);
+      batch.update(ref, {
+        games: arrayUnion(newGameRef.id),
+      });
+    }
+
+    await batch.commit();
   };
 
-  public static colorGenerator = () => {
+  public static colorGenerator = (): Color => {
     const randomNumber = () => {
       return Math.floor(Math.random() * 256);
     };
