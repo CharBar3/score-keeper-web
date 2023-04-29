@@ -7,9 +7,10 @@ export interface Player {
   role: Role;
   score: number;
   notes: string;
-  isGuest: boolean;
   color: Color;
 }
+
+export type PlayerAddParams = Omit<Player, "score" | "notes" | "color">;
 
 export type GuestPlayerCreateParams = Omit<Player, "id">;
 export type AddPlayerParams = Omit<Player, "id" | "name" | "score" | "notes">;

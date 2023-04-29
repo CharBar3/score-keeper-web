@@ -1,6 +1,13 @@
 "use client";
 
-import { Friend, User, GameCreateParams, Game } from "../models";
+import {
+  Friend,
+  User,
+  GameCreateParams,
+  Game,
+  PlayerAddParams,
+  Color,
+} from "../models";
 import { db } from "@/config/firebase";
 import { useAuth } from "@/providers/Auth";
 import { DatabaseService } from "@/services/database-service";
@@ -24,8 +31,15 @@ interface DataStoreContextProps {
   getGames: () => Promise<void>;
   addFriend: (friendId: string) => Promise<void>;
   removeFriend: (friendId: string) => Promise<void>;
-  createGame: (newGame: GameCreateParams) => Promise<void>;
+  createGame: (
+    title: string,
+    info: string,
+    players: PlayerAddParams[],
+    playerIds: string[],
+    color: Color
+  ) => Promise<void>;
   findFriend: (username: string) => Promise<Friend[] | []>;
+  generateRandomColor: () => Color;
 }
 
 const DataStoreContext = createContext<DataStoreContextProps>({
@@ -50,6 +64,10 @@ const DataStoreContext = createContext<DataStoreContextProps>({
   findFriend: async () => {
     console.log("Error: Function not added to value prop");
     return [];
+  },
+  generateRandomColor: () => {
+    console.log("Error: Function not added to value prop");
+    return {} as Color;
   },
 });
 
@@ -100,13 +118,31 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
     [user]
   );
 
+  const generateRandomColor = useCallback(() => {
+    const color = GameService.colorGenerator();
+    return color;
+  }, []);
+
   const createGame = useCallback(
-    async (newGame: GameCreateParams) => {
+    async (
+      title: string,
+      info: string,
+      players: PlayerAddParams[],
+      playerIds: string[],
+      color: Color
+    ) => {
       if (!user) {
         return;
       }
       try {
-        await GameService.createUserGame(user, newGame);
+        await GameService.createUserGame(
+          title,
+          info,
+          user,
+          players,
+          playerIds,
+          color
+        );
       } catch (error) {
         console.log(error);
       }
@@ -162,6 +198,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
         addFriend,
         createGame,
         findFriend,
+        generateRandomColor,
       }}
     >
       {children}

@@ -3,4 +3,5 @@ export enum Role {
   Admin = "admin",
   Edit = "edit",
   View = "view",
+  Guest = "guest",
 }
