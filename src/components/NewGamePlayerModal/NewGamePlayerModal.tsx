@@ -46,7 +46,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
     setOpen(false);
   };
 
-  const handleClick = async (friendId: string, friendUsername: string) => {
+  const handleAddPlayer = async (friendId: string, friendUsername: string) => {
     const newPlayer: Player = {
       id: friendId,
       name: friendUsername,
@@ -78,7 +78,10 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
         <Fragment key={id}>
           <ListItem>
             <ListItemText primary={username} />
-            <Button variant="text" onClick={() => handleClick(id, username)}>
+            <Button
+              variant="text"
+              onClick={() => handleAddPlayer(id, username)}
+            >
               add to game
             </Button>
           </ListItem>
@@ -117,6 +120,8 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                     const newState = [...prevState, newGuestPlayer];
                     return newState;
                   });
+                  setGuestName("");
+                  e.currentTarget.guestName.value = "";
                 } else {
                   console.log("please input a guest name");
                 }
@@ -126,7 +131,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                 <TextField
                   id="outlined-basic"
                   label="Guest Player Name"
-                  name="name"
+                  name="guestName"
                   variant="outlined"
                   onChange={(e) => setGuestName(e.currentTarget.value)}
                 />
