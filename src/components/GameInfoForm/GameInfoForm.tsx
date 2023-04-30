@@ -1,6 +1,6 @@
 "use client";
 
-import { Color, Player, PlayerAddParams, Role } from "@/models";
+import { Color, Player, Role } from "@/models";
 import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
@@ -32,32 +32,31 @@ import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
 import { useGame } from "@/providers/Game";
 
-interface CreateGameFormProps {
-  gameId?: string;
+interface GameInfoFormProps {
+  gameTitle?: string;
+  gameInfo?: string;
+  gamePlayers?: Player[];
+  gamePlayerIds?: string[];
+  gameColor: Color;
 }
 
-const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
-  const { setGameId, liveGame } = useGame();
-  useEffect(() => {
-    if (gameId) {
-      setGameId(gameId);
-    }
-  }, [gameId, setGameId]);
+const GameInfoForm: FC<GameInfoFormProps> = ({
+  gameTitle = "",
+  gameInfo = "",
+  gamePlayers = [],
+  gamePlayerIds = [],
+  gameColor,
+}) => {
+  const { user, createGame } = useDataStore();
+  const { liveGame, updateGame, deleteGame } = useGame();
 
-  const { generateRandomColor } = useDataStore();
-
-  const { fireUser: user } = useAuth();
-  const { createGame } = useDataStore();
   const { showToast } = useToast();
 
-  if (gameId) {
-  } else {
-  }
-  const [title, setTitle] = useState("");
-  const [info, setInfo] = useState("");
-  const [players, setPlayers] = useState<PlayerAddParams[] | Player[]>([]);
-  const [playerIds, setPlayerIds] = useState<string[]>([]);
-  const [color, setColor] = useState<Color>(generateRandomColor());
+  const [title, setTitle] = useState(gameTitle);
+  const [info, setInfo] = useState(gameInfo);
+  const [players, setPlayers] = useState(gamePlayers);
+  const [playerIds, setPlayerIds] = useState(gamePlayerIds);
+  const [color, setColor] = useState<Color>(gameColor);
 
   const handleCreateGame = async () => {
     if (!user) {
@@ -66,6 +65,19 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
 
     try {
       await createGame(title, info, players, playerIds, color);
+      showToast("Game succesfully created!", "success");
+    } catch (error) {
+      showToast("Failed to create game!", "error");
+    }
+  };
+
+  const handleUpdateGame = async () => {
+    if (!user || !liveGame) {
+      return;
+    }
+
+    try {
+      await updateGame(liveGame.id, title, info, players, playerIds, color);
       showToast("Game succesfully created!", "success");
     } catch (error) {
       showToast("Failed to create game!", "error");
@@ -92,6 +104,17 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
         }
       }
 
+      return newState;
+    });
+
+    setPlayerIds((prevState) => {
+      const newState = [];
+
+      for (const playerId of prevState) {
+        if (playerId != id) {
+          newState.push(playerId);
+        }
+      }
       return newState;
     });
   };
@@ -133,7 +156,7 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
           <ListItemText primary={name} />
           <ColorDialog color={color} setColor={setPlayerColor} />
           <Box sx={{ minWidth: 120 }}>
-            {role != Role.Guest ? (
+            {role != Role.Guest && role != Role.Owner ? (
               <FormControl fullWidth>
                 <InputLabel>Role</InputLabel>
                 <Select
@@ -144,7 +167,6 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
                   <MenuItem value={Role.Admin}>Admin</MenuItem>
                   <MenuItem value={Role.Edit}>Edit</MenuItem>
                   <MenuItem value={Role.View}>View</MenuItem>
-                  {/* <MenuItem value={Role.Guest}>Guest</MenuItem> */}
                 </Select>
               </FormControl>
             ) : (
@@ -160,67 +182,14 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
     );
   });
 
-  if (liveGame) {
-    showPlayers = liveGame.players.map(({ id, name, role, color }, index) => {
-      const setPlayerColor = (newColor: Color) => {
-        setPlayers((prevState) => {
-          const newState = [];
-
-          for (const player of prevState) {
-            if (player.id == id) {
-              player.color = newColor;
-            }
-            newState.push(player);
-          }
-
-          return newState;
-        });
-      };
-
-      return (
-        <Fragment key={id}>
-          <ListItem>
-            <ListItemText primary={name} />
-            <ColorDialog color={color} setColor={setPlayerColor} />
-            <Box sx={{ minWidth: 120 }}>
-              {role != Role.Guest && role != Role.Owner ? (
-                <FormControl fullWidth>
-                  <InputLabel>Role</InputLabel>
-                  <Select
-                    value={role}
-                    label="Role"
-                    onChange={(e) => handlePickRole(e, id)}
-                  >
-                    <MenuItem value={Role.Admin}>Admin</MenuItem>
-                    <MenuItem value={Role.Edit}>Edit</MenuItem>
-                    <MenuItem value={Role.View}>View</MenuItem>
-                    {/* <MenuItem value={Role.Guest}>Guest</MenuItem> */}
-                  </Select>
-                </FormControl>
-              ) : (
-                <Typography>{role}</Typography>
-              )}
-            </Box>
-            <Button variant="contained" onClick={() => handleRemovePlayer(id)}>
-              Remove
-            </Button>
-          </ListItem>
-          <Divider />
-        </Fragment>
-      );
-    });
-  }
-
   return (
     <Stack spacing={1}>
-      <Typography variant="h1">
-        {gameId ? <>Update Game</> : <>New Game</>}
-      </Typography>
       <TextField
         id="outlined-basic"
         label="Title"
         name="Title"
         variant="outlined"
+        defaultValue={title}
         onChange={(e) => handleChange(e)}
       />
       <TextField
@@ -228,6 +197,7 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
         label="Info"
         name="Info"
         variant="outlined"
+        defaultValue={info}
         onChange={(e) => handleChange(e)}
       />
       <NewGamePlayerModal
@@ -238,11 +208,27 @@ const CreateGameForm: FC<CreateGameFormProps> = ({ gameId }) => {
       <List>{showPlayers}</List>
 
       <ColorDialog color={color} setColor={setColor} />
-      <Button variant="contained" onClick={() => handleCreateGame()}>
-        Create Game
-      </Button>
+
+      {liveGame ? (
+        <>
+          <Button variant="contained" onClick={() => handleUpdateGame()}>
+            Save Changes
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "red" }}
+            onClick={() => deleteGame(liveGame.id)}
+          >
+            Delete Game
+          </Button>
+        </>
+      ) : (
+        <Button variant="contained" onClick={() => handleCreateGame()}>
+          Create Game
+        </Button>
+      )}
     </Stack>
   );
 };
 
-export default CreateGameForm;
+export default GameInfoForm;

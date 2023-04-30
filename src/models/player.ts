@@ -10,7 +10,7 @@ export interface Player {
   color: Color;
 }
 
-export type PlayerAddParams = Omit<Player, "score" | "notes" | "color">;
+// export type PlayerAddParams = Omit<Player, "score" | "notes">;
 
 export type GuestPlayerCreateParams = Omit<Player, "id">;
-export type AddPlayerParams = Omit<Player, "id" | "name" | "score" | "notes">;
+// export type AddPlayerParams = Omit<Player, "id" | "name" | "score" | "notes">;

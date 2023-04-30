@@ -25,7 +25,9 @@ import { Color } from "@/models";
 
 interface AddPlayerModalProps {
   color: Color;
-  setColor: React.Dispatch<React.SetStateAction<Color>>;
+  setColor:
+    | React.Dispatch<React.SetStateAction<Color>>
+    | ((newColor: Color) => void);
 }
 
 const AddPlayerModal: FC<AddPlayerModalProps> = ({ color, setColor }) => {

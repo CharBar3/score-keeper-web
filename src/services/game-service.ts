@@ -6,12 +6,12 @@ import {
   GameCreateParams,
   GuestPlayerCreateParams,
   Player,
-  PlayerAddParams,
   Role,
   User,
 } from "@/models";
 import { green } from "@mui/material/colors";
 import {
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -130,7 +130,7 @@ export class GameService {
     title: string,
     info: string,
     owner: User,
-    players: PlayerAddParams[],
+    players: Player[],
     playerIds: string[],
     color: Color
   ): Promise<void> => {
@@ -145,7 +145,7 @@ export class GameService {
         role: Role.Owner,
         notes: "",
         score: 0,
-        color: this.colorGenerator(),
+        color: color,
       },
     ];
 
@@ -156,20 +156,9 @@ export class GameService {
         role: player.role,
         notes: "",
         score: 0,
-        color: this.colorGenerator(),
+        color: player.color,
       });
     }
-
-    // for (const guestPlayer of guestPlayers) {
-    //   players.push({
-    //     id: uniqid(),
-    //     name: guestPlayer,
-    //     role: Role.Guest,
-    //     score: 0,
-    //     notes: "",
-    //     color: this.colorGenerator(),
-    //   });
-    // }
 
     const newGame: Game = {
       id: newGameRef.id,
@@ -195,6 +184,89 @@ export class GameService {
 
     await batch.commit();
   };
+  public static updateUserGame = async (
+    gameId: string,
+    newTitle: string,
+    newInfo: string,
+    // owner: User,
+    newPlayers: Player[],
+    newPlayerIds: string[],
+    newColor: Color
+  ): Promise<void> => {
+    // get the game doc
+
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+
+    if (gameSnap.exists()) {
+      const currentGameDoc = gameSnap.data();
+
+      // create a batch
+
+      const batch = writeBatch(db);
+
+      // check to see if players have been removed and remove the game id from the removed players game list (batch)
+
+      for (const playerId of currentGameDoc.playerIds) {
+        if (!newPlayerIds.includes(playerId)) {
+          const ref = doc(db, "users", playerId);
+          batch.update(ref, {
+            games: arrayRemove(gameId),
+          });
+        }
+      }
+
+      // check to see if players have been added and add the game id to that players game list (batch)
+      for (const playerId of newPlayerIds) {
+        if (!currentGameDoc.playerIds.includes(playerId)) {
+          const ref = doc(db, "users", playerId);
+          batch.update(ref, {
+            games: arrayUnion(gameId),
+          });
+        }
+      }
+
+      // update the title and info and players on the game doc itself (batch)
+
+      batch.update(gameRef, {
+        title: newTitle,
+        info: newInfo,
+        playerIds: newPlayerIds,
+        players: newPlayers,
+        color: newColor,
+      });
+
+      // save batch
+
+      await batch.commit();
+    } else {
+      console.log("Game does not exist!");
+    }
+  };
+
+  public static deleteUserGame = async (gameId: string): Promise<void> => {
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+
+    if (gameSnap.exists()) {
+      const currentGameDoc = gameSnap.data();
+
+      const batch = writeBatch(db);
+
+      for (const playerId of currentGameDoc.playerIds) {
+        const ref = doc(db, "users", playerId);
+        batch.update(ref, {
+          games: arrayRemove(gameId),
+        });
+      }
+
+      batch.delete(gameRef);
+
+      await batch.commit();
+    } else {
+      console.log("Game does not exist!");
+    }
+  };
 
   public static colorGenerator = (): Color => {
     const randomNumber = () => {
@@ -206,7 +278,5 @@ export class GameService {
       green: randomNumber(),
       blue: randomNumber(),
     };
-
-    // return `rgb(${randomNumber()}, ${randomNumber()}, ${randomNumber()})`;
   };
 }

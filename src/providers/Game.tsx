@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/config/firebase";
-import { Game } from "@/models";
+import { Color, Game, Player } from "@/models";
 import { DatabaseService } from "@/services/database-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -26,6 +26,15 @@ interface LiveGameContextProps {
   addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
   increaseScore: (playerId: string, scoreIncrease: number) => Promise<void>;
   decreaseScore: (playerId: string, scoreDecrease: number) => Promise<void>;
+  updateGame: (
+    gameId: string,
+    newTitle: string,
+    newInfo: string,
+    newPlayers: Player[],
+    newPlayerIds: string[],
+    newColor: Color
+  ) => Promise<void>;
+  deleteGame: (gameId: string) => Promise<void>;
 }
 
 const LiveGameContext = createContext<LiveGameContextProps>({
@@ -48,6 +57,12 @@ const LiveGameContext = createContext<LiveGameContextProps>({
     console.log("Error: Function not added to value prop");
   },
   decreaseScore: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  updateGame: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  deleteGame: async () => {
     console.log("Error: Function not added to value prop");
   },
 });
@@ -125,6 +140,50 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
     [liveGame]
   );
 
+  const updateGame = useCallback(
+    async (
+      gameId: string,
+      newTitle: string,
+      newInfo: string,
+      newPlayers: Player[],
+      newPlayerIds: string[],
+      newColor: Color
+    ) => {
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await GameService.updateUserGame(
+          gameId,
+          newTitle,
+          newInfo,
+          newPlayers,
+          newPlayerIds,
+          newColor
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
+  const deleteGame = useCallback(
+    async (gameId: string) => {
+      console.log("delete user games called");
+      if (!liveGame) {
+        return;
+      }
+
+      try {
+        await GameService.deleteUserGame(gameId);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [liveGame]
+  );
+
   useEffect(() => {
     console.log("live game loop check");
     let unsub = () => {};
@@ -151,6 +210,8 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         addPlayer,
         increaseScore,
         decreaseScore,
+        updateGame,
+        deleteGame,
       }}
     >
       {children}
