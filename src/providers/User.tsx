@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Friend,
-  User,
-  GameCreateParams,
-  Game,
-  PlayerAddParams,
-  Color,
-} from "../models";
+import { Friend, User, GameCreateParams, Game, Color, Player } from "../models";
 import { db } from "@/config/firebase";
 import { useAuth } from "@/providers/Auth";
 import { DatabaseService } from "@/services/database-service";
@@ -34,7 +27,7 @@ interface DataStoreContextProps {
   createGame: (
     title: string,
     info: string,
-    players: PlayerAddParams[],
+    players: Player[],
     playerIds: string[],
     color: Color
   ) => Promise<void>;
@@ -127,7 +120,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
     async (
       title: string,
       info: string,
-      players: PlayerAddParams[],
+      players: Player[],
       playerIds: string[],
       color: Color
     ) => {

@@ -31,6 +31,7 @@ import {
 import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
 import { useGame } from "@/providers/Game";
+import GameIconSelector from "../GameIconSelector/GameIconSelector";
 
 interface GameInfoFormProps {
   gameTitle?: string;
@@ -208,6 +209,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
       <List>{showPlayers}</List>
 
       <ColorDialog color={color} setColor={setColor} />
+      {/* <GameIconSelector /> */}
 
       {liveGame ? (
         <>

@@ -26,6 +26,7 @@ import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import DownIcon from "../../../public/icons/down_arrow_icon_55px.svg";
 import { useAuth } from "@/providers/Auth";
 import { useDataStore } from "@/providers/User";
+import NotesDialog from "../NotesDialog/NotesDialog";
 
 interface PlayerCardProps {
   id: string; // the players id.
@@ -180,7 +181,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
           height: "15%",
         }}
       >
-        <Button
+        {/* <Button
           variant="customStyle"
           sx={{
             height: "100%",
@@ -193,7 +194,8 @@ const PlayerCard: FC<PlayerCardProps> = ({
         >
           Notes
           <DownIcon color="#9A9FA4" height="100%" />
-        </Button>
+        </Button> */}
+        <NotesDialog notes={notes} id={id} />
       </CardActions>
 
       <CardActions sx={{ height: "15%", marginBottom: "4px" }}>

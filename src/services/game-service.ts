@@ -126,6 +126,31 @@ export class GameService {
       console.log("no player exists");
     }
   };
+  public static updateNotes = async (
+    gameId: string,
+    playerId: string,
+    notes: string
+  ): Promise<void> => {
+    const gameRef = doc(db, "games", gameId);
+
+    const docSnap = await getDoc(gameRef);
+
+    if (docSnap.exists()) {
+      const document = docSnap.data();
+
+      for (const player of document.players as Player[]) {
+        if (player.id == playerId) {
+          player.notes = notes;
+          await updateDoc(gameRef, {
+            players: [...document.players],
+          });
+        }
+      }
+    } else {
+      console.log("no player exists");
+    }
+  };
+
   public static createUserGame = async (
     title: string,
     info: string,
