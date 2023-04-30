@@ -18,11 +18,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FC, FormEvent, Fragment, useState } from "react";
-import { PlayerAddParams, Role } from "@/models";
+import { Player, Role } from "@/models";
 import uniqid from "uniqid";
 
 interface NewGamePlayerModalProps {
-  setPlayers: React.Dispatch<React.SetStateAction<PlayerAddParams[]>>;
+  setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
   setPlayerIds: React.Dispatch<React.SetStateAction<string[]>>;
   playerIds: string[];
 }
@@ -32,7 +32,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
   setPlayerIds,
   playerIds,
 }) => {
-  const { friendsList } = useDataStore();
+  const { friendsList, generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const [guestName, setGuestName] = useState<string | null>();
 
@@ -47,10 +47,13 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
   };
 
   const handleClick = async (friendId: string, friendUsername: string) => {
-    const newPlayer: PlayerAddParams = {
+    const newPlayer: Player = {
       id: friendId,
       name: friendUsername,
       role: Role.Edit,
+      score: 0,
+      notes: "",
+      color: generateRandomColor(),
     };
 
     setPlayers((prevState) => {
@@ -102,10 +105,13 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                 e.preventDefault();
 
                 if (guestName && guestName != "") {
-                  const newGuestPlayer: PlayerAddParams = {
+                  const newGuestPlayer: Player = {
                     id: uniqid(),
                     name: guestName,
                     role: Role.Guest,
+                    score: 0,
+                    notes: "",
+                    color: generateRandomColor(),
                   };
                   setPlayers((prevState) => {
                     const newState = [...prevState, newGuestPlayer];

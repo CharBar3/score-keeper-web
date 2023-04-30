@@ -9,6 +9,7 @@ import AddPlayerModal from "../AddPlayerModal/AddPlayerModal";
 import { GameService } from "@/services/game-service";
 import Grid from "@mui/material/Unstable_Grid2";
 import { theme } from "@/config/theme";
+import Link from "next/link";
 
 interface GameViewProps {
   id: string;
@@ -17,10 +18,16 @@ interface GameViewProps {
 const GameView: FC<GameViewProps> = ({ id }) => {
   // const [game, setGame] = useState<Game | null>(null);
   const { liveGame: game, addGuestPlayer } = useGame();
-
+  const adminIds: string[] = [];
   if (!game) {
     return <Typography variant="h1">Loading...</Typography>;
   }
+
+  game.players.map((player) => {
+    if (player.role === Role.Admin) {
+      adminIds.push(player.id);
+    }
+  });
 
   const showPlayers = game.players.map((player, index) => {
     return (
@@ -32,8 +39,8 @@ const GameView: FC<GameViewProps> = ({ id }) => {
           role={player.role}
           score={player.score}
           notes={player.notes}
-          isGuest={player.isGuest}
           color={player.color}
+          adminIds={adminIds}
         />
       </Grid>
     );
@@ -45,8 +52,8 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         name: "Guest name test",
         notes: "guest notes test",
         score: 0,
-        role: Role.View,
-        isGuest: true,
+        role: Role.Guest,
+
         color: GameService.colorGenerator(),
       });
     } catch (error) {}
@@ -60,11 +67,14 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography textAlign="center" variant="h4">
         {game.info}
       </Typography>
+      <Link href={`dashboard/game/${id}/settings`}>
+        <Button variant="contained">Settings</Button>
+      </Link>
       <Stack>
         <ButtonGroup>
-          <AddPlayerModal />
+          {/* <AddPlayerModal /> */}
           {/* <Button>Add Player</Button> */}
-          <Button onClick={handleClick}>Add Guest Player</Button>
+          {/* <Button onClick={handleClick}>Add Guest Player</Button> */}
         </ButtonGroup>
         <Grid
           container

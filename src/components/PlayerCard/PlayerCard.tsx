@@ -24,6 +24,8 @@ import { theme } from "@/config/theme";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import DownIcon from "../../../public/icons/down_arrow_icon_55px.svg";
+import { useAuth } from "@/providers/Auth";
+import { useDataStore } from "@/providers/User";
 
 interface PlayerCardProps {
   id: string; // the players id.
@@ -31,8 +33,8 @@ interface PlayerCardProps {
   role: Role;
   score: number;
   notes: string;
-  isGuest: boolean;
   color: Color;
+  adminIds: string[];
 }
 
 enum Action {
@@ -46,11 +48,23 @@ const PlayerCard: FC<PlayerCardProps> = ({
   role,
   score,
   notes,
-  isGuest,
   color,
+  adminIds,
 }) => {
-  const { increaseScore, decreaseScore } = useGame();
+  const { user } = useDataStore();
+  const { liveGame, increaseScore, decreaseScore } = useGame();
   const { showToast } = useToast();
+
+  // Security
+
+  if (user && liveGame) {
+    if (adminIds.includes(user.id) || user.id === liveGame.ownerId) {
+      console.log("can access admin");
+    }
+    if (user.id === id) {
+      console.log("can edit");
+    }
+  }
 
   const [inputNumber, setInputNumber] = useState<number>(0);
   const [scoreAction, setScoreAction] = useState<Action>(Action.Increase);
