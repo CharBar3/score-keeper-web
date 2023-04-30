@@ -58,12 +58,16 @@ const PlayerCard: FC<PlayerCardProps> = ({
 
   // Security
 
+  let roleButtonColor = "red";
+  let roleDisabled = true;
+
   if (user && liveGame) {
     if (adminIds.includes(user.id) || user.id === liveGame.ownerId) {
-      console.log("can access admin");
-    }
-    if (user.id === id) {
-      console.log("can edit");
+      roleDisabled = false;
+      roleButtonColor = "blue";
+    } else if (user.id === id && role === Role.Edit) {
+      roleDisabled = false;
+      roleButtonColor = "blue";
     }
   }
 
@@ -201,8 +205,10 @@ const PlayerCard: FC<PlayerCardProps> = ({
       <CardActions sx={{ height: "15%", marginBottom: "4px" }}>
         <Button
           variant="customStyle"
+          disabled={roleDisabled}
           sx={{
             height: "100%",
+            backgroundColor: roleButtonColor,
             [theme.breakpoints.up(600)]: {
               boxShadow: "0px 6px #9A9FA4",
             },
@@ -213,7 +219,9 @@ const PlayerCard: FC<PlayerCardProps> = ({
         </Button>
         <Button
           variant="customStyle"
+          disabled={roleDisabled}
           sx={{
+            backgroundColor: roleButtonColor,
             height: "100%",
             [theme.breakpoints.up(600)]: {
               boxShadow: "0px 6px #9A9FA4",
