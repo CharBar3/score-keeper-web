@@ -28,7 +28,6 @@ const LoginForm: FC = () => {
   const handleLogin = async () => {
     try {
       await loginWithEmailPassword(email, password);
-      console.log("this happens");
       showToast("Login Successful!", "success");
     } catch (error) {
       showToast(`Login Failed! ${(error as Error).message}`, "error");
@@ -45,13 +44,13 @@ const LoginForm: FC = () => {
     }
   };
 
-  const { isLoading, fireUser: user } = useAuth();
+  const { fireUser } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    if (fireUser) {
       redirect("/dashboard");
     }
-  }, [user, isLoading]);
+  }, [fireUser]);
 
   return (
     <Stack

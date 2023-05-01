@@ -83,16 +83,24 @@ const PlayerCard: FC<PlayerCardProps> = ({
 
   const handleClose = () => {
     setIsOpen(false);
+    setInputNumber(0);
   };
 
   const handleChangeScore = () => {
+    if (inputNumber === 0) {
+      showToast(`Please input number or cancel`, "error");
+      return;
+    }
+
     try {
       if (scoreAction === Action.Increase) {
         increaseScore(id, inputNumber);
         showToast(`Score Increased!`, "success");
+        setInputNumber(0);
       } else if (scoreAction === Action.Decrease) {
         decreaseScore(id, inputNumber);
         showToast(`Score Decreased!`, "success");
+        setInputNumber(0);
       }
       handleClose();
     } catch (error) {
@@ -101,7 +109,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
   };
 
   const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
-  const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .8)`;
+  const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .6)`;
 
   return (
     <Card
@@ -233,15 +241,8 @@ const PlayerCard: FC<PlayerCardProps> = ({
         </Button>
       </CardActions>
 
-      {/* Dialog */}
-      <Dialog
-        sx={{
-          ["& MuiPaper-root"]: { widht: "1000px" },
-        }}
-        open={isOpen}
-        onClose={handleClose}
-      >
-        {/* <DialogTitle>Change the score!</DialogTitle> */}
+      <Dialog open={isOpen} onClose={handleClose}>
+        <DialogTitle>Change the score!</DialogTitle>
         <DialogContent>
           {/* <DialogContentText>change your score below</DialogContentText> */}
           <TextField
@@ -250,7 +251,6 @@ const PlayerCard: FC<PlayerCardProps> = ({
             id="score"
             label={`${scoreAction} score`}
             type="number"
-            // fullWidth
             variant="outlined"
             onChange={(e) => setInputNumber(parseInt(e.target.value))}
           />

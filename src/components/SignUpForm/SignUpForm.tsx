@@ -1,22 +1,34 @@
 "use client";
 
 import { useAuth } from "@/providers/Auth";
+import { useToast } from "@/providers/ToastProvider";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { ChangeEvent, FC, useState } from "react";
-
-// interface LoginFormProps {}
+import { redirect } from "next/navigation";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 
 const SignUpFrom: FC = () => {
-  const { createAccount } = useAuth();
+  const { fireUser, createAccount } = useAuth();
+  const { showToast } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
   const handleSignUp = () => {
-    createAccount(email, password, username);
+    try {
+      createAccount(email, password, username);
+      showToast("Sign Up Successful!", "success");
+    } catch (error) {
+      showToast("Sign Up Failed!", "error");
+    }
   };
+
+  useEffect(() => {
+    if (fireUser) {
+      redirect("/dashboard");
+    }
+  }, [fireUser]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

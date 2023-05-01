@@ -1,9 +1,10 @@
 "use client";
 
 import { Color, Player, Role } from "@/models";
-import { useAuth } from "@/providers/Auth";
+import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -20,18 +21,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  ChangeEvent,
-  FC,
-  Fragment,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, FC, Fragment, useState } from "react";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
-import { useGame } from "@/providers/Game";
-import GameIconSelector from "../GameIconSelector/GameIconSelector";
+import Link from "next/link";
 
 interface GameInfoFormProps {
   gameTitle?: string;
@@ -50,8 +43,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
 }) => {
   const { user, createGame } = useDataStore();
   const { liveGame, updateGame, deleteGame } = useGame();
-
   const { showToast } = useToast();
+  const router = useRouter();
 
   const [title, setTitle] = useState(gameTitle);
   const [info, setInfo] = useState(gameInfo);
@@ -65,8 +58,15 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
     }
 
     try {
-      await createGame(title, info, players, playerIds, color);
+      const newGameId = await createGame(
+        title,
+        info,
+        players,
+        playerIds,
+        color
+      );
       showToast("Game succesfully created!", "success");
+      router.push(`/dashboard/game/${newGameId}`);
     } catch (error) {
       showToast("Failed to create game!", "error");
     }
@@ -79,9 +79,26 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
 
     try {
       await updateGame(liveGame.id, title, info, players, playerIds, color);
-      showToast("Game succesfully created!", "success");
+      showToast("Game succesfully updated!", "success");
+      router.push(`/dashboard/game/${liveGame.id}`);
     } catch (error) {
-      showToast("Failed to create game!", "error");
+      showToast("Failed to updated game!", "error");
+    }
+  };
+
+  const handleDeleteGame = async () => {
+    if (!liveGame) {
+      return;
+    }
+
+    console.log("this happens");
+
+    try {
+      await deleteGame(liveGame.id);
+      showToast("Game succesfully deleted!", "success");
+      router.push("/dashboard");
+    } catch (error) {
+      showToast("Failed to delete game!", "error");
     }
   };
 
@@ -216,10 +233,15 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
           <Button variant="contained" onClick={() => handleUpdateGame()}>
             Save Changes
           </Button>
+          <Link href={`/dashboard/game/${liveGame.id}`}>
+            <Button variant="contained" onClick={() => {}}>
+              Cancel
+            </Button>
+          </Link>
           <Button
             variant="contained"
             sx={{ backgroundColor: "red" }}
-            onClick={() => deleteGame(liveGame.id)}
+            onClick={() => handleDeleteGame()}
           >
             Delete Game
           </Button>

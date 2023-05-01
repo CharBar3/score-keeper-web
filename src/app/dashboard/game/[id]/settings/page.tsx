@@ -1,5 +1,3 @@
-"use client";
-
 import GameSettingsView from "@/components/GameSettingsView/GameSettingsView";
 
 import { FC } from "react";
@@ -9,11 +7,7 @@ interface GameSettingsPageProps {
 }
 
 const GameSettingsPage: FC<GameSettingsPageProps> = ({ params }) => {
-  return (
-    <div>
-      <GameSettingsView gameId={params.id} />
-    </div>
-  );
+  return <GameSettingsView gameId={params.id} />;
 };
 
 export default GameSettingsPage;
