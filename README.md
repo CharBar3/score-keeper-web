@@ -1,38 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Score Keeper (name tbd - work in progress)
+
+#### The problem
+Often during board game nights with my girlfriend it falls on me to keep track of the score. While I love losing my focus on the game to do basic math and keep track of each players score after a move is made, I figured I could make that process more seamless.
+
+#### The solution
+
+A score tracking app! Score keeper is designed so everyone can keep track of their own score while still leaving the option for one person to update them all. 
+
+## Main Features
+
+1. Real time updates while you're viewing the game. You can see exactly where you stack up against all competing players and even make sure some less savory players don’t add a few extra points to their score. 
+2. Guest players. Sometimes your friends don’t want to make a new account. No problem! You can still do things the old way and keep track of their score for them. 
+3. Randomly generated colors. Every time you make a game the color for the game and the color for each player will be randomly generated! This keeps everything fresh and exciting. That being said, if you’re someone who likes consistency, you can still pick your preferred color. 
+
+## Technologies Used
+* Typescript
+* React.js
+* Next.js
+* Firebase
+* Material UI
+* uniqid
+* SVGR
+* Vercel
 
 ## Getting Started
 
-First, run the development server:
+[Click here](http://localhost:3000) to check it out! 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Screenshots 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I'll add some screenshots once the styling is completed but in the meantime here are some wireframes/style guides.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Wireframe/Style Guide Credit: Justin Oeftger
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<img src="https://i.imgur.com/4f2Ry3G.png" alt="wireframe"/>
+<img src="https://i.imgur.com/WsBDghq.png" alt="wireframe"/>
+<img src="https://i.imgur.com/lLRkHar.png" alt="wireframe"/>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Future Features (What I'm currently working on because this is still in development)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* A friend can currently be added without being accepted by the friend. Friend request feature where the request has to be accepted. 
+* Selectable icons for your game. Right now it's one single icon but eventually you'll be able to select from a list. 
+* Color selector. Currently you can edit your RGB values but I want to add standard colors you can select. 
