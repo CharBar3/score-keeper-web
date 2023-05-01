@@ -10,8 +10,12 @@ A score tracking app! Score keeper is designed so everyone can keep track of the
 ## Main Features
 
 1. Real time updates while you're viewing the game. You can see exactly where you stack up against all competing players and even make sure some less savory players don’t add a few extra points to their score. 
+
 2. Guest players. Sometimes your friends don’t want to make a new account. No problem! You can still do things the old way and keep track of their score for them. 
-3. Randomly generated colors. Every time you make a game the color for the game and the color for each player will be randomly generated! This keeps everything fresh and exciting. That being said, if you’re someone who likes consistency, you can still pick your preferred color. 
+
+3. Partial username search! You don't have to know your friends full username. Just start typing it in and the search function will take care of the rest.  
+
+4. Randomly generated colors. Every time you make a game the color for the game and the color for each player will be randomly generated! This keeps everything fresh and exciting. That being said, if you’re someone who likes consistency, you can still pick your preferred color. 
 
 ## Technologies Used
 * Typescript
