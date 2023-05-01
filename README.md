@@ -25,7 +25,7 @@ A score tracking app! Score keeper is designed so everyone can keep track of the
 
 ## Getting Started
 
-[Click here](http://localhost:3000) to check it out! 
+[Click here](https://score-keeper-web.vercel.app/) to check it out! 
 
 ## Screenshots 
 
@@ -34,6 +34,7 @@ I'll add some screenshots once the styling is completed but in the meantime here
 Wireframe/Style Guide Credit: Justin Oeftger
 
 <img src="https://i.imgur.com/4f2Ry3G.png" alt="wireframe"/>
+<img src="https://i.imgur.com/0oqTu56.png" alt="wireframe"/>
 <img src="https://i.imgur.com/WsBDghq.png" alt="wireframe"/>
 <img src="https://i.imgur.com/lLRkHar.png" alt="wireframe"/>
 
