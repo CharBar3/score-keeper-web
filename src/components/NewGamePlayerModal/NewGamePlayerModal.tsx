@@ -34,9 +34,9 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
 }) => {
   const { friendsList, generateRandomColor } = useDataStore();
   const { showToast } = useToast();
-  const [guestName, setGuestName] = useState<string | null>();
-
   const [open, setOpen] = useState(false);
+
+  const [guestName, setGuestName] = useState<string | null>();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,7 +46,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
     setOpen(false);
   };
 
-  const handleAddPlayer = async (friendId: string, friendUsername: string) => {
+  const handleAddPlayer = (friendId: string, friendUsername: string) => {
     const newPlayer: Player = {
       id: friendId,
       name: friendUsername,

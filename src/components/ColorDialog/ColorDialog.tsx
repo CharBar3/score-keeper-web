@@ -1,36 +1,23 @@
 "use client";
 
-import { useDataStore } from "@/providers/User";
-import { useGame } from "@/providers/Game";
-import { useToast } from "@/providers/ToastProvider";
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Slider,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Color } from "@/models";
+import { Box, Slider, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { ChangeEvent, FC, FormEvent, Fragment, useState } from "react";
-import { Color } from "@/models";
+import { FC, useState } from "react";
 
-interface AddPlayerModalProps {
+interface ColorDialogProps {
   color: Color;
   setColor:
     | React.Dispatch<React.SetStateAction<Color>>
     | ((newColor: Color) => void);
 }
 
-const AddPlayerModal: FC<AddPlayerModalProps> = ({ color, setColor }) => {
+const ColorDialog: FC<ColorDialogProps> = ({ color, setColor }) => {
   const updateButtonTextColor = (color: Color) => {
     // Get YIQ ratio
     var yiq = (color.red * 299 + color.green * 587 + color.blue * 114) / 1000;
@@ -179,4 +166,4 @@ const AddPlayerModal: FC<AddPlayerModalProps> = ({ color, setColor }) => {
   );
 };
 
-export default AddPlayerModal;
+export default ColorDialog;

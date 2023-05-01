@@ -67,20 +67,38 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
     }
   };
 
-  const createAccount = (email: string, password: string, username: string) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        DatabaseService.createFirestoreUserDocument(
-          userCredential.user,
-          username
-        );
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        // ..
-      });
+  const createAccount = async (
+    email: string,
+    password: string,
+    username: string
+  ) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await DatabaseService.createFirestoreUserDocument(
+        userCredential.user,
+        username
+      );
+    } catch (error) {
+      console.log("Auth Provider Error " + error);
+    }
+    // createUserWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     DatabaseService.createFirestoreUserDocument(
+    //       userCredential.user,
+    //       username
+    //     );
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorCode);
+    //     console.log(errorMessage);
+    //     // ..
+    //   });
   };
 
   const logOut = async () => {

@@ -158,7 +158,7 @@ export class GameService {
     players: Player[],
     playerIds: string[],
     color: Color
-  ): Promise<void> => {
+  ): Promise<string> => {
     const newGameRef = doc(collection(db, "games"));
 
     playerIds.push(owner.id);
@@ -208,7 +208,9 @@ export class GameService {
     }
 
     await batch.commit();
+    return newGameRef.id;
   };
+
   public static updateUserGame = async (
     gameId: string,
     newTitle: string,
