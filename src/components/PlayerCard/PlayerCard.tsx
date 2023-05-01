@@ -259,7 +259,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
           <Button
             variant="customStyle"
             sx={{ height: "30px", width: "50px" }}
-            onClick={handleChangeScore}
+            onClick={handleClose}
           >
             Cancel
           </Button>

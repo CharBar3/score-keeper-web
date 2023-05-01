@@ -57,9 +57,14 @@ const Nav: FC<NavProps> = () => {
               </Button>
             </Box>
           ) : (
-            <Link href="/login">
-              <Button color="inherit">Login</Button>
-            </Link>
+            <Box>
+              <Link href="/login">
+                <Button color="inherit">Login</Button>
+              </Link>
+              <Link href="/signup">
+                <Button color="inherit">Signup</Button>
+              </Link>
+            </Box>
           )}
         </Toolbar>
       </AppBar>
