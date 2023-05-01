@@ -9,16 +9,6 @@ const StyledSearchBox = styled("div")(({ theme }) => ({
   borderColor: theme.palette.primary.main,
   height: "50px",
   display: "flex",
-  // justifyContent: "space-between",
-  // backgroundColor: alpha(theme.palette.common.white, 0.15),
-  // "&:hover": {
-  //   backgroundColor: alpha(theme.palette.common.white, 0.25),
-  // },
-  // marginLeft: 0,
-  // [theme.breakpoints.up("sm")]: {
-  //   marginLeft: theme.spacing(1),
-  //   width: "auto",
-  // },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -50,9 +40,6 @@ interface SearchInputProps {
   onChangeSearch: (value: string | null) => void;
   debounce: number | null;
   setIsSearching?: React.Dispatch<React.SetStateAction<boolean>> | null;
-  // Leaving this as an example for how i'd implement
-  // searching on click of the search icon
-  // onClickSearch?: (value: string) => void;
 }
 
 const SearchBar: FC<SearchInputProps> = ({
@@ -60,10 +47,6 @@ const SearchBar: FC<SearchInputProps> = ({
   onChangeSearch,
   debounce,
   setIsSearching = null,
-
-  // Leaving this as an example for how i'd implement
-  // searching on click of the search icon
-  // onClickSearch,
 }) => {
   const { showToast } = useToast();
 
@@ -98,31 +81,10 @@ const SearchBar: FC<SearchInputProps> = ({
           }
 
           setSearchString(searchInput);
-
-          // if (onChangeSearch) {
-          // onChangeSearch(e.currentTarget.value);
-          // }
-          // Leaving this as an example for how i'd implement
-          // searching on click of the search icon
-          // else {
-          //   setSearchString(e.currentTarget.value);
-          // }
         }}
       />
       <SearchIconWrapper>
-        <SearchIcon
-          height="80%"
-          color={theme.palette.primary.main}
-          // Leaving this as an example for how i'd implement
-          // searching on click of the search icon
-          // onClick={() => {
-          //   if (searchString && onClickSearch) {
-          //     onClickSearch(searchString);
-          //   } else {
-          //     showToast("No search provided", "error");
-          //   }
-          // }}
-        />
+        <SearchIcon height="80%" color={theme.palette.primary.main} />
       </SearchIconWrapper>
     </StyledSearchBox>
   );
