@@ -1,16 +1,9 @@
 // "use client";
-import { Color, Game } from "@/models";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  styled,
-  useMediaQuery,
-} from "@mui/material";
-import { FC } from "react";
-import GameCardIcon from "../../../public/icons/cards_icon_01_updated.svg";
-import GameCardPeopleIcon from "../../../public/icons/friends_botton_icon-07.svg";
+import { Color } from "@/models";
+import { Box, Typography } from "@mui/material";
+import { FC, useEffect, useRef, useState } from "react";
+import GameIcon from "../../../public/game-icons/cards_icon.svg";
+import PlayerIcon from "../../../public/icons/player_icon_55px.svg";
 
 import { theme } from "@/config/theme";
 
@@ -21,106 +14,80 @@ interface GameCardProps {
 }
 
 const GameCard: FC<GameCardProps> = ({ title, playerIds, color }) => {
+  const gameCardRef = useRef<HTMLDivElement>(null);
+  const [borderWidth, setBorderWidth] = useState<number | null>(null);
+  const [shadowHeight, setShadowHeight] = useState<number | null>(null);
+  const [textHeight, setTextHeight] = useState<number | null>(null);
+
   const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
   const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .7)`;
 
-  const StyledGameCard = styled("div")(({ theme }) => ({
-    borderColor: borderColor,
-    borderStyle: "solid",
-    borderWidth: "7px",
-    borderRadius: "7px",
-    boxShadow: `0px 20px ${boxShadowColor}`,
-    marginBottom: "20px",
-    aspectRatio: "13/14",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-
-    [theme.breakpoints.only("sm")]: {
-      borderWidth: "10px",
-      boxShadow: `0px 30px ${boxShadowColor}`,
-      marginBottom: "30px",
-    },
-    [theme.breakpoints.only("md")]: {
-      borderWidth: "15px",
-      boxShadow: `0px 45px ${boxShadowColor}`,
-      marginBottom: "45px",
-    },
-    [theme.breakpoints.only("lg")]: {
-      borderWidth: "10px",
-      boxShadow: `0px 30px ${boxShadowColor}`,
-      marginBottom: "30px",
-    },
-    [theme.breakpoints.only("xl")]: {
-      borderWidth: "15px",
-      boxShadow: `0px 45x ${boxShadowColor}`,
-      marginBottom: "45px",
-    },
-  }));
-  const StyledGamePlayerNumber = styled(Typography)(({ theme }) => ({
-    paddingLeft: theme.spacing(1),
-    color: theme.palette.primary.main,
-    fontSize: "20px",
-    display: "flex",
-    alignItems: "center",
-    [theme.breakpoints.down(400)]: {
-      fontSize: "15px",
-    },
-    [theme.breakpoints.only("sm")]: {
-      fontSize: "25px",
-    },
-    [theme.breakpoints.only("md")]: {
-      fontSize: "30px",
-    },
-    [theme.breakpoints.only("lg")]: {
-      fontSize: "25px",
-    },
-    [theme.breakpoints.only("xl")]: {
-      fontSize: "30px",
-    },
-  }));
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (entries[0].target === gameCardRef.current) {
+        setBorderWidth(entries[0].contentRect.width / 20);
+        setShadowHeight(entries[0].contentRect.height / 7);
+        setTextHeight(entries[0].contentRect.height);
+      }
+    });
+    if (gameCardRef.current) {
+      resizeObserver.observe(gameCardRef.current);
+    }
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [gameCardRef]);
 
   return (
-    <StyledGameCard>
-      <Typography
-        variant="h4"
-        textAlign="center"
-        // noWrap
-        sx={{
-          paddingTop: "10%",
-          [theme.breakpoints.down(400)]: {
-            paddingTop: "5%",
-          },
-          [theme.breakpoints.down(450)]: {
-            fontSize: "20px",
-          },
-        }}
-      >
-        {title}
-      </Typography>
+    <Box
+      ref={gameCardRef}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        borderStyle: "solid",
+        borderRadius: "7px",
+        border: `${borderWidth}px solid ${borderColor}`,
+        boxShadow: `0px ${shadowHeight}px ${boxShadowColor}`,
+        marginBottom: `${shadowHeight}px`,
+        aspectRatio: "13/14",
+      }}
+    >
       <Box
         sx={{
+          paddingTop: 1,
+          height: "20%",
           display: "flex",
           justifyContent: "center",
-          width: "100%",
-          height: "50%",
+          alignItems: "center",
         }}
       >
-        <GameCardIcon color={borderColor} />
+        <Typography
+          textAlign="center"
+          // noWrap
+          sx={{ fontSize: `${textHeight ? textHeight / 10 : 10}px` }}
+        >
+          {title}
+        </Typography>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          width: "100%",
-          height: "10%",
-          position: "relative",
-          paddingLeft: 1,
-        }}
-      >
-        <GameCardPeopleIcon height="90%" color={theme.palette.primary.main} />
-        <StyledGamePlayerNumber>{playerIds.length}</StyledGamePlayerNumber>
+
+      <GameIcon height="60%" color={borderColor} />
+
+      <Box sx={{ height: "10%", display: "flex" }}>
+        <Typography
+          sx={{
+            fontSize: `${textHeight ? textHeight / 10 : 10}px`,
+            paddingLeft: 1,
+            paddingRight: "4px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {playerIds.length}
+        </Typography>
+        <PlayerIcon height="90%" color={theme.palette.primary.main} />
       </Box>
-    </StyledGameCard>
+    </Box>
   );
 };
 

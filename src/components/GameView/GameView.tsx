@@ -1,14 +1,12 @@
 "use client";
 
+import { Role } from "@/models";
 import { useGame } from "@/providers/Game";
-import { Button, ButtonGroup, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import Link from "next/link";
 import { FC, useEffect } from "react";
 import PlayerCard from "../PlayerCard/PlayerCard";
-import { Role } from "@/models";
-import { GameService } from "@/services/game-service";
-import Grid from "@mui/material/Unstable_Grid2";
-import { theme } from "@/config/theme";
-import Link from "next/link";
 
 interface GameViewProps {
   id: string;
@@ -32,9 +30,9 @@ const GameView: FC<GameViewProps> = ({ id }) => {
     }
   });
 
-  const showPlayers = liveGame.players.map((player, index) => {
+  const showPlayers = liveGame.players.map((player) => {
     return (
-      <Grid key={player.id} xs={6} sm={6} md={6} lg={4} xl={4}>
+      <Grid key={player.id}>
         <PlayerCard
           key={player.id}
           id={player.id}
@@ -49,19 +47,6 @@ const GameView: FC<GameViewProps> = ({ id }) => {
     );
   });
 
-  const handleClick = async () => {
-    try {
-      await addGuestPlayer({
-        name: "Guest name test",
-        notes: "guest notes test",
-        score: 0,
-        role: Role.Guest,
-
-        color: GameService.colorGenerator(),
-      });
-    } catch (error) {}
-  };
-
   return (
     <div>
       <Typography textAlign="center" variant="h1">
@@ -70,18 +55,15 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography textAlign="center" variant="h4">
         {liveGame.info}
       </Typography>
-      {}
+
       <Link href={`dashboard/game/${id}/settings`}>
         <Button variant="contained">Settings</Button>
       </Link>
       <Stack>
         <Grid
           container
-          spacing={{ xxs: 1, xs: 2, sm: 2, md: 4, lg: 4 }}
-          sx={{
-            margin: "auto",
-            maxWidth: "1536px",
-          }}
+          spacing={{ xs: 2, sm: 2, md: 2, lg: 2, xl: 2 }}
+          sx={{ display: "flex", justifyContent: "center" }}
         >
           {showPlayers}
         </Grid>

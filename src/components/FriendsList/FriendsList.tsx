@@ -47,7 +47,7 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
                     backgroundColor: "red",
                   },
                 }}
-                variant="actionButton"
+                variant="styled"
                 onClick={() => handleClick(id)}
               >
                 <MinusIcon width="27px" height="27px" />
