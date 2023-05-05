@@ -6,7 +6,7 @@ import { useDataStore } from "@/providers/User";
 
 import { Button, Divider, ListItem, ListItemText, Stack } from "@mui/material";
 import { FC, Fragment, useCallback, useEffect, useState } from "react";
-import PlusIcon from "../../../public/icons/plus_sign_icon.svg";
+import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import SearchBar from "../SearchBar/SearchBar";
 
 interface SearchAddFriendProps {}
