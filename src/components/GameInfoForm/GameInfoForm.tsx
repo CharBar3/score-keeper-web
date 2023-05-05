@@ -1,10 +1,9 @@
 "use client";
 
-import { Color, Player, Role } from "@/models";
+import { Color, Game, Role } from "@/models";
 import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
-import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -21,36 +20,33 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import * as _ from "lodash";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FC, Fragment, useState } from "react";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
-import Link from "next/link";
+import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 
 interface GameInfoFormProps {
-  gameTitle?: string;
-  gameInfo?: string;
-  gamePlayers?: Player[];
-  gamePlayerIds?: string[];
-  gameColor: Color;
+  game?: Game;
 }
 
-const GameInfoForm: FC<GameInfoFormProps> = ({
-  gameTitle = "",
-  gameInfo = "",
-  gamePlayers = [],
-  gamePlayerIds = [],
-  gameColor,
-}) => {
+const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
   const { user, createGame } = useDataStore();
-  const { liveGame, updateGame, deleteGame } = useGame();
+  const { liveGame, updateGame, deleteGame, setGameId } = useGame();
+  const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
 
-  const [title, setTitle] = useState(gameTitle);
-  const [info, setInfo] = useState(gameInfo);
-  const [players, setPlayers] = useState(gamePlayers);
-  const [playerIds, setPlayerIds] = useState(gamePlayerIds);
-  const [color, setColor] = useState<Color>(gameColor);
+  const [title, setTitle] = useState(game?.title ?? "");
+  const [info, setInfo] = useState(game?.info ?? "");
+  const [players, setPlayers] = useState(_.cloneDeep(game?.players) ?? []);
+  const [playerIds, setPlayerIds] = useState(
+    _.cloneDeep(game?.playerIds) ?? []
+  );
+  const [color, setColor] = useState<Color>(
+    _.cloneDeep(game?.color) ?? generateRandomColor()
+  );
 
   const handleCreateGame = async () => {
     if (!user) {
@@ -91,8 +87,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
       return;
     }
 
-    console.log("this happens");
-
     try {
       await deleteGame(liveGame.id);
       showToast("Game succesfully deleted!", "success");
@@ -126,7 +120,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
     });
 
     setPlayerIds((prevState) => {
-      const newState = [];
+      const newState: string[] = [];
 
       for (const playerId of prevState) {
         if (playerId != id) {
@@ -170,38 +164,75 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
 
     return (
       <Fragment key={id}>
-        <ListItem>
-          <ListItemText primary={name} />
-          <ColorDialog color={color} setColor={setPlayerColor} />
-          <Box sx={{ minWidth: 120 }}>
-            {role != Role.Guest && role != Role.Owner ? (
+        <ListItem sx={{ display: "flex", flexWrap: "wrap" }}>
+          <ListItemText
+            primaryTypographyProps={{ noWrap: true }}
+            primary={name}
+            sx={{ minWidth: "320px" }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ColorDialog color={color} setColor={setPlayerColor} />
+            </Box>
+            <Box sx={{ minWidth: 100, marginLeft: 2, marginRight: 2 }}>
               <FormControl fullWidth>
                 <InputLabel>Role</InputLabel>
                 <Select
                   value={role}
                   label="Role"
+                  variant="outlined"
+                  sx={{ border: "none" }}
                   onChange={(e) => handlePickRole(e, id)}
+                  disabled={role == Role.Owner ? true : false}
                 >
+                  {role == Role.Owner && (
+                    <MenuItem value={Role.Owner}>Owner</MenuItem>
+                  )}
                   <MenuItem value={Role.Admin}>Admin</MenuItem>
                   <MenuItem value={Role.Edit}>Edit</MenuItem>
                   <MenuItem value={Role.View}>View</MenuItem>
                 </Select>
               </FormControl>
-            ) : (
-              <Typography>{role}</Typography>
-            )}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                variant="styled"
+                sx={{
+                  width: "36px",
+                  height: "36px",
+                  minWidth: "unset",
+                  padding: "6px",
+                  margin: "auto",
+                }}
+                onClick={() => handleRemovePlayer(id)}
+              >
+                <MinusIcon height="100%" />
+              </Button>
+            </Box>
           </Box>
-          <Button variant="contained" onClick={() => handleRemovePlayer(id)}>
-            Remove
-          </Button>
         </ListItem>
+
         <Divider />
       </Fragment>
     );
   });
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} sx={{ minWidth: "unset" }}>
       <TextField
         id="outlined-basic"
         label="Title"
@@ -225,7 +256,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
       />
       <List>{showPlayers}</List>
 
-      <ColorDialog color={color} setColor={setColor} />
+      <ColorDialog color={color} setColor={setColor} title="Game Color" />
       {/* <GameIconSelector /> */}
 
       {liveGame ? (
@@ -233,11 +264,16 @@ const GameInfoForm: FC<GameInfoFormProps> = ({
           <Button variant="contained" onClick={() => handleUpdateGame()}>
             Save Changes
           </Button>
-          <Link href={`/dashboard/game/${liveGame.id}`}>
-            <Button variant="contained" onClick={() => {}}>
-              Cancel
-            </Button>
-          </Link>
+          {/* <Link href={`/dashboard/game/${liveGame.id}`}> */}
+          <Button
+            variant="contained"
+            onClick={() => {
+              router.push(`/dashboard/game/${liveGame.id}`);
+            }}
+          >
+            Cancel
+          </Button>
+          {/* </Link> */}
           <Button
             variant="contained"
             sx={{ backgroundColor: "red" }}

@@ -22,29 +22,13 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
     setGameId(gameId);
   }, [gameId, setGameId, user, liveGame]);
 
-  // useEffect(() => {
-  //   if (user && liveGame && user.id != liveGame.id) {
-  //     redirect(`/dashboard/game/${liveGame.id}`);
-  //   }
-
-  //   return () => {};
-  // }, [user, liveGame]);
-
-  const updateGame = () => {};
-
   return (
     <Stack>
       <Typography variant="h1">Game Settings</Typography>
       {!liveGame ? (
         <Typography variant="h1">Loading...</Typography>
       ) : (
-        <GameInfoForm
-          gameTitle={liveGame.title}
-          gameInfo={liveGame.info}
-          gamePlayers={liveGame.players}
-          gamePlayerIds={liveGame.playerIds}
-          gameColor={liveGame.color}
-        />
+        <GameInfoForm game={liveGame} />
       )}
     </Stack>
   );

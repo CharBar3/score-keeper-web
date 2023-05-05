@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FC } from "react";
-import MinusIcon from "../../../public/icons/minus_sign_icon.svg";
+import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 
 interface FriendsListProps {
   canRemoveFriend: boolean;

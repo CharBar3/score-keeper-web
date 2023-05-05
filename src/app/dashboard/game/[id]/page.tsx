@@ -5,8 +5,8 @@ interface PageProps {
   params: { id: string };
 }
 
-const Page: FC<PageProps> = ({ params }) => {
-  return <GameView id={params.id} />;
+const Page: FC<PageProps> = ({ params: { id } }) => {
+  return <GameView id={id} />;
 };
 
 export default Page;
