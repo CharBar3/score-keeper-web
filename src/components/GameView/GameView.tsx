@@ -13,7 +13,7 @@ interface GameViewProps {
 }
 
 const GameView: FC<GameViewProps> = ({ id }) => {
-  const { liveGame, addGuestPlayer, setGameId } = useGame();
+  const { liveGame, setGameId } = useGame();
 
   useEffect(() => {
     setGameId(id);
