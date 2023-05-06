@@ -15,9 +15,9 @@ const SignUpFrom: FC = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     try {
-      createAccount(email, password, username);
+      await createAccount(email, password, username);
       showToast("Sign Up Successful!", "success");
     } catch (error) {
       showToast("Sign Up Failed!", "error");

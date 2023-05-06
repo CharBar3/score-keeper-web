@@ -11,7 +11,7 @@ const NewGameView: FC<NewGameViewProps> = () => {
 
   return (
     <Stack>
-      <Typography variant="h1">Game Settings</Typography>
+      <Typography variant="h1">New Game</Typography>
       {!user ? (
         <Typography variant="h1">Loading...</Typography>
       ) : (

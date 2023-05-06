@@ -124,8 +124,6 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
   );
 
   useEffect(() => {
-    console.log("loop reload check datastore");
-
     let unsub = () => {};
     if (fireUser) {
       unsub = onSnapshot(doc(db, "users", fireUser.uid), (doc) => {

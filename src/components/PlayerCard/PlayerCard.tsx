@@ -48,9 +48,6 @@ const PlayerCard: FC<PlayerCardProps> = ({
 
   let hasPermission = false;
 
-  console.log(user?.id);
-  console.log(user?.id === id);
-
   if (user && liveGame) {
     if (adminIds.includes(user.id)) {
       hasPermission = true;

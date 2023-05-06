@@ -97,7 +97,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   const addGuestPlayer = useCallback(
     async (guestPlayerInfo: GuestPlayerCreateParams) => {
-      console.log();
       if (!liveGame) {
         return;
       }
@@ -106,6 +105,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.addGuestPlayer(liveGame.id, guestPlayerInfo);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
@@ -113,7 +113,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   const addPlayer = useCallback(
     async (friendId: string, friendUsername: string) => {
-      console.log();
       if (!liveGame) {
         return;
       }
@@ -122,6 +121,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.addPlayer(liveGame.id, friendId, friendUsername);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
@@ -138,6 +138,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.increaseScore(liveGame.id, playerId, scoreIncrease);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
@@ -152,6 +153,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.decreaseScore(liveGame.id, playerId, scoreDecrease);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
@@ -166,6 +168,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.updateNotes(liveGame.id, playerId, notes);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
@@ -193,6 +196,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         );
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [user]
@@ -222,13 +226,13 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         );
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
   );
   const deleteGame = useCallback(
     async (gameId: string) => {
-      console.log("delete user games called");
       if (!liveGame) {
         return;
       }
@@ -237,13 +241,13 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         await GameService.deleteUserGame(gameId);
       } catch (error) {
         console.log(error);
+        throw error;
       }
     },
     [liveGame]
   );
 
   useEffect(() => {
-    console.log("live game loop check");
     let unsub = () => {};
     if (gameId) {
       unsub = onSnapshot(doc(db, "games", gameId), (doc) => {
@@ -256,8 +260,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
     };
   }, [gameId]);
-
-  // useEffect(() => {}, [liveGame, addGuestPlayer]);
 
   return (
     <LiveGameContext.Provider
