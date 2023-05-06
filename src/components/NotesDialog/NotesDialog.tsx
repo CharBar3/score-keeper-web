@@ -61,6 +61,7 @@ const NotesDialog: FC<NotesDialogProps> = ({
 
           <Stack spacing={1}>
             <TextField
+              autoFocus
               multiline
               defaultValue={notes}
               rows={4}
