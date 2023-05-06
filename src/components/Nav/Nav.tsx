@@ -32,7 +32,7 @@ const Nav: FC<NavProps> = () => {
           <Box sx={{ flexGrow: 1 }}>
             <Link href={fireUser ? "/dashboard" : "/"}>
               <Typography variant="h6" component="div">
-                Tally Board
+                Score Keeper
               </Typography>
             </Link>
             {fireUser ? (

@@ -4,6 +4,7 @@ import { DatabaseService } from "@/services/database-service";
 import {
   User,
   createUserWithEmailAndPassword,
+  deleteUser,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -83,8 +84,13 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
         username
       );
     } catch (error) {
+      if (fireUser) {
+        await deleteUser(fireUser);
+      }
       console.log("Auth Provider Error " + error);
+      throw error;
     }
+
     // createUserWithEmailAndPassword(auth, email, password)
     //   .then((userCredential) => {
     //     DatabaseService.createFirestoreUserDocument(

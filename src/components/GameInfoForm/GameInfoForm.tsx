@@ -32,7 +32,7 @@ interface GameInfoFormProps {
 }
 
 const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
-  const { liveGame, updateGame, deleteGame, createGame } = useGame();
+  const { updateGame, deleteGame, createGame } = useGame();
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
@@ -85,28 +85,28 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   };
 
   const handleUpdateGame = async () => {
-    if (!user || !liveGame) {
+    if (!game) {
       return;
     }
 
     try {
-      await updateGame(liveGame.id, title, info, players, playerIds, color);
+      await updateGame(game.id, title, info, players, playerIds, color);
       showToast("Game succesfully updated!", "success");
-      router.push(`/dashboard/game/${liveGame.id}`);
+      router.push(`/dashboard/game/${game.id}`);
     } catch (error) {
       showToast("Failed to updated game!", "error");
     }
   };
 
   const handleDeleteGame = async () => {
-    if (!liveGame) {
+    if (!game) {
       return;
     }
 
     try {
-      await deleteGame(liveGame.id);
-      showToast("Game succesfully deleted!", "success");
+      await deleteGame(game.id);
       router.push("/dashboard");
+      showToast("Game succesfully deleted!", "success");
     } catch (error) {
       showToast("Failed to delete game!", "error");
     }
@@ -284,21 +284,19 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       <ColorDialog color={color} setColor={setColor} title="Game Color" />
       {/* <GameIconSelector /> */}
 
-      {liveGame ? (
+      {game ? (
         <>
           <Button variant="contained" onClick={() => handleUpdateGame()}>
             Save Changes
           </Button>
-          {/* <Link href={`/dashboard/game/${liveGame.id}`}> */}
           <Button
             variant="contained"
             onClick={() => {
-              router.push(`/dashboard/game/${liveGame.id}`);
+              router.push(`/dashboard/game/${game.id}`);
             }}
           >
             Cancel
           </Button>
-          {/* </Link> */}
           <Button
             variant="contained"
             sx={{ backgroundColor: "red" }}

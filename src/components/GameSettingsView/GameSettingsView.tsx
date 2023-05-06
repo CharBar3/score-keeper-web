@@ -18,7 +18,6 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
     if (user && liveGame && user.id != liveGame.ownerId) {
       redirect(`/dashboard/game/${liveGame.id}`);
     }
-    console.log("settings reload");
     setGameId(gameId);
   }, [gameId, setGameId, user, liveGame]);
 
