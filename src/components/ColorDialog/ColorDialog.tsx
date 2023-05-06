@@ -8,8 +8,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Unstable_Grid2";
 import { FC, useState } from "react";
-import RandomIcon from "../../../public/icons/randomize_icon_game master.svg";
 import ColorWheelBackground from "../../../public/color_wheel.png";
+import RandomIcon from "../../../public/icons/randomize_icon_game master.svg";
 
 interface ColorDialogProps {
   color: Color;
@@ -223,7 +223,6 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
                 sx={{
                   width: "100%",
                   height: "56px",
-                  // backgroundImage: `url(${ColorWheelPNG.src})`,
                   backgroundImage: `url(${ColorWheelBackground.src})`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center center",

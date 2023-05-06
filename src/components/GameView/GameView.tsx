@@ -7,22 +7,25 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
 import { FC, useEffect } from "react";
 import PlayerCard from "../PlayerCard/PlayerCard";
+import { useDataStore } from "@/providers/User";
 
 interface GameViewProps {
   id: string;
 }
 
 const GameView: FC<GameViewProps> = ({ id }) => {
+  const { user } = useDataStore();
   const { liveGame, setGameId } = useGame();
 
   useEffect(() => {
     setGameId(id);
   }, [id, setGameId]);
 
-  const adminIds: string[] = [];
   if (!liveGame) {
     return <Typography variant="h1">Loading...</Typography>;
   }
+
+  const adminIds: string[] = [liveGame.ownerId];
 
   liveGame.players.map((player) => {
     if (player.role === Role.Admin) {
@@ -56,9 +59,11 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         {liveGame.info}
       </Typography>
 
-      <Link href={`dashboard/game/${id}/settings`}>
-        <Button variant="contained">Settings</Button>
-      </Link>
+      {liveGame.ownerId === user?.id && (
+        <Link href={`dashboard/game/${id}/settings`}>
+          <Button variant="contained">Settings</Button>
+        </Link>
+      )}
       <Stack>
         <Grid
           container

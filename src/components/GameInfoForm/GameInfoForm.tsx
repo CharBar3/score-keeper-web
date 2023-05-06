@@ -1,6 +1,6 @@
 "use client";
 
-import { Color, Game, Role } from "@/models";
+import { Color, Game, Player, Role, User } from "@/models";
 import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
@@ -18,31 +18,41 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
 import * as _ from "lodash";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FC, Fragment, useState } from "react";
+import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
-import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 
 interface GameInfoFormProps {
   game?: Game;
+  user: User;
 }
 
-const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
-  const { user, createGame } = useDataStore();
-  const { liveGame, updateGame, deleteGame, setGameId } = useGame();
+const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
+  const { liveGame, updateGame, deleteGame, createGame } = useGame();
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
 
   const [title, setTitle] = useState(game?.title ?? "");
   const [info, setInfo] = useState(game?.info ?? "");
-  const [players, setPlayers] = useState(_.cloneDeep(game?.players) ?? []);
-  const [playerIds, setPlayerIds] = useState(
-    _.cloneDeep(game?.playerIds) ?? []
+  const [players, setPlayers] = useState<Player[]>(
+    _.cloneDeep(game?.players) ?? [
+      {
+        id: user.id,
+        name: user.username,
+        role: Role.Owner,
+        notes: "",
+        score: 0,
+        color: generateRandomColor(),
+      },
+    ]
+  );
+  const [playerIds, setPlayerIds] = useState<string[]>(
+    _.cloneDeep(game?.playerIds) ?? [user.id]
   );
   const [color, setColor] = useState<Color>(
     _.cloneDeep(game?.color) ?? generateRandomColor()
@@ -50,6 +60,12 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
 
   const handleCreateGame = async () => {
     if (!user) {
+      return;
+    }
+
+    console.log(title);
+    if (title == "") {
+      showToast("Please provide a title for the game", "info");
       return;
     }
 
@@ -192,11 +208,17 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
                   variant="outlined"
                   sx={{ border: "none" }}
                   onChange={(e) => handlePickRole(e, id)}
-                  disabled={role == Role.Owner ? true : false}
+                  disabled={
+                    role == Role.Owner || role == Role.Guest ? true : false
+                  }
                 >
                   {role == Role.Owner && (
                     <MenuItem value={Role.Owner}>Owner</MenuItem>
                   )}
+                  {role == Role.Guest && (
+                    <MenuItem value={Role.Guest}>Guest</MenuItem>
+                  )}
+
                   <MenuItem value={Role.Admin}>Admin</MenuItem>
                   <MenuItem value={Role.Edit}>Edit</MenuItem>
                   <MenuItem value={Role.View}>View</MenuItem>
@@ -209,19 +231,21 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
                 alignItems: "center",
               }}
             >
-              <Button
-                variant="styled"
-                sx={{
-                  width: "36px",
-                  height: "36px",
-                  minWidth: "unset",
-                  padding: "6px",
-                  margin: "auto",
-                }}
-                onClick={() => handleRemovePlayer(id)}
-              >
-                <MinusIcon height="100%" />
-              </Button>
+              {role != Role.Owner && (
+                <Button
+                  variant="styled"
+                  sx={{
+                    width: "36px",
+                    height: "36px",
+                    minWidth: "unset",
+                    padding: "6px",
+                    margin: "auto",
+                  }}
+                  onClick={() => handleRemovePlayer(id)}
+                >
+                  <MinusIcon height="100%" />
+                </Button>
+              )}
             </Box>
           </Box>
         </ListItem>
@@ -239,6 +263,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game }) => {
         name="Title"
         variant="outlined"
         defaultValue={title}
+        required={true}
         onChange={(e) => handleChange(e)}
       />
       <TextField

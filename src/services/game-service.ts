@@ -1,22 +1,18 @@
 import { db } from "@/config/firebase";
 import {
   Color,
-  Friend,
   Game,
-  GameCreateParams,
   GuestPlayerCreateParams,
   Player,
   Role,
   User,
 } from "@/models";
-import { green } from "@mui/material/colors";
 import {
   arrayRemove,
   arrayUnion,
   collection,
   doc,
   getDoc,
-  setDoc,
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
@@ -161,18 +157,7 @@ export class GameService {
   ): Promise<string> => {
     const newGameRef = doc(collection(db, "games"));
 
-    playerIds.push(owner.id);
-
-    const processedPlayers: Player[] = [
-      {
-        id: owner.id,
-        name: owner.username,
-        role: Role.Owner,
-        notes: "",
-        score: 0,
-        color: color,
-      },
-    ];
+    const processedPlayers: Player[] = [];
 
     for (const player of players) {
       processedPlayers.push({
@@ -198,7 +183,6 @@ export class GameService {
     const batch = writeBatch(db);
 
     batch.set(newGameRef, newGame);
-    // await setDoc(newGameRef, newGame);
 
     for (const playerId of playerIds) {
       const ref = doc(db, "users", playerId);

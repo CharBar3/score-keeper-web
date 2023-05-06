@@ -46,7 +46,7 @@ const Nav: FC<NavProps> = () => {
               <Link href="/dashboard">
                 <Button color="inherit">Dashboard</Button>
               </Link>
-              <Link href="/dashboard/newgame">
+              <Link href="/dashboard/game/new">
                 <Button color="inherit">New Game</Button>
               </Link>
               <Link href="/dashboard/friends">
