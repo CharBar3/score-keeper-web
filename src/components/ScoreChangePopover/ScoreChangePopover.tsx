@@ -137,6 +137,7 @@ const ScoreChangePopover: FC<ScoreChangePopoverProps> = ({
         }}
       >
         <StyledInputBase
+          autoFocus
           type="number"
           placeholder="Number"
           onChange={(e) => {
