@@ -2,7 +2,7 @@
 
 import { db } from "@/config/firebase";
 import { Color, Game, Player } from "@/models";
-import { DatabaseService } from "@/services/database-service";
+import { GameService } from "@/services/game-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
   FC,
@@ -13,18 +13,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { GuestPlayerCreateParams } from "@/models";
-import { GameService } from "@/services/game-service";
 import { useDataStore } from "./User";
 
 interface LiveGameContextProps {
   liveGame: Game | null;
-  // friendsList: Array<Friend> | null;
-  // gameList: Array<GamePreview> | null;
-  // getUser: () => Promise<void>;
   setGameId: (value: string) => void;
-  addPlayer: (friendId: string, friendUsername: string) => Promise<void>;
-  addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
   increaseScore: (playerId: string, scoreIncrease: number) => Promise<void>;
   decreaseScore: (playerId: string, scoreDecrease: number) => Promise<void>;
   createGame: (
@@ -48,17 +41,6 @@ interface LiveGameContextProps {
 
 const LiveGameContext = createContext<LiveGameContextProps>({
   liveGame: null,
-  // friendsList: null,
-  // gameList: null,
-  // getUser: async () => {
-  //   console.log("Error: Function not added to value prop");
-  // },
-  addPlayer: async () => {
-    console.log("Error: Function not added to value prop");
-  },
-  addGuestPlayer: async () => {
-    console.log("Error: Function not added to value prop");
-  },
   setGameId: async () => {
     console.log("Error: Function not added to value prop");
   },
@@ -94,38 +76,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   const [gameId, setGameId] = useState<string | null>(null);
   const [liveGame, setLiveGame] = useState<Game | null>(null);
-
-  const addGuestPlayer = useCallback(
-    async (guestPlayerInfo: GuestPlayerCreateParams) => {
-      if (!liveGame) {
-        return;
-      }
-
-      try {
-        await GameService.addGuestPlayer(liveGame.id, guestPlayerInfo);
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    [liveGame]
-  );
-
-  const addPlayer = useCallback(
-    async (friendId: string, friendUsername: string) => {
-      if (!liveGame) {
-        return;
-      }
-
-      try {
-        await GameService.addPlayer(liveGame.id, friendId, friendUsername);
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    },
-    [liveGame]
-  );
 
   const increaseScore = useCallback(
     async (playerId: string, scoreIncrease: number) => {
@@ -266,8 +216,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       value={{
         liveGame,
         setGameId,
-        addGuestPlayer,
-        addPlayer,
         increaseScore,
         decreaseScore,
         createGame,

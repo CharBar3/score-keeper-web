@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { Friend, Game, User } from "../models";
 
-export class DatabaseService {
+export class UserService {
   public static createFirestoreUserDocument = async (
     user: FireUser,
     username: string
@@ -83,18 +83,11 @@ export class DatabaseService {
     friendId: string,
     userId: string
   ): Promise<void> => {
-    // const ref = await doc(db, "users", userId);
-    // await updateDoc(ref, {
-    //   friends: arrayRemove(friendUserId),
-    // });
-
     const batch = writeBatch(db);
 
-    // Add friendId to user friends list
     const userRef = doc(db, "users", userId);
     batch.update(userRef, { friends: arrayRemove(friendId) });
 
-    // Add userId to friend's friends list
     const friendRef = doc(db, "users", friendId);
     batch.update(friendRef, {
       friends: arrayRemove(userId),

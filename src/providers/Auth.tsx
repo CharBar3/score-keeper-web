@@ -1,6 +1,6 @@
 "use client";
 
-import { DatabaseService } from "@/services/database-service";
+import { UserService } from "@/services/user-service";
 import {
   User,
   createUserWithEmailAndPassword,
@@ -79,7 +79,7 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
         email,
         password
       );
-      await DatabaseService.createFirestoreUserDocument(
+      await UserService.createFirestoreUserDocument(
         userCredential.user,
         username
       );
