@@ -1,5 +1,4 @@
 import { db } from "@/config/firebase";
-import uniqid from "uniqid";
 import { User as FireUser } from "firebase/auth";
 import {
   arrayRemove,
@@ -10,18 +9,10 @@ import {
   getDocs,
   query,
   setDoc,
-  updateDoc,
   where,
   writeBatch,
 } from "firebase/firestore";
-import {
-  Friend,
-  Game,
-  GameCreateParams,
-  GuestPlayerCreateParams,
-  Role,
-  User,
-} from "../models";
+import { Friend, Game, User } from "../models";
 
 export class DatabaseService {
   public static createFirestoreUserDocument = async (

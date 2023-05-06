@@ -1,21 +1,20 @@
 "use client";
 
 import { Color, Role } from "@/models";
+import { useGame } from "@/providers/Game";
+import { useDataStore } from "@/providers/User";
 import {
-  Box,
   Card,
   CardActions,
   CardContent,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { FC } from "react";
-import { useGame } from "@/providers/Game";
-import { useDataStore } from "@/providers/User";
-import NotesDialog from "../NotesDialog/NotesDialog";
-import ScoreChangePopover from "../ScoreChangePopover/ScoreChangePopover";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useTheme } from "@mui/material/styles";
+import { FC } from "react";
+import NotesDialog from "../NotesDialog/NotesDialog";
+import ScoreChangePopover from "../ScoreChangePopover/ScoreChangePopover";
 
 interface PlayerCardProps {
   id: string; // the players id.
@@ -47,16 +46,16 @@ const PlayerCard: FC<PlayerCardProps> = ({
 
   // Security
 
-  let roleButtonColor = "red";
-  let roleDisabled = true;
+  let hasPermission = false;
+
+  console.log(user?.id);
+  console.log(user?.id === id);
 
   if (user && liveGame) {
-    if (adminIds.includes(user.id) || user.id === liveGame.ownerId) {
-      roleDisabled = false;
-      roleButtonColor = "blue";
+    if (adminIds.includes(user.id)) {
+      hasPermission = true;
     } else if (user.id === id && role === Role.Edit) {
-      roleDisabled = false;
-      roleButtonColor = "blue";
+      hasPermission = true;
     }
   }
 
@@ -143,6 +142,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
           >
             <NotesDialog
               notes={notes}
+              hasPermission={hasPermission}
               id={id}
               sx={{
                 width: "100%",
@@ -157,36 +157,40 @@ const PlayerCard: FC<PlayerCardProps> = ({
             />
           </Grid>
           <Grid xs={6}>
-            <ScoreChangePopover
-              action={Action.Decrease}
-              playerId={id}
-              color={boxShadowColor}
-              sx={{
-                width: "100%",
-                height: "44px",
-                [theme.breakpoints.down(670)]: {
-                  minWidth: "0px",
-                  height: "22px",
-                  boxShadow: "0px 3px",
-                },
-              }}
-            />
+            {hasPermission && (
+              <ScoreChangePopover
+                action={Action.Decrease}
+                playerId={id}
+                color={boxShadowColor}
+                sx={{
+                  width: "100%",
+                  height: "44px",
+                  [theme.breakpoints.down(670)]: {
+                    minWidth: "0px",
+                    height: "22px",
+                    boxShadow: "0px 3px",
+                  },
+                }}
+              />
+            )}
           </Grid>
           <Grid xs={6}>
-            <ScoreChangePopover
-              action={Action.Increase}
-              playerId={id}
-              color={boxShadowColor}
-              sx={{
-                width: "100%",
-                height: "44px",
-                [theme.breakpoints.down(670)]: {
-                  minWidth: "0px",
-                  height: "22px",
-                  boxShadow: "0px 3px",
-                },
-              }}
-            />
+            {hasPermission && (
+              <ScoreChangePopover
+                action={Action.Increase}
+                playerId={id}
+                color={boxShadowColor}
+                sx={{
+                  width: "100%",
+                  height: "44px",
+                  [theme.breakpoints.down(670)]: {
+                    minWidth: "0px",
+                    height: "22px",
+                    boxShadow: "0px 3px",
+                  },
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </CardActions>

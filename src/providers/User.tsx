@@ -24,13 +24,7 @@ interface DataStoreContextProps {
   getGames: () => Promise<void>;
   addFriend: (friendId: string) => Promise<void>;
   removeFriend: (friendId: string) => Promise<void>;
-  createGame: (
-    title: string,
-    info: string,
-    players: Player[],
-    playerIds: string[],
-    color: Color
-  ) => Promise<string | void>;
+
   findFriend: (username: string) => Promise<Friend[] | []>;
   generateRandomColor: () => Color;
 }
@@ -50,10 +44,6 @@ const DataStoreContext = createContext<DataStoreContextProps>({
   },
   removeFriend: async () => {
     console.log("Error: Function not added to value prop");
-  },
-  createGame: async () => {
-    console.log("Error: Function not added to value prop");
-    return "";
   },
   findFriend: async () => {
     console.log("Error: Function not added to value prop");
@@ -117,33 +107,6 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
     return color;
   }, []);
 
-  const createGame = useCallback(
-    async (
-      title: string,
-      info: string,
-      players: Player[],
-      playerIds: string[],
-      color: Color
-    ) => {
-      if (!user) {
-        return;
-      }
-      try {
-        return await GameService.createUserGame(
-          title,
-          info,
-          user,
-          players,
-          playerIds,
-          color
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [user]
-  );
-
   const findFriend = useCallback(
     async (username: string) => {
       if (!user) {
@@ -190,7 +153,6 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
         getGames,
         removeFriend,
         addFriend,
-        createGame,
         findFriend,
         generateRandomColor,
       }}

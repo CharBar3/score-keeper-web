@@ -15,6 +15,7 @@ import {
 } from "react";
 import { GuestPlayerCreateParams } from "@/models";
 import { GameService } from "@/services/game-service";
+import { useDataStore } from "./User";
 
 interface LiveGameContextProps {
   liveGame: Game | null;
@@ -26,6 +27,13 @@ interface LiveGameContextProps {
   addGuestPlayer: (guestPlayerInfo: GuestPlayerCreateParams) => Promise<void>;
   increaseScore: (playerId: string, scoreIncrease: number) => Promise<void>;
   decreaseScore: (playerId: string, scoreDecrease: number) => Promise<void>;
+  createGame: (
+    title: string,
+    info: string,
+    players: Player[],
+    playerIds: string[],
+    color: Color
+  ) => Promise<string | void>;
   updateGame: (
     gameId: string,
     newTitle: string,
@@ -60,6 +68,10 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   decreaseScore: async () => {
     console.log("Error: Function not added to value prop");
   },
+  createGame: async () => {
+    console.log("Error: Function not added to value prop");
+    return "";
+  },
   updateGame: async () => {
     console.log("Error: Function not added to value prop");
   },
@@ -78,6 +90,8 @@ interface LiveGameContextProviderProps {
 export const GameProvider: FC<LiveGameContextProviderProps> = ({
   children,
 }) => {
+  const { user } = useDataStore();
+
   const [gameId, setGameId] = useState<string | null>(null);
   const [liveGame, setLiveGame] = useState<Game | null>(null);
 
@@ -157,6 +171,33 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
     [liveGame]
   );
 
+  const createGame = useCallback(
+    async (
+      title: string,
+      info: string,
+      players: Player[],
+      playerIds: string[],
+      color: Color
+    ) => {
+      if (!user) {
+        return;
+      }
+      try {
+        return await GameService.createUserGame(
+          title,
+          info,
+          user,
+          players,
+          playerIds,
+          color
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [user]
+  );
+
   const updateGame = useCallback(
     async (
       gameId: string,
@@ -227,6 +268,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         addPlayer,
         increaseScore,
         decreaseScore,
+        createGame,
         updateGame,
         deleteGame,
         updateNotes,

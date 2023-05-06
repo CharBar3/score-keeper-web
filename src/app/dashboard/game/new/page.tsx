@@ -4,11 +4,7 @@ import { FC } from "react";
 interface newGameProps {}
 
 const newGame: FC<newGameProps> = () => {
-  return (
-    <div>
-      <NewGameView />
-    </div>
-  );
+  return <NewGameView />;
 };
 
 export default newGame;

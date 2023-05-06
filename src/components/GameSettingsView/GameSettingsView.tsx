@@ -25,10 +25,10 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
   return (
     <Stack>
       <Typography variant="h1">Game Settings</Typography>
-      {!liveGame ? (
+      {!liveGame || !user ? (
         <Typography variant="h1">Loading...</Typography>
       ) : (
-        <GameInfoForm game={liveGame} />
+        <GameInfoForm game={liveGame} user={user} />
       )}
     </Stack>
   );

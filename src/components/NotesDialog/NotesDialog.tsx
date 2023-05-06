@@ -15,9 +15,15 @@ interface NotesDialogProps {
   notes: string;
   id: string;
   sx: SxProps;
+  hasPermission: boolean;
 }
 
-const NotesDialog: FC<NotesDialogProps> = ({ notes, id, sx }) => {
+const NotesDialog: FC<NotesDialogProps> = ({
+  notes,
+  id,
+  sx,
+  hasPermission,
+}) => {
   const { updateNotes } = useGame();
 
   const [open, setOpen] = useState(false);
@@ -55,8 +61,6 @@ const NotesDialog: FC<NotesDialogProps> = ({ notes, id, sx }) => {
 
           <Stack spacing={1}>
             <TextField
-              id="outlined-multiline-static"
-              // label="Multiline"
               multiline
               defaultValue={notes}
               rows={4}
@@ -64,14 +68,16 @@ const NotesDialog: FC<NotesDialogProps> = ({ notes, id, sx }) => {
             />
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={handleClose}>
-            cancel
-          </Button>
-          <Button variant="contained" onClick={handleClick}>
-            update
-          </Button>
-        </DialogActions>
+        {hasPermission && (
+          <DialogActions>
+            <Button variant="contained" onClick={handleClose}>
+              cancel
+            </Button>
+            <Button variant="contained" onClick={handleClick}>
+              update
+            </Button>
+          </DialogActions>
+        )}
       </Dialog>
     </>
   );
