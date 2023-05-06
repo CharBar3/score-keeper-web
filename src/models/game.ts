@@ -14,7 +14,6 @@ export interface Color {
   red: number;
   green: number;
   blue: number;
-  // alpha: number;
 }
 
-export type GameCreateParams = Omit<Game, "id" | "color">;
+export type GameCreateParams = Omit<Game, "id">;

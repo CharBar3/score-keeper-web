@@ -1,10 +1,9 @@
 "use client";
 
-import { Friend, User, GameCreateParams, Game, Color, Player } from "../models";
 import { db } from "@/config/firebase";
 import { useAuth } from "@/providers/Auth";
-import { DatabaseService } from "@/services/database-service";
 import { GameService } from "@/services/game-service";
+import { UserService } from "@/services/user-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
   FC,
@@ -15,6 +14,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Color, Friend, Game, User } from "../models";
 
 interface DataStoreContextProps {
   user: User | null;
@@ -72,14 +72,14 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
     if (!user) {
       return;
     }
-    setFriendsList(await DatabaseService.fetchUserFriends(user.id));
+    setFriendsList(await UserService.fetchUserFriends(user.id));
   }, [user]);
 
   const getGames = useCallback(async () => {
     if (!user) {
       return;
     }
-    setGameList(await DatabaseService.fetchUserGames(user.id));
+    setGameList(await UserService.fetchUserGames(user.id));
   }, [user]);
 
   const addFriend = useCallback(
@@ -87,7 +87,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
       if (!user) {
         return;
       }
-      await DatabaseService.addUserFriend(friendId, user.id);
+      await UserService.addUserFriend(friendId, user.id);
     },
     [user]
   );
@@ -97,7 +97,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
       if (!user) {
         return;
       }
-      await DatabaseService.removeUserFriend(friendId, user.id);
+      await UserService.removeUserFriend(friendId, user.id);
     },
     [user]
   );
@@ -114,7 +114,7 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
       }
 
       try {
-        return await DatabaseService.findFriendByUsername(username);
+        return await UserService.findFriendByUsername(username);
       } catch (error) {
         console.log(error);
         throw Error;

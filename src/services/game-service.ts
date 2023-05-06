@@ -1,12 +1,5 @@
 import { db } from "@/config/firebase";
-import {
-  Color,
-  Game,
-  GuestPlayerCreateParams,
-  Player,
-  Role,
-  User,
-} from "@/models";
+import { Color, Game, Player, User } from "@/models";
 import {
   arrayRemove,
   arrayUnion,
@@ -16,64 +9,8 @@ import {
   updateDoc,
   writeBatch,
 } from "firebase/firestore";
-import uniqid from "uniqid";
 
 export class GameService {
-  // public static addGameToUsersGames = async (
-  //   gameId: string,
-  //   playerIds: string[]
-  // ) => {
-  //   const ref = await doc(db, "users", userId);
-  //   await updateDoc(ref, {
-  //     games: arrayUnion(gameId),
-  //   });
-  // };
-
-  public static addPlayer = async (
-    gameId: string,
-    friendId: string,
-    friendUsername: string
-  ): Promise<void> => {
-    // const batch = writeBatch(db);
-
-    // // Add friendId to user friends list
-    // const userRef = doc(db, "users", userId);
-    // batch.update(userRef, { friends: arrayUnion(friendId) });
-
-    // // Add userId to friend's friends list
-    // const friendRef = doc(db, "users", friendId);
-    // batch.update(friendRef, {
-    //   friends: arrayUnion(userId),
-    // });
-
-    // await batch.commit();
-
-    const newPlayer: Player = {
-      id: friendId,
-      name: friendUsername,
-      notes: "",
-      role: Role.Edit,
-      score: 0,
-      color: this.colorGenerator(),
-    };
-
-    const gameRef = doc(db, "games", gameId);
-    await updateDoc(gameRef, {
-      players: arrayUnion(newPlayer),
-      playerIds: arrayUnion(friendId),
-    });
-  };
-
-  public static addGuestPlayer = async (
-    gameId: string,
-    guestInfo: GuestPlayerCreateParams
-  ): Promise<void> => {
-    const gameDocRef = doc(db, "games", gameId);
-    await updateDoc(gameDocRef, {
-      players: arrayUnion({ ...guestInfo, id: uniqid() }),
-    });
-  };
-
   public static increaseScore = async (
     gameId: string,
     playerId: string,
@@ -122,6 +59,7 @@ export class GameService {
       console.log("no player exists");
     }
   };
+
   public static updateNotes = async (
     gameId: string,
     playerId: string,
@@ -199,24 +137,17 @@ export class GameService {
     gameId: string,
     newTitle: string,
     newInfo: string,
-    // owner: User,
     newPlayers: Player[],
     newPlayerIds: string[],
     newColor: Color
   ): Promise<void> => {
-    // get the game doc
-
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
 
     if (gameSnap.exists()) {
       const currentGameDoc = gameSnap.data();
 
-      // create a batch
-
       const batch = writeBatch(db);
-
-      // check to see if players have been removed and remove the game id from the removed players game list (batch)
 
       for (const playerId of currentGameDoc.playerIds) {
         if (!newPlayerIds.includes(playerId)) {
@@ -227,7 +158,6 @@ export class GameService {
         }
       }
 
-      // check to see if players have been added and add the game id to that players game list (batch)
       for (const playerId of newPlayerIds) {
         if (!currentGameDoc.playerIds.includes(playerId)) {
           const ref = doc(db, "users", playerId);
@@ -237,8 +167,6 @@ export class GameService {
         }
       }
 
-      // update the title and info and players on the game doc itself (batch)
-
       batch.update(gameRef, {
         title: newTitle,
         info: newInfo,
@@ -247,11 +175,9 @@ export class GameService {
         color: newColor,
       });
 
-      // save batch
-
       await batch.commit();
     } else {
-      console.log("Game does not exist!");
+      throw new Error("Game does not exist");
     }
   };
 
@@ -275,7 +201,7 @@ export class GameService {
 
       await batch.commit();
     } else {
-      console.log("Game does not exist!");
+      throw new Error("Game does not exist");
     }
   };
 
