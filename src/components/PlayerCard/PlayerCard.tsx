@@ -19,11 +19,12 @@ import ScoreChangePopover from "../ScoreChangePopover/ScoreChangePopover";
 interface PlayerCardProps {
   id: string; // the players id.
   name: string; // defaults to the players username but can be updated
-  role: Role;
+  // role: Role;
   score: number;
   notes: string;
   color: Color;
-  adminIds: string[];
+  // adminIds: string[];
+  hasPermission: boolean;
 }
 
 enum Action {
@@ -34,27 +35,12 @@ enum Action {
 const PlayerCard: FC<PlayerCardProps> = ({
   id,
   name,
-  role,
   score,
   notes,
   color,
-  adminIds,
+  hasPermission,
 }) => {
   const theme = useTheme();
-  const { user } = useDataStore();
-  const { liveGame } = useGame();
-
-  // Security
-
-  let hasPermission = false;
-
-  if (user && liveGame) {
-    if (adminIds.includes(user.id)) {
-      hasPermission = true;
-    } else if (user.id === id && role === Role.Edit) {
-      hasPermission = true;
-    }
-  }
 
   const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
   const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .6)`;

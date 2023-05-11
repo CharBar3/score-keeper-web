@@ -7,21 +7,30 @@ import { FC } from "react";
 const Toast: FC = () => {
   const { toastQueue, handleCloseToast } = useToast();
 
-  let marginOffsetCounter = 0;
+  let zIndexCount = 9000;
 
   const showToastQueue = toastQueue.map(
     ({ id, message, severity, isOpen }, index) => {
-      if (isOpen) {
-        marginOffsetCounter++;
-      }
+      zIndexCount--;
 
       return (
         <Snackbar
           key={id}
           open={isOpen}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
           sx={{
-            marginBottom: `${marginOffsetCounter * 56}px`,
-            transition: "margin-bottom .2s ",
+            zIndex: zIndexCount,
+            position: "fixed",
+            top: "56px",
+            animation: `slideUp 0.5s ease-in-out forwards`,
+            "@keyframes slideUp": {
+              from: {
+                top: "64px",
+              },
+              to: {
+                top: "8px",
+              },
+            },
           }}
           // autoHideDuration={6000}
           // onClose={() => handleCloseToast(id)}
@@ -29,7 +38,7 @@ const Toast: FC = () => {
           <Alert
             onClose={() => handleCloseToast(id)}
             severity={severity}
-            sx={{ width: "100%" }}
+            // sx={{ width: "100%" }}
           >
             {message}
           </Alert>

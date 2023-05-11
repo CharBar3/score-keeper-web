@@ -10,7 +10,6 @@ const Page: FC<PageProps> = ({ params: { id } }) => {
   return (
     <>
       <GameView id={id} />
-      <GameNav gameId={id} />
     </>
   );
 };

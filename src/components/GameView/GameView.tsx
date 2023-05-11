@@ -2,10 +2,10 @@
 
 import { Role } from "@/models";
 import { useGame } from "@/providers/Game";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import Link from "next/link";
 import { FC, useEffect } from "react";
+import GameNav from "../GameNav/GameNav";
 import PlayerCard from "../PlayerCard/PlayerCard";
 import { useDataStore } from "@/providers/User";
 
@@ -14,8 +14,8 @@ interface GameViewProps {
 }
 
 const GameView: FC<GameViewProps> = ({ id }) => {
+  const { liveGame, setGameId, playerRole } = useGame();
   const { user } = useDataStore();
-  const { liveGame, setGameId } = useGame();
 
   useEffect(() => {
     setGameId(id);
@@ -25,26 +25,25 @@ const GameView: FC<GameViewProps> = ({ id }) => {
     return <Typography variant="h1">Loading...</Typography>;
   }
 
-  const adminIds: string[] = [liveGame.ownerId];
-
-  liveGame.players.map((player) => {
-    if (player.role === Role.Admin) {
-      adminIds.push(player.id);
-    }
-  });
-
   const showPlayers = liveGame.players.map((player) => {
+    let hasPermission = false;
+
+    if (playerRole === Role.Admin || playerRole === Role.Owner) {
+      hasPermission = true;
+    } else if (playerRole === Role.Edit && user && user.id === player.id) {
+      hasPermission = true;
+    }
+
     return (
       <Grid key={player.id}>
         <PlayerCard
           key={player.id}
           id={player.id}
           name={player.name}
-          role={player.role}
           score={player.score}
           notes={player.notes}
           color={player.color}
-          adminIds={adminIds}
+          hasPermission={hasPermission}
         />
       </Grid>
     );
@@ -73,6 +72,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
           {showPlayers}
         </Grid>
       </Stack>
+      <GameNav gameId={id} />
     </Box>
   );
 };

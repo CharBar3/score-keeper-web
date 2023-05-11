@@ -29,7 +29,7 @@ const Nav: FC<NavProps> = () => {
     <Box sx={{ flexGrow: 1, marginBottom: 3 }}>
       <AppBar position="static" variant="elevation">
         <Toolbar>
-          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+          <Box sx={{ flexGrow: 1 }}>
             <Link href={fireUser ? "/dashboard" : "/"}>
               <Typography variant="h6" component="div">
                 Score Keeper

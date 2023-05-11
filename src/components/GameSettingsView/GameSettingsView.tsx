@@ -16,9 +16,9 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
   const theme = useTheme();
 
   useEffect(() => {
-    if (user && liveGame && user.id != liveGame.ownerId) {
-      redirect(`/dashboard/game/${liveGame.id}`);
-    }
+    // if (user && liveGame && user.id != liveGame.ownerId) {
+    //   redirect(`/dashboard/game/${liveGame.id}`);
+    // }
     setGameId(gameId);
   }, [gameId, setGameId, user, liveGame]);
 
