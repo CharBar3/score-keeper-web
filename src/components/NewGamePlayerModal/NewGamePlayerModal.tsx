@@ -1,8 +1,8 @@
 "use client";
 
-import { useDataStore } from "@/providers/User";
-import { useGame } from "@/providers/Game";
+import { Player, Role } from "@/models";
 import { useToast } from "@/providers/ToastProvider";
+import { useDataStore } from "@/providers/User";
 import {
   Box,
   Divider,
@@ -18,7 +18,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FC, FormEvent, Fragment, useState } from "react";
-import { Player, Role } from "@/models";
 import uniqid from "uniqid";
 
 interface NewGamePlayerModalProps {
@@ -65,6 +64,8 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
       const newState = [...prevState, friendId];
       return newState;
     });
+
+    showToast("Friend Added", "success");
   };
 
   let showFriends = null;
@@ -94,8 +95,8 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
   return (
     <div>
       <div>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Add Players
+        <Button variant="dark" sx={{ width: "100%" }} onClick={handleClickOpen}>
+          Add Friends
         </Button>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Add Your Friends!</DialogTitle>
@@ -122,8 +123,10 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                   });
                   setGuestName("");
                   e.currentTarget.guestName.value = "";
+
+                  showToast("Guest player added", "success");
                 } else {
-                  console.log("please input a guest name");
+                  showToast("Please add guest name", "info");
                 }
               }}
             >

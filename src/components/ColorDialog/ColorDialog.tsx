@@ -10,6 +10,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { FC, useState } from "react";
 import ColorWheelBackground from "../../../public/color_wheel.png";
 import RandomIcon from "../../../public/icons/randomize_icon_game master.svg";
+import { useToast } from "@/providers/ToastProvider";
+import { useTheme } from "@mui/material/styles";
 
 interface ColorDialogProps {
   color: Color;
@@ -27,6 +29,9 @@ const ColorChoiceButton = styled(Button)(({ theme }) => ({
 }));
 
 const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
+  const { showToast } = useToast();
+  const theme = useTheme();
+
   const colorChoices: Color[] = [
     { red: 230, green: 30, blue: 35 },
     { red: 235, green: 80, blue: 40 },
@@ -155,6 +160,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
           onClick={handleClickOpen}
           sx={{
             backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
+            // boxShadow: `0px 6px ${theme.palette.primary.dark}`,
             minWidth: "unset",
             width: "36px",
             height: "36px",
@@ -364,6 +370,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
                 handleClose();
                 setCurrentTextColor(updateTextColor(newColor));
                 setColor(newColor);
+                showToast("Color applied", "success");
               }}
             >
               Apply

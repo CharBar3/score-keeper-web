@@ -1,9 +1,4 @@
 import { createTheme, responsiveFontSizes } from "@mui/material";
-// declare module "@mui/material/Card" {
-//   interface CardPropsVariantOverrides {
-//     yeet: true;
-//   }
-// }
 
 declare module "@mui/material/styles" {
   interface BreakpointOverrides {}
@@ -11,26 +6,20 @@ declare module "@mui/material/styles" {
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     styled: true;
+    dark: true;
   }
 }
 
 export const theme = responsiveFontSizes(
   createTheme({
     palette: {
-      primary: {
-        main: "#787D8C",
-
-        // light: "#EBEBEB",
-        // dark: "blue",
-      },
-      // secondary: { main: "#999999" },
-      // text: { primary: "#5A5A5A" },
+      primary: { main: "#787D8C", light: "#C0C5CA", dark: "#4B4F59" },
+      text: { primary: "#000000" },
     },
     breakpoints: {
       values: {
         xs: 0,
         sm: 600,
-
         md: 900,
         lg: 1200,
         xl: 1536,
@@ -53,6 +42,16 @@ export const theme = responsiveFontSizes(
               backgroundColor: "#C0C5CA",
               color: "#9A9FA4",
               boxShadow: " 0px 6px #9A9FA4",
+            },
+          },
+          {
+            props: { variant: "dark" },
+            style: {
+              backgroundColor: "#787D8C",
+              color: "#FFFFFF",
+              boxShadow: "0px 6px #4B4F59",
+              marginBottom: "6px",
+              borderRadius: "5px",
             },
           },
         ],
