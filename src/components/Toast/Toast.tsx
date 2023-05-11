@@ -7,7 +7,7 @@ import { FC } from "react";
 const Toast: FC = () => {
   const { toastQueue, handleCloseToast } = useToast();
 
-  let marginOffsetCounter = -1;
+  let marginOffsetCounter = 0;
 
   const showToastQueue = toastQueue.map(
     ({ id, message, severity, isOpen }, index) => {
@@ -20,7 +20,7 @@ const Toast: FC = () => {
           key={id}
           open={isOpen}
           sx={{
-            marginBottom: `${marginOffsetCounter * 55}px`,
+            marginBottom: `${marginOffsetCounter * 56}px`,
             transition: "margin-bottom .2s ",
           }}
           // autoHideDuration={6000}

@@ -1,3 +1,4 @@
+import GameNav from "@/components/GameNav/GameNav";
 import GameView from "@/components/GameView/GameView";
 import { FC } from "react";
 
@@ -6,7 +7,12 @@ interface PageProps {
 }
 
 const Page: FC<PageProps> = ({ params: { id } }) => {
-  return <GameView id={id} />;
+  return (
+    <>
+      <GameView id={id} />
+      <GameNav gameId={id} />
+    </>
+  );
 };
 
 export default Page;

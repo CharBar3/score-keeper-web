@@ -2,7 +2,7 @@
 
 import { Role } from "@/models";
 import { useGame } from "@/providers/Game";
-import { Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import Link from "next/link";
 import { FC, useEffect } from "react";
@@ -51,7 +51,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
   });
 
   return (
-    <div>
+    <Box sx={{ marginBottom: "56px" }}>
       <Typography textAlign="center" variant="h1">
         {liveGame.title}
       </Typography>
@@ -59,11 +59,11 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         {liveGame.info}
       </Typography>
 
-      {liveGame.ownerId === user?.id && (
+      {/* {liveGame.ownerId === user?.id && (
         <Link href={`dashboard/game/${id}/settings`}>
           <Button variant="contained">Settings</Button>
         </Link>
-      )}
+      )} */}
       <Stack>
         <Grid
           container
@@ -73,7 +73,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
           {showPlayers}
         </Grid>
       </Stack>
-    </div>
+    </Box>
   );
 };
 
