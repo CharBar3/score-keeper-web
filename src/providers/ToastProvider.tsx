@@ -1,22 +1,19 @@
 "use client";
 
+import uniqid from "uniqid";
 import { FC, ReactNode, createContext, useContext, useState } from "react";
 
 type ToastSeverity = "error" | "warning" | "info" | "success";
 
 interface ToastContextProps {
-  message: string | null;
-  severity: ToastSeverity;
-  isOpen: boolean;
-  handleClose: Function;
+  toastQueue: ToaseQueueItem[];
+  handleCloseToast: (id: string) => void;
   showToast: (message: string, severity: ToastSeverity) => void;
 }
 
 const ToastContext = createContext<ToastContextProps>({
-  message: null,
-  severity: "info",
-  isOpen: false,
-  handleClose: () => {
+  toastQueue: [],
+  handleCloseToast: () => {
     console.log("Make sure to add handleClose function to value prop");
   },
   showToast: () => {
@@ -24,30 +21,72 @@ const ToastContext = createContext<ToastContextProps>({
   },
 });
 
+interface ToaseQueueItem {
+  id: string;
+  message: string;
+  severity: ToastSeverity;
+  isOpen: boolean;
+}
 interface ToastContextProviderProps {
   children: ReactNode;
 }
 
 export const ToastProvider: FC<ToastContextProviderProps> = ({ children }) => {
-  const [message, setMessage] = useState<string | null>(null);
-  const [severity, setSeverity] = useState<ToastSeverity>("info");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setMessage(null);
-    setSeverity("info");
-  };
+  const [toastQueue, setToastQueue] = useState<ToaseQueueItem[]>([]);
 
   const showToast = (message: string, severity: ToastSeverity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setIsOpen(true);
+    const newToast = { id: uniqid(), message, severity, isOpen: true };
+
+    setToastQueue((prevState) => {
+      let updatedQueue = [newToast, ...prevState.slice(0, 3)];
+
+      if (updatedQueue[3]) {
+        updatedQueue[3].isOpen = false;
+      }
+
+      return [...updatedQueue];
+    });
+
+    setTimeout(() => {
+      handleCloseToast(newToast.id);
+    }, 6000);
+  };
+
+  const handleCloseToast = (id: string) => {
+    let shouldCleanup = false;
+
+    setToastQueue((prevState) => {
+      const newState = prevState.map((toast) =>
+        toast.id === id ? { ...toast, isOpen: false } : toast
+      );
+
+      if (newState.every((toast) => !toast.isOpen)) {
+        shouldCleanup = true;
+      }
+
+      return [...newState];
+    });
+
+    if (shouldCleanup) {
+      setTimeout(() => {
+        handleQueueCleanup();
+      }, 1000);
+    }
+  };
+
+  const handleQueueCleanup = () => {
+    setToastQueue((prevState) => {
+      return [];
+    });
   };
 
   return (
     <ToastContext.Provider
-      value={{ message, severity, isOpen, handleClose, showToast }}
+      value={{
+        toastQueue,
+        handleCloseToast,
+        showToast,
+      }}
     >
       {children}
     </ToastContext.Provider>

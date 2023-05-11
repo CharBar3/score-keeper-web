@@ -1,4 +1,6 @@
+import { useToast } from "@/providers/ToastProvider";
 import { InputBase, styled } from "@mui/material";
+import { FC, useEffect, useState } from "react";
 import SearchIcon from "../../../public/icons/Magnifying_glass_icon-09.svg";
 import { theme } from "../../config/theme";
 
@@ -31,9 +33,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     marginLeft: theme.spacing(2),
   },
 }));
-
-import { FC, useEffect, useState } from "react";
-import { useToast } from "@/providers/ToastProvider";
 
 interface SearchInputProps {
   placeholder: string;

@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   FormControl,
+  InputBase,
   InputLabel,
   List,
   ListItem,
@@ -18,6 +19,7 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
+  styled,
 } from "@mui/material";
 import * as _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -25,6 +27,8 @@ import { ChangeEvent, FC, Fragment, useState } from "react";
 import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
+import InputBar from "../InputBar/InputBar";
+import { useTheme } from "@mui/material/styles";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -36,6 +40,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
+  const theme = useTheme();
 
   const [title, setTitle] = useState(game?.title ?? "");
   const [info, setInfo] = useState(game?.info ?? "");
@@ -112,16 +117,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (e.target.name === "Title") {
-      setTitle(e.target.value);
-    } else if (e.target.name === "Info") {
-      setInfo(e.target.value);
-    }
-  };
-
   const handleRemovePlayer = (id: string) => {
     setPlayers((prevState) => {
       const newState = [];
@@ -145,6 +140,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       }
       return newState;
     });
+
+    showToast("Removed player", "success");
   };
 
   const handlePickRole = (e: SelectChangeEvent, id: string) => {
@@ -182,64 +179,59 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       <Fragment key={id}>
         <ListItem sx={{ display: "flex", flexWrap: "wrap" }}>
           <ListItemText
-            primaryTypographyProps={{ noWrap: true }}
             primary={name}
-            sx={{ minWidth: "320px" }}
+            primaryTypographyProps={{ noWrap: true }}
+            sx={{ minWidth: "100px" }}
           />
-          <Box
-            sx={{
-              display: "flex",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <ColorDialog color={color} setColor={setPlayerColor} />
-            </Box>
-            <Box sx={{ minWidth: 100, marginLeft: 2, marginRight: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel>Role</InputLabel>
-                <Select
-                  value={role}
-                  label="Role"
-                  variant="outlined"
-                  sx={{ border: "none" }}
-                  onChange={(e) => handlePickRole(e, id)}
-                  disabled={
-                    role == Role.Owner || role == Role.Guest ? true : false
-                  }
-                >
-                  {role == Role.Owner && (
-                    <MenuItem value={Role.Owner}>Owner</MenuItem>
-                  )}
-                  {role == Role.Guest && (
-                    <MenuItem value={Role.Guest}>Guest</MenuItem>
-                  )}
+          <Box sx={{ display: "flex" }}>
+            <ColorDialog color={color} setColor={setPlayerColor} />
+            <FormControl sx={{ unset: "all" }}>
+              <Select
+                value={role}
+                sx={{
+                  marginLeft: 1,
+                  marginRight: 1,
+                  border: "none",
+                  color: "white",
+                  borderTopLeftRadius: "5px",
+                  borderTopRightRadius: "5px",
+                  height: "36px",
+                  width: "100px",
+                  backgroundColor: theme.palette.primary.main,
+                  marginBottom: "6px",
+                  boxShadow: `0px 6px ${theme.palette.primary.dark}`,
+                  "&:hover": { border: "red" },
+                  "& .MuiSvgIcon-root":
+                    role === Role.Owner || role === Role.Guest
+                      ? {}
+                      : { color: "white" },
+                }}
+                onChange={(e) => handlePickRole(e, id)}
+                disabled={
+                  role == Role.Owner || role == Role.Guest ? true : false
+                }
+              >
+                {role == Role.Owner && (
+                  <MenuItem value={Role.Owner}>Owner</MenuItem>
+                )}
+                {role == Role.Guest && (
+                  <MenuItem value={Role.Guest}>Guest</MenuItem>
+                )}
 
-                  <MenuItem value={Role.Admin}>Admin</MenuItem>
-                  <MenuItem value={Role.Edit}>Edit</MenuItem>
-                  <MenuItem value={Role.View}>View</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+                <MenuItem value={Role.Admin}>Admin</MenuItem>
+                <MenuItem value={Role.Edit}>Edit</MenuItem>
+                <MenuItem value={Role.View}>View</MenuItem>
+              </Select>
+            </FormControl>
+            <Box sx={{ minWidth: "36px" }}>
               {role != Role.Owner && (
                 <Button
-                  variant="styled"
+                  variant="dark"
                   sx={{
+                    minWidth: "unset",
                     width: "36px",
                     height: "36px",
-                    minWidth: "unset",
-                    padding: "6px",
-                    margin: "auto",
+                    padding: "8px",
                   }}
                   onClick={() => handleRemovePlayer(id)}
                 >
@@ -256,23 +248,16 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   });
 
   return (
-    <Stack spacing={1} sx={{ minWidth: "unset" }}>
-      <TextField
-        id="outlined-basic"
-        label="Title"
-        name="Title"
-        variant="outlined"
+    <Stack spacing={2} sx={{ minWidth: "unset" }}>
+      <InputBar
+        placeholder="Title"
+        setInputValue={setTitle}
         defaultValue={title}
-        required={true}
-        onChange={(e) => handleChange(e)}
       />
-      <TextField
-        id="outlined-basic"
-        label="Info"
-        name="Info"
-        variant="outlined"
+      <InputBar
+        placeholder="Info"
+        setInputValue={setInfo}
         defaultValue={info}
-        onChange={(e) => handleChange(e)}
       />
       <NewGamePlayerModal
         setPlayers={setPlayers}
@@ -286,11 +271,11 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
       {game ? (
         <>
-          <Button variant="contained" onClick={() => handleUpdateGame()}>
+          <Button variant="dark" onClick={() => handleUpdateGame()}>
             Save Changes
           </Button>
           <Button
-            variant="contained"
+            variant="dark"
             onClick={() => {
               router.push(`/dashboard/game/${game.id}`);
             }}
@@ -306,7 +291,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           </Button>
         </>
       ) : (
-        <Button variant="contained" onClick={() => handleCreateGame()}>
+        <Button variant="dark" onClick={() => handleCreateGame()}>
           Create Game
         </Button>
       )}

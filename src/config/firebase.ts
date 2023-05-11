@@ -22,6 +22,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 // export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
-// connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
 export const db = getFirestore(app);
-// connectFirestoreEmulator(db, "localhost", 8080);
+connectFirestoreEmulator(db, "localhost", 8080);
