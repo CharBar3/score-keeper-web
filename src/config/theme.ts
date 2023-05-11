@@ -35,6 +35,15 @@ export const theme = responsiveFontSizes(
         },
       },
       MuiButton: {
+        styleOverrides: {
+          root: {
+            "@media (hover: hover)": {
+              "&:hover": {
+                backgroundColor: "#8B0000",
+              },
+            },
+          },
+        },
         variants: [
           {
             props: { variant: "styled" },
@@ -42,6 +51,11 @@ export const theme = responsiveFontSizes(
               backgroundColor: "#C0C5CA",
               color: "#9A9FA4",
               boxShadow: " 0px 6px #9A9FA4",
+              "@media (hover: hover)": {
+                "&:hover": {
+                  backgroundColor: "#4B4F59",
+                },
+              },
             },
           },
           {
@@ -52,6 +66,11 @@ export const theme = responsiveFontSizes(
               boxShadow: "0px 6px #4B4F59",
               marginBottom: "6px",
               borderRadius: "5px",
+              "@media (hover: hover)": {
+                "&:hover": {
+                  backgroundColor: "#4B4F59",
+                },
+              },
             },
           },
         ],

@@ -137,6 +137,13 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
             boxShadow: `0px 8px rgb(${red * 0.8}, ${green * 0.8}, ${
               blue * 0.8
             })`,
+            "@media (hover: hover)": {
+              "&:hover": {
+                backgroundColor: `rgb(${red * 0.9}, ${green * 0.9}, ${
+                  blue * 0.9
+                })`,
+              },
+            },
           }}
           onClick={() => {
             const selectedColor = colorChoices[index];
@@ -165,6 +172,13 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
             width: "36px",
             height: "36px",
             padding: "0px",
+            "@media (hover: hover)": {
+              "&:hover": {
+                backgroundColor: `rgb(${color.red * 0.7}, ${
+                  color.green * 0.7
+                }, ${color.blue * 0.7})`,
+              },
+            },
           }}
         ></Button>
       </Box>
@@ -352,7 +366,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
           </Box>
           <Box sx={{ display: "flex" }}>
             <Button
-              variant="contained"
+              variant="dark"
               sx={{
                 flexGrow: 1,
                 marginRight: 1,
@@ -362,7 +376,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
               Cancel
             </Button>
             <Button
-              variant="contained"
+              variant="dark"
               sx={{
                 flexGrow: 1,
               }}
