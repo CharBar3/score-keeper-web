@@ -29,6 +29,7 @@ import ColorDialog from "../ColorDialog/ColorDialog";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
 import InputBar from "../InputBar/InputBar";
 import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -291,9 +292,19 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           </Button>
         </>
       ) : (
-        <Button variant="dark" onClick={() => handleCreateGame()}>
-          Create Game
-        </Button>
+        <>
+          <Button variant="dark" onClick={() => handleCreateGame()}>
+            Create Game
+          </Button>
+          <Link href="/dashboard">
+            <Button
+              variant="dark"
+              sx={{ width: "100%", boxShadow: "none", backgroundColor: "red" }}
+            >
+              Cancel
+            </Button>
+          </Link>
+        </>
       )}
     </Stack>
   );

@@ -4,23 +4,25 @@ import { Box, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
 import GameIcon from "../../../public/game-icons/cards_icon.svg";
 import PlayerIcon from "../../../public/icons/player_icon_55px.svg";
-
+import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import { theme } from "@/config/theme";
 
 interface GameCardProps {
   title: string;
-  playerIds: string[];
   color: Color;
+  numberOfPlayers: number;
 }
 
-const GameCard: FC<GameCardProps> = ({ title, playerIds, color }) => {
+const GameCard: FC<GameCardProps> = ({ title, numberOfPlayers, color }) => {
   const gameCardRef = useRef<HTMLDivElement>(null);
   const [borderWidth, setBorderWidth] = useState<number | null>(null);
   const [shadowHeight, setShadowHeight] = useState<number | null>(null);
   const [textHeight, setTextHeight] = useState<number | null>(null);
 
-  const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
-  const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .7)`;
+  const boxShadowColor = `rgb(${color.red * 0.8}, ${color.green * 0.8}, ${
+    color.blue * 0.8
+  })`;
+  const borderColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
@@ -65,27 +67,37 @@ const GameCard: FC<GameCardProps> = ({ title, playerIds, color }) => {
         <Typography
           textAlign="center"
           // noWrap
-          sx={{ fontSize: `${textHeight ? textHeight / 10 : 10}px` }}
+          sx={{
+            fontSize: `${textHeight ? textHeight / 10 : 10}px`,
+            color: theme.palette.primary.main,
+          }}
         >
           {title}
         </Typography>
       </Box>
-
-      <GameIcon height="60%" color={borderColor} />
+      {numberOfPlayers === 0 ? (
+        <PlusIcon height="60%" color={borderColor} />
+      ) : (
+        <GameIcon height="60%" color={borderColor} />
+      )}
 
       <Box sx={{ height: "10%", display: "flex" }}>
-        <Typography
-          sx={{
-            fontSize: `${textHeight ? textHeight / 10 : 10}px`,
-            paddingLeft: 1,
-            paddingRight: "4px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {playerIds.length}
-        </Typography>
-        <PlayerIcon height="90%" color={theme.palette.primary.main} />
+        {numberOfPlayers != 0 && (
+          <Typography
+            sx={{
+              fontSize: `${textHeight ? textHeight / 10 : 10}px`,
+              paddingLeft: 1,
+              paddingRight: "4px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {numberOfPlayers}
+          </Typography>
+        )}
+        {numberOfPlayers != 0 && (
+          <PlayerIcon height="90%" color={theme.palette.primary.main} />
+        )}
       </Box>
     </Box>
   );

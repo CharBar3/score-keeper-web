@@ -3,12 +3,37 @@
 import { Button, ButtonGroup } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FC, useState } from "react";
+import { FC } from "react";
+import BottomBar from "../BottomBar/BottomBar";
 
 interface FriendNavProps {}
 
 const FriendNav: FC<FriendNavProps> = () => {
   const pathname = usePathname();
+
+  return (
+    <BottomBar>
+      <Link href="/dashboard">
+        <Button variant="dark" sx={{ marginRight: 1 }}>
+          Dashboard
+        </Button>
+      </Link>
+      {pathname === "/dashboard/friends" && (
+        <Link href="/dashboard/friends/add">
+          <Button variant="dark" sx={{ marginLeft: 1 }}>
+            Find Friends
+          </Button>
+        </Link>
+      )}
+      {pathname === "/dashboard/friends/add" && (
+        <Link href="/dashboard/friends/">
+          <Button variant="dark" sx={{ marginLeft: 1 }}>
+            My Friends
+          </Button>
+        </Link>
+      )}
+    </BottomBar>
+  );
 
   if (pathname === "/dashboard/friends") {
     return (

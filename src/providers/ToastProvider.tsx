@@ -38,10 +38,10 @@ export const ToastProvider: FC<ToastContextProviderProps> = ({ children }) => {
     const newToast = { id: uniqid(), message, severity, isOpen: true };
 
     setToastQueue((prevState) => {
-      let updatedQueue = [newToast, ...prevState.slice(0, 3)];
+      let updatedQueue = [newToast, ...prevState.slice(0, 2)];
 
-      if (updatedQueue[3]) {
-        updatedQueue[3].isOpen = false;
+      if (updatedQueue[2]) {
+        updatedQueue[2].isOpen = false;
       }
 
       return [...updatedQueue];

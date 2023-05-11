@@ -126,7 +126,7 @@ export class UserService {
         info: document.info,
         ownerId: document.ownerId,
         playerIds: document.playerIds,
-        players: document.playerIds,
+        players: document.players,
         color: document.color,
       };
       games.push(game);

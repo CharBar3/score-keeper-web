@@ -10,10 +10,7 @@ export default function DashboardLayout({
   return (
     <section>
       <ProtectedContextProvider>
-        <UserProvider>
-          <DashboardNav />
-          {children}
-        </UserProvider>
+        <UserProvider>{children}</UserProvider>
       </ProtectedContextProvider>
     </section>
   );

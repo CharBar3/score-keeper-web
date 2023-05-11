@@ -29,19 +29,14 @@ const Nav: FC<NavProps> = () => {
     <Box sx={{ flexGrow: 1, marginBottom: 3 }}>
       <AppBar position="static" variant="elevation">
         <Toolbar>
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
             <Link href={fireUser ? "/dashboard" : "/"}>
               <Typography variant="h6" component="div">
                 Score Keeper
               </Typography>
             </Link>
-            {fireUser ? (
-              <Typography variant="h5" component="div">
-                {fireUser.displayName}
-              </Typography>
-            ) : null}
           </Box>
-          {fireUser ? (
+          {/* {fireUser ? (
             <Box>
               <Link href="/dashboard">
                 <Button color="inherit">Dashboard</Button>
@@ -65,7 +60,7 @@ const Nav: FC<NavProps> = () => {
                 <Button color="inherit">Signup</Button>
               </Link>
             </Box>
-          )}
+          )} */}
         </Toolbar>
       </AppBar>
     </Box>
