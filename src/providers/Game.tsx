@@ -217,6 +217,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   useEffect(() => {
     if (!user || !liveGame) {
+      setPlayerRole(Role.Owner);
       return;
     }
     if (user.id === liveGame.ownerId) {
