@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/config/firebase";
-import { Color, Game, Player } from "@/models";
+import { Color, Game, Player, Role } from "@/models";
 import { GameService } from "@/services/game-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -17,6 +17,7 @@ import { useDataStore } from "./User";
 
 interface LiveGameContextProps {
   liveGame: Game | null;
+  playerRole: Role | null;
   setGameId: (value: string) => void;
   increaseScore: (playerId: string, scoreIncrease: number) => Promise<void>;
   decreaseScore: (playerId: string, scoreDecrease: number) => Promise<void>;
@@ -41,6 +42,7 @@ interface LiveGameContextProps {
 
 const LiveGameContext = createContext<LiveGameContextProps>({
   liveGame: null,
+  playerRole: null,
   setGameId: async () => {
     console.log("Error: Function not added to value prop");
   },
@@ -76,6 +78,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
 
   const [gameId, setGameId] = useState<string | null>(null);
   const [liveGame, setLiveGame] = useState<Game | null>(null);
+  const [playerRole, setPlayerRole] = useState<Role | null>(null);
 
   const increaseScore = useCallback(
     async (playerId: string, scoreIncrease: number) => {
@@ -198,6 +201,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
   );
 
   useEffect(() => {
+    console.log("game provider reload check");
     let unsub = () => {};
     if (gameId) {
       unsub = onSnapshot(doc(db, "games", gameId), (doc) => {
@@ -211,10 +215,28 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
     };
   }, [gameId]);
 
+  useEffect(() => {
+    if (!user || !liveGame) {
+      return;
+    }
+    if (user.id === liveGame.ownerId) {
+      setPlayerRole(Role.Owner);
+    } else {
+      for (const player of liveGame.players) {
+        if (user.id === player.id) {
+          setPlayerRole(player.role);
+        }
+      }
+    }
+
+    // return () => {};
+  }, [user, liveGame]);
+
   return (
     <LiveGameContext.Provider
       value={{
         liveGame,
+        playerRole,
         setGameId,
         increaseScore,
         decreaseScore,

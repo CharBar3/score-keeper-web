@@ -37,7 +37,7 @@ interface GameInfoFormProps {
 }
 
 const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
-  const { updateGame, deleteGame, createGame } = useGame();
+  const { updateGame, deleteGame, createGame, playerRole } = useGame();
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
@@ -160,7 +160,13 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     });
   };
 
-  let showPlayers = players.map(({ id, name, role, color }, index) => {
+  let showPlayers = players.map(({ id, name, role, color }) => {
+    if (playerRole != Role.Owner && playerRole != Role.Admin) {
+      if (playerRole === Role.Edit && user.id != id) {
+        return;
+      }
+    }
+
     const setPlayerColor = (newColor: Color) => {
       setPlayers((prevState) => {
         const newState: any = [];
@@ -186,6 +192,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           />
           <Box sx={{ display: "flex" }}>
             <ColorDialog color={color} setColor={setPlayerColor} />
+
             <FormControl sx={{ unset: "all" }}>
               <Select
                 value={role}
@@ -203,13 +210,19 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
                   boxShadow: `0px 6px ${theme.palette.primary.dark}`,
                   "&:hover": { border: "red" },
                   "& .MuiSvgIcon-root":
-                    role === Role.Owner || role === Role.Guest
+                    role === Role.Owner ||
+                    role === Role.Guest ||
+                    playerRole == Role.Edit
                       ? {}
                       : { color: "white" },
                 }}
                 onChange={(e) => handlePickRole(e, id)}
                 disabled={
-                  role == Role.Owner || role == Role.Guest ? true : false
+                  role == Role.Owner ||
+                  role == Role.Guest ||
+                  playerRole == Role.Edit
+                    ? true
+                    : false
                 }
               >
                 {role == Role.Owner && (
@@ -250,24 +263,31 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
   return (
     <Stack spacing={2} sx={{ minWidth: "unset" }}>
-      <InputBar
-        placeholder="Title"
-        setInputValue={setTitle}
-        defaultValue={title}
-      />
-      <InputBar
-        placeholder="Info"
-        setInputValue={setInfo}
-        defaultValue={info}
-      />
-      <NewGamePlayerModal
-        setPlayers={setPlayers}
-        setPlayerIds={setPlayerIds}
-        playerIds={playerIds}
-      />
+      {playerRole === Role.Owner && (
+        <>
+          <InputBar
+            placeholder="Title"
+            setInputValue={setTitle}
+            defaultValue={title}
+          />
+          <InputBar
+            placeholder="Info"
+            setInputValue={setInfo}
+            defaultValue={info}
+          />
+          <NewGamePlayerModal
+            setPlayers={setPlayers}
+            setPlayerIds={setPlayerIds}
+            playerIds={playerIds}
+          />
+        </>
+      )}
       <List>{showPlayers}</List>
-
-      <ColorDialog color={color} setColor={setColor} title="Game Color" />
+      {playerRole === Role.Owner && (
+        <>
+          <ColorDialog color={color} setColor={setColor} title="Game Color" />
+        </>
+      )}
       {/* <GameIconSelector /> */}
 
       {game ? (
@@ -283,13 +303,15 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           >
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: "red" }}
-            onClick={() => handleDeleteGame()}
-          >
-            Delete Game
-          </Button>
+          {playerRole === Role.Owner && (
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: "red" }}
+              onClick={() => handleDeleteGame()}
+            >
+              Delete Game
+            </Button>
+          )}
         </>
       ) : (
         <>
