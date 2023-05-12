@@ -102,7 +102,7 @@ const ScoreChangePopover: FC<ScoreChangePopoverProps> = ({
     <>
       <Button
         aria-describedby={id}
-        variant="styled"
+        variant="dark"
         onClick={handleClick}
         sx={sx}
       >
@@ -145,7 +145,7 @@ const ScoreChangePopover: FC<ScoreChangePopoverProps> = ({
           }}
         />
         <Button
-          variant="styled"
+          variant="dark"
           onClick={handleChangeScore}
           sx={{ width: "129px", height: "44px" }}
         >

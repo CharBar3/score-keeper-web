@@ -6,6 +6,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChangeEvent, FC, useEffect, useState } from "react";
+import InputBar from "../InputBar/InputBar";
 
 const SignUpFrom: FC = () => {
   const { fireUser, createAccount } = useAuth();
@@ -45,42 +46,32 @@ const SignUpFrom: FC = () => {
   return (
     <Stack
       sx={{
-        maxWidth: { sm: "300px", md: "500px", lg: "700px" },
+        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
         width: "100%",
         margin: "auto",
       }}
-      spacing={3}
+      spacing={2}
     >
-      <Typography variant="h2">Sign Up</Typography>
-      <TextField
-        // id="outlined-basic"
-        label="Username"
-        name="Username"
-        variant="outlined"
-        onChange={(e) => handleChange(e)}
+      <Typography variant="h2" textAlign="center">
+        Sign Up
+      </Typography>
+
+      <InputBar
+        defaultValue=""
+        placeholder="Username"
+        setInputValue={setUsername}
       />
-      <TextField
-        // id="outlined-basic"
-        label="Email"
-        name="Email"
-        variant="outlined"
-        onChange={(e) => handleChange(e)}
+      <InputBar defaultValue="" placeholder="Email" setInputValue={setEmail} />
+      <InputBar
+        defaultValue=""
+        placeholder="Password"
+        setInputValue={setPassword}
+        isPasswordInput={true}
       />
-      <TextField
-        // id="outlined-basic"
-        label="Password"
-        name="Password"
-        type="password"
-        variant="outlined"
-        onChange={(e) => handleChange(e)}
-      />
-      <Button variant="contained" onClick={() => handleSignUp()}>
+
+      <Button variant="blue" onClick={() => handleSignUp()}>
         Sign Up
       </Button>
-      <Link href="/login">
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
-        Already have an account? Click here to Login!
-      </Link>
     </Stack>
   );
 };

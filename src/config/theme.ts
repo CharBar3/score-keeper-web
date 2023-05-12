@@ -5,26 +5,34 @@ declare module "@mui/material/styles" {
 }
 declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
-    styled: true;
     dark: true;
+    red: true;
+    blue: true;
   }
 }
 
+const defaultTheme = createTheme({
+  palette: {
+    primary: { main: "#787D8C", light: "#F5F5F5", dark: "#4B4F59" },
+    text: { primary: "#4B4F59" },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+  typography: {
+    fontFamily: "nunito, sans-serif",
+  },
+});
+
 export const theme = responsiveFontSizes(
   createTheme({
-    palette: {
-      primary: { main: "#787D8C", light: "#C0C5CA", dark: "#4B4F59" },
-      text: { primary: "#000000" },
-    },
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 600,
-        md: 900,
-        lg: 1200,
-        xl: 1536,
-      },
-    },
+    ...defaultTheme,
     components: {
       MuiStack: {
         defaultProps: {
@@ -35,31 +43,51 @@ export const theme = responsiveFontSizes(
         },
       },
       MuiButton: {
-        styleOverrides: {
-          root: {
-            "&:hover": {
-              backgroundColor: "#8B0000",
-            },
-            "@media (hover: hover)": {
-              "&:hover": {
-                backgroundColor: "#8B0000",
-              },
-            },
-          },
-        },
+        // styleOverrides: {
+        //   root: {
+        //     "&:hover": {
+        //       backgroundColor: "#8B0000",
+        //     },
+        //     "@media (hover: hover)": {
+        //       "&:hover": {
+        //         backgroundColor: "#8B0000",
+        //       },
+        //     },
+        //   },
+        // },
         variants: [
           {
-            props: { variant: "styled" },
+            props: { variant: "blue" },
             style: {
-              backgroundColor: "#C0C5CA",
-              color: "#9A9FA4",
-              boxShadow: " 0px 6px #9A9FA4",
+              backgroundColor: "#149FE5",
+              color: "white",
+              boxShadow: " 0px 8px #107CB3",
+              marginBottom: "8px",
+              borderRadius: "7px",
               "&:hover": {
-                backgroundColor: "#4B4F59",
+                backgroundColor: "#107CB3",
               },
               "@media (hover: hover)": {
                 "&:hover": {
-                  backgroundColor: "#4B4F59",
+                  backgroundColor: "#107CB3",
+                },
+              },
+            },
+          },
+          {
+            props: { variant: "red" },
+            style: {
+              backgroundColor: "#EA5028",
+              color: "white",
+              boxShadow: "0px 8px #B83F1F",
+              marginBottom: "8px",
+              borderRadius: "7px",
+              "&:hover": {
+                backgroundColor: "#B83F1F",
+              },
+              "@media (hover: hover)": {
+                "&:hover": {
+                  backgroundColor: "#B83F1F",
                 },
               },
             },
@@ -67,22 +95,26 @@ export const theme = responsiveFontSizes(
           {
             props: { variant: "dark" },
             style: {
-              backgroundColor: "#787D8C",
-              color: "#FFFFFF",
-              boxShadow: "0px 6px #4B4F59",
-              marginBottom: "6px",
-              borderRadius: "5px",
+              color: "white",
+              backgroundColor: defaultTheme.palette.primary.main,
+              // boxShadow: "0px 6px #4B4F59",
+              boxShadow: `0px 8px ${defaultTheme.palette.primary.dark}`,
+              marginBottom: "8px",
+              borderRadius: "7px",
               "&:hover": {
-                backgroundColor: "#4B4F59",
+                backgroundColor: defaultTheme.palette.primary.dark,
               },
               "@media (hover: hover)": {
                 "&:hover": {
-                  backgroundColor: "#4B4F59",
+                  backgroundColor: defaultTheme.palette.primary.dark,
                 },
               },
             },
           },
         ],
+      },
+      MuiTextField: {
+        styleOverrides: {},
       },
       MuiDivider: {
         defaultProps: {
@@ -95,9 +127,6 @@ export const theme = responsiveFontSizes(
         },
       },
 
-      //   MuiTypography: {
-      //     defaultProps: { color: "#5A5A5A" },
-      //   },
       //   MuiAppBar: {
       //     defaultProps: {
       //       variant: "elevation",

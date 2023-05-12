@@ -20,8 +20,8 @@ const FriendNav: FC<FriendNavProps> = () => {
       </Link>
       {pathname === "/dashboard/friends" && (
         <Link href="/dashboard/friends/add">
-          <Button variant="dark" sx={{ marginLeft: 1 }}>
-            Find Friends
+          <Button variant="blue" sx={{ marginLeft: 1 }}>
+            Add Friends
           </Button>
         </Link>
       )}
