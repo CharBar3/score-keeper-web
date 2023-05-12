@@ -13,15 +13,14 @@ const GameNav: FC<GameNavProps> = ({ gameId }) => {
   const { user } = useDataStore();
   return (
     <BottomBar>
-      <Link href={`/dashboard/game/${gameId}/settings`}>
+      <Link href="/dashboard">
         <Button variant="dark" sx={{ marginRight: 1, width: "125px" }}>
-          Settings
+          Dashboard
         </Button>
       </Link>
-
-      <Link href="/dashboard">
+      <Link href={`/dashboard/game/${gameId}/settings`}>
         <Button variant="dark" sx={{ marginLeft: 1, width: "125px" }}>
-          Dashboard
+          Settings
         </Button>
       </Link>
     </BottomBar>

@@ -134,7 +134,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 justifyContent: "space-between",
                 [theme.breakpoints.down(670)]: {
                   height: "22px",
-                  boxShadow: "0px 3px",
+                  // boxShadow: "0px 3px",
                 },
               }}
             />
@@ -151,7 +151,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                   [theme.breakpoints.down(670)]: {
                     minWidth: "0px",
                     height: "22px",
-                    boxShadow: "0px 3px",
+                    // boxShadow: "0px 3px",
                   },
                 }}
               />
@@ -169,7 +169,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                   [theme.breakpoints.down(670)]: {
                     minWidth: "0px",
                     height: "22px",
-                    boxShadow: "0px 3px",
+                    // boxShadow: "0px 3px",
                   },
                 }}
               />

@@ -1,13 +1,13 @@
-import { InputBase, styled } from "@mui/material";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { InputBase, SxProps, Theme, styled } from "@mui/material";
+import { Dispatch, FC, SetStateAction } from "react";
 
 const StyledSearchBox = styled("div")(({ theme }) => ({
-  borderRadius: "10px",
+  display: "flex",
   borderWidth: "4px",
   borderStyle: "solid",
   borderColor: theme.palette.primary.main,
-  height: "50px",
-  display: "flex",
+  borderRadius: "7px",
+  height: "40px",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -22,12 +22,11 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: theme.palette.primary.main,
-  fontSize: "20pt",
+  fontSize: "16px",
   flexGrow: 1,
   minWidth: "unset",
   "& .MuiInputBase-input": {
-    display: "flex",
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -35,19 +34,26 @@ interface InputBarProps {
   placeholder: string;
   defaultValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
+  sx?: SxProps<Theme>;
+  sxInputBase?: SxProps<Theme>;
+  isPasswordInput?: boolean;
 }
 
 const InputBar: FC<InputBarProps> = ({
   placeholder,
   defaultValue,
   setInputValue,
+  sx,
+  sxInputBase,
+  isPasswordInput = false,
 }) => {
   return (
-    <StyledSearchBox>
+    <StyledSearchBox sx={sx}>
       <StyledInputBase
+        sx={sxInputBase}
         placeholder={placeholder}
         defaultValue={defaultValue}
-        inputProps={{ "aria-label": "search" }}
+        type={isPasswordInput ? "password" : "text"}
         onChange={(e) => {
           setInputValue(e.currentTarget.value);
         }}

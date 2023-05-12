@@ -3,9 +3,16 @@
 import { Friend } from "@/models";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
-
-import { Button, Divider, ListItem, ListItemText, Stack } from "@mui/material";
-import { FC, Fragment, useCallback, useEffect, useState } from "react";
+import {
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { FC, useCallback, useEffect, useState } from "react";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -51,32 +58,31 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
     }
 
     return (
-      <Fragment key={id}>
-        <ListItem>
-          <ListItemText
-            // primaryTypographyProps={{ fontSize: "20pt", color: "#5A5A5A" }}
-            primary={username}
-          />
-          <Button
-            sx={{
-              "&:hover": {
-                backgroundColor: "lightgreen",
-              },
-            }}
-            variant="styled"
-            onClick={() => handleAddFriend(id)}
-          >
-            {/* <Image
-              src={plusIcon}
-              width={27}
-              height={27}
-              alt="add friend icon"
-            /> */}
-            <PlusIcon width="27px" height="27px" />
-          </Button>
-        </ListItem>
-        <Divider />
-      </Fragment>
+      <ListItem key={id} sx={{ padding: "0px" }}>
+        <ListItemText
+          primary={username}
+          sx={{
+            fontSize: "16px",
+            backgroundColor: "#EDEDED",
+            borderRadius: "7px",
+            paddingLeft: 2,
+          }}
+        />
+
+        <Button
+          variant="blue"
+          onClick={() => handleAddFriend(id)}
+          sx={{
+            width: "40px",
+            height: "24px",
+            minWidth: "unset",
+            padding: "12px",
+            marginLeft: 1,
+          }}
+        >
+          <PlusIcon />
+        </Button>
+      </ListItem>
     );
   });
 
@@ -85,17 +91,20 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
   }, [friendsList]);
 
   return (
-    <Stack>
+    <Stack spacing={1}>
+      <Typography textAlign="center" variant="h3">
+        Add New Friends
+      </Typography>
       <SearchBar
         placeholder="Find Friends"
         onChangeSearch={handleSearch}
         debounce={1000}
         setIsSearching={setIsSearching}
       />
-
-      <Divider />
-      {isSearching && <h1>Loading...</h1>}
-      {showSearchResults}
+      <List>
+        {isSearching && <h1>Loading...</h1>}
+        {showSearchResults}
+      </List>
     </Stack>
   );
 };

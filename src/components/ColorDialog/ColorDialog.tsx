@@ -1,7 +1,7 @@
 "use client";
 
 import { Color } from "@/models";
-import { Box, Slider, Typography, styled } from "@mui/material";
+import { Box, Slider, SxProps, Typography, styled } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -19,16 +19,16 @@ interface ColorDialogProps {
   setColor:
     | React.Dispatch<React.SetStateAction<Color>>
     | ((newColor: Color) => void);
+  sx?: SxProps;
 }
 
 const ColorChoiceButton = styled(Button)(({ theme }) => ({
   minWidth: "unset",
   width: "100%",
-  height: "100%",
   aspectRatio: "1/1",
 }));
 
-const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
+const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title, sx }) => {
   const { showToast } = useToast();
   const theme = useTheme();
 
@@ -161,26 +161,55 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        {title && <Typography sx={{ marginRight: 1 }}>{title}</Typography>}
-        <Button
-          variant="contained"
-          onClick={handleClickOpen}
-          sx={{
-            backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
-            // boxShadow: `0px 6px ${theme.palette.primary.dark}`,
-            minWidth: "unset",
-            width: "36px",
-            height: "36px",
-            padding: "0px",
-            "@media (hover: hover)": {
+        {title ? (
+          <Button
+            variant="contained"
+            onClick={handleClickOpen}
+            sx={{
+              ...sx,
+              color: currentTextColor,
+              backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
+              boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
+                color.green * 0.8
+              }, ${color.blue * 0.8})`,
+              minWidth: "unset",
+              borderRadius: "7px",
+              marginBottom: "8px",
+              width: "100%",
               "&:hover": {
-                backgroundColor: `rgb(${color.red * 0.7}, ${
-                  color.green * 0.7
-                }, ${color.blue * 0.7})`,
+                backgroundColor: `rgb(${color.red * 0.8}, ${
+                  color.green * 0.8
+                }, ${color.blue * 0.8})`,
+                boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
+                  color.green * 0.8
+                }, ${color.blue * 0.8})`,
               },
-            },
-          }}
-        ></Button>
+            }}
+          >
+            {title}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={handleClickOpen}
+            sx={{
+              ...sx,
+              backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
+              // boxShadow: `0px 6px ${theme.palette.primary.dark}`,
+              minWidth: "unset",
+              width: "36px",
+              height: "36px",
+              padding: "0px",
+              "@media (hover: hover)": {
+                "&:hover": {
+                  backgroundColor: `rgb(${color.red * 0.7}, ${
+                    color.green * 0.7
+                  }, ${color.blue * 0.7})`,
+                },
+              },
+            }}
+          ></Button>
+        )}
       </Box>
       <Dialog
         open={open}
@@ -239,7 +268,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
             {showColorChoices}
             <Grid xs={6}>
               <Button
-                variant="styled"
+                variant="blue"
                 sx={{
                   width: "100%",
                   height: "56px",
@@ -257,7 +286,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Box
                 sx={{
-                  backgroundColor: "rgb(255 0 0)",
+                  backgroundColor: "#E51E23",
                   borderRadius: "50%",
                   display: "flex",
                   minWidth: "24px",
@@ -287,14 +316,14 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
                 max={255}
                 onChange={handleRedSlider}
                 sx={{
-                  color: "rgb(255 0 0)",
+                  color: "#E51E23",
                 }}
               />
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Box
                 sx={{
-                  backgroundColor: "rgb(0 255 0)",
+                  backgroundColor: "#23AE73",
                   borderRadius: "50%",
                   display: "flex",
                   minWidth: "24px",
@@ -323,14 +352,14 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
                 max={255}
                 onChange={handlGreenSlider}
                 sx={{
-                  color: "rgb(0 255 0)",
+                  color: "#23AE73",
                 }}
               />
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Box
                 sx={{
-                  backgroundColor: "rgb(0 0 255)",
+                  backgroundColor: "#149FE5",
                   borderRadius: "50%",
                   display: "flex",
                   minWidth: "24px",
@@ -359,7 +388,7 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title }) => {
                 max={255}
                 onChange={handleBlueSlider}
                 sx={{
-                  color: "rgb(0 0 255)",
+                  color: "#149FE5",
                 }}
               />
             </Box>

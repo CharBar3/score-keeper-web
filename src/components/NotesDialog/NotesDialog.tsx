@@ -49,7 +49,7 @@ const NotesDialog: FC<NotesDialogProps> = ({
 
   return (
     <>
-      <Button variant="styled" onClick={handleClickOpen} sx={sx}>
+      <Button variant="dark" onClick={handleClickOpen} sx={sx}>
         Notes
         <DownArrow height="100%" />
       </Button>

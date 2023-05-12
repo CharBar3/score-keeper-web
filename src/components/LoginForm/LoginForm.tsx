@@ -9,11 +9,13 @@ import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ChangeEvent, FC, useEffect, useState } from "react";
+import InputBar from "../InputBar/InputBar";
 // import useStyles from "./LoginForm.styles";
 
 // interface LoginFormProps {}
 
 const LoginForm: FC = () => {
+  const { fireUser } = useAuth();
   const { showToast } = useToast();
   // const { classes, cx } = useStyles();
 
@@ -34,18 +36,6 @@ const LoginForm: FC = () => {
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (e.target.name === "Email") {
-      setEmail(e.target.value);
-    } else if (e.target.name === "Password") {
-      setPassword(e.target.value);
-    }
-  };
-
-  const { fireUser } = useAuth();
-
   useEffect(() => {
     if (fireUser) {
       redirect("/dashboard");
@@ -59,30 +49,30 @@ const LoginForm: FC = () => {
         width: "100%",
         margin: "auto",
       }}
-      spacing={3}
-      // className={classes.root}
+      spacing={2}
     >
-      <Typography variant="h2">Login</Typography>
-      <TextField
-        // id="outlined-basic"
-        label="Email"
-        name="Email"
-        variant="outlined"
-        onChange={(e) => handleChange(e)}
+      <Typography variant="h2" textAlign="center">
+        Login
+      </Typography>
+
+      <InputBar placeholder="Email" setInputValue={setEmail} defaultValue="" />
+      <InputBar
+        placeholder="Password"
+        setInputValue={setPassword}
+        defaultValue=""
+        isPasswordInput={true}
       />
-      <TextField
-        // id="outlined-basic"
-        label="Password"
-        name="Password"
-        type="password"
-        variant="outlined"
-        onChange={(e) => handleChange(e)}
-      />
-      <Button variant="contained" onClick={() => handleLogin()}>
+
+      <Button variant="blue" onClick={() => handleLogin()}>
         Login
       </Button>
       {/* eslint-disable-next-line react/no-unescaped-entities */}
-      <Link href="/signup">Don't have an account? Click here to Sign Up!</Link>
+      <Typography textAlign="center">Don't have an account?</Typography>
+      <Link href="/signup">
+        <Button variant="blue" sx={{ width: "100%" }}>
+          Click here to Sign Up!
+        </Button>
+      </Link>
     </Stack>
   );
 };

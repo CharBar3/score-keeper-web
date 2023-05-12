@@ -7,29 +7,22 @@ import { useDataStore } from "@/providers/User";
 import {
   Box,
   Button,
-  Divider,
   FormControl,
-  InputBase,
-  InputLabel,
   List,
-  ListItem,
-  ListItemText,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
-  TextField,
-  styled,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import * as _ from "lodash";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FC, Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import ColorDialog from "../ColorDialog/ColorDialog";
-import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
 import InputBar from "../InputBar/InputBar";
-import { useTheme } from "@mui/material/styles";
-import Link from "next/link";
+import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -68,8 +61,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     if (!user) {
       return;
     }
-
-    console.log(title);
     if (title == "") {
       showToast("Please provide a title for the game", "info");
       return;
@@ -147,7 +138,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
   const handlePickRole = (e: SelectChangeEvent, id: string) => {
     setPlayers((prevState) => {
-      const newState = [];
+      const newState: Player[] = [];
 
       for (const player of prevState) {
         if (player.id == id) {
@@ -169,7 +160,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
     const setPlayerColor = (newColor: Color) => {
       setPlayers((prevState) => {
-        const newState: any = [];
+        const newState: Player[] = [];
 
         for (const player of prevState) {
           if (player.id == id) {
@@ -183,86 +174,104 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     };
 
     return (
-      <Fragment key={id}>
-        <ListItem sx={{ display: "flex", flexWrap: "wrap" }}>
-          <ListItemText
-            primary={name}
-            primaryTypographyProps={{ noWrap: true }}
-            sx={{ minWidth: "100px" }}
+      <Box key={id} sx={{ display: "flex", padding: "0px 0px 8px 0px" }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <ColorDialog
+            color={color}
+            setColor={setPlayerColor}
+            title={name}
+            sx={{ height: "23px", justifyContent: "flex-start" }}
           />
-          <Box sx={{ display: "flex" }}>
-            <ColorDialog color={color} setColor={setPlayerColor} />
-
-            <FormControl sx={{ unset: "all" }}>
-              <Select
-                value={role}
-                sx={{
-                  marginLeft: 1,
-                  marginRight: 1,
-                  border: "none",
-                  color: "white",
-                  borderTopLeftRadius: "5px",
-                  borderTopRightRadius: "5px",
-                  height: "36px",
-                  width: "100px",
-                  backgroundColor: theme.palette.primary.main,
-                  marginBottom: "6px",
-                  boxShadow: `0px 6px ${theme.palette.primary.dark}`,
-                  "&:hover": { border: "red" },
-                  "& .MuiSvgIcon-root":
-                    role === Role.Owner ||
-                    role === Role.Guest ||
-                    playerRole == Role.Edit
-                      ? {}
-                      : { color: "white" },
-                }}
-                onChange={(e) => handlePickRole(e, id)}
-                disabled={
-                  role == Role.Owner ||
-                  role == Role.Guest ||
+        </Box>
+        <Box sx={{ display: "flex", flexGrow: 0 }}>
+          <FormControl
+            sx={{
+              unset: "all",
+              margin: "0px 8px",
+              "& .Mui-disabled": {
+                backgroundColor: "#EDEDED",
+                width: "64px",
+                height: "32px",
+                boxShadow: "none",
+                display: "flex",
+                justifyContent: "center",
+                border: "none",
+              },
+            }}
+          >
+            <Select
+              value={role}
+              sx={{
+                border: "none",
+                color: "white",
+                borderRadius: "7px",
+                width: "64px",
+                height: "24px",
+                backgroundColor: theme.palette.primary.main,
+                marginBottom:
+                  role === Role.Owner ||
+                  role === Role.Guest ||
                   playerRole == Role.Edit
-                    ? true
-                    : false
-                }
-              >
-                {role == Role.Owner && (
-                  <MenuItem value={Role.Owner}>Owner</MenuItem>
-                )}
-                {role == Role.Guest && (
-                  <MenuItem value={Role.Guest}>Guest</MenuItem>
-                )}
+                    ? ""
+                    : "8px",
+                boxShadow: `0px 8px ${theme.palette.primary.dark}`,
+                fontSize: "12px",
 
-                <MenuItem value={Role.Admin}>Admin</MenuItem>
-                <MenuItem value={Role.Edit}>Edit</MenuItem>
-                <MenuItem value={Role.View}>View</MenuItem>
-              </Select>
-            </FormControl>
-            <Box sx={{ minWidth: "36px" }}>
-              {role != Role.Owner && (
-                <Button
-                  variant="dark"
-                  sx={{
-                    minWidth: "unset",
-                    width: "36px",
-                    height: "36px",
-                    padding: "8px",
-                  }}
-                  onClick={() => handleRemovePlayer(id)}
-                >
-                  <MinusIcon height="100%" />
-                </Button>
+                "& .MuiOutlinedInput-notchedOutline": {
+                  border: "none",
+                },
+                "& .MuiSelect-select": {
+                  padding: "0px !important",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              }}
+              disabled={
+                role === Role.Owner ||
+                role === Role.Guest ||
+                playerRole == Role.Edit
+                  ? true
+                  : false
+              }
+              inputProps={{ IconComponent: () => null }}
+              onChange={(e) => handlePickRole(e, id)}
+            >
+              {role == Role.Owner && (
+                <MenuItem value={Role.Owner}>Owner</MenuItem>
               )}
-            </Box>
-          </Box>
-        </ListItem>
+              {role == Role.Guest && (
+                <MenuItem value={Role.Guest}>Guest</MenuItem>
+              )}
 
-        <Divider />
-      </Fragment>
+              <MenuItem value={Role.Admin}>Admin</MenuItem>
+              <MenuItem value={Role.Edit}>Edit</MenuItem>
+              <MenuItem value={Role.View}>View</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ width: "40px" }}>
+            {role != Role.Owner && (
+              <Button
+                variant="red"
+                sx={{
+                  minWidth: "unset",
+                  width: "40px",
+                  height: "24px",
+                  padding: "6px",
+                }}
+                onClick={() => handleRemovePlayer(id)}
+              >
+                <MinusIcon height="100%" />
+              </Button>
+            )}
+          </Box>
+        </Box>
+      </Box>
     );
   });
 
   return (
-    <Stack spacing={2} sx={{ minWidth: "unset" }}>
+    <Stack spacing={1} sx={{ minWidth: "unset" }}>
       {playerRole === Role.Owner && (
         <>
           <InputBar
@@ -291,42 +300,51 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       {/* <GameIconSelector /> */}
 
       {game ? (
-        <>
-          <Button variant="dark" onClick={() => handleUpdateGame()}>
-            Save Changes
-          </Button>
+        <Box sx={{ display: "flex" }}>
+          {playerRole === Role.Owner && (
+            <Button
+              variant="red"
+              onClick={() => handleDeleteGame()}
+              sx={{ width: "0px", flexGrow: 1, marginRight: 1 }}
+            >
+              Delete
+            </Button>
+          )}
           <Button
             variant="dark"
             onClick={() => {
               router.push(`/dashboard/game/${game.id}`);
             }}
+            sx={{ width: "0px", flexGrow: 1, marginRight: 1 }}
           >
             Cancel
           </Button>
-          {playerRole === Role.Owner && (
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: "red" }}
-              onClick={() => handleDeleteGame()}
-            >
-              Delete Game
-            </Button>
-          )}
-        </>
+          <Button
+            variant="dark"
+            onClick={() => handleUpdateGame()}
+            sx={{ width: "0px", flexGrow: 1 }}
+          >
+            Save
+          </Button>
+        </Box>
       ) : (
-        <>
-          <Button variant="dark" onClick={() => handleCreateGame()}>
+        <Box sx={{ display: "flex" }}>
+          <Button
+            variant="red"
+            onClick={() => router.push("/dashboard")}
+            sx={{ width: "50%", marginRight: 1 }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="dark"
+            onClick={() => handleCreateGame()}
+            sx={{ width: "50%", marginLeft: 1 }}
+          >
             Create Game
           </Button>
-          <Link href="/dashboard">
-            <Button
-              variant="dark"
-              sx={{ width: "100%", boxShadow: "none", backgroundColor: "red" }}
-            >
-              Cancel
-            </Button>
-          </Link>
-        </>
+        </Box>
       )}
     </Stack>
   );

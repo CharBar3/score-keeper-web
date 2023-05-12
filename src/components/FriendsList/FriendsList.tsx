@@ -1,11 +1,10 @@
 "use client";
 
-import { useDataStore } from "@/providers/User";
 import { useToast } from "@/providers/ToastProvider";
+import { useDataStore } from "@/providers/User";
 import {
   Box,
   Button,
-  Divider,
   List,
   ListItem,
   ListItemText,
@@ -35,40 +34,53 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
   let showFriends = null;
 
   if (friendsList) {
-    showFriends = friendsList.map(({ username, id }, index: any) => {
+    showFriends = friendsList.map(({ username, id }) => {
       return (
-        <div key={index}>
-          <ListItem>
-            <ListItemText primary={username} />
-            {canRemoveFriend && (
-              <Button
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "red",
-                  },
-                }}
-                variant="styled"
-                onClick={() => handleClick(id)}
-              >
-                <MinusIcon width="27px" height="27px" />
-              </Button>
-            )}
-          </ListItem>
-          <Divider />
-        </div>
+        <ListItem key={id} sx={{ padding: " 0px" }}>
+          <ListItemText
+            primary={username}
+            sx={{
+              fontSize: "16px",
+              backgroundColor: "#EDEDED",
+              borderRadius: "7px",
+              paddingLeft: 2,
+            }}
+          />
+          {canRemoveFriend && (
+            <Button
+              variant="red"
+              onClick={() => handleClick(id)}
+              sx={{
+                width: "40px",
+                height: "24px",
+                minWidth: "unset",
+                padding: "12px",
+                marginLeft: 1,
+              }}
+            >
+              <MinusIcon />
+            </Button>
+          )}
+        </ListItem>
       );
     });
   }
 
   return (
-    <Stack>
-      <Typography textAlign="center" variant="h2">
-        FriendsList
+    <Stack sx={{ marginRight: 3, marginLeft: 3 }}>
+      {/* <Box
+        sx={{
+          width: "100%",
+          height: "40px",
+          backgroundColor: "rgba(34, 174, 115, 0.3)",
+        }}
+      >
+        <Typography>Friend Added</Typography>
+      </Box> */}
+      <Typography textAlign="center" variant="h3">
+        My Friends
       </Typography>
-      <List>
-        <Divider />
-        {showFriends ? showFriends : <>loading</>}
-      </List>
+      <List>{showFriends ? showFriends : <>loading</>}</List>
     </Stack>
   );
 };
