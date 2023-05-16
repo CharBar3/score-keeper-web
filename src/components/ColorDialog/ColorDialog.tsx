@@ -195,16 +195,23 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title, sx }) => {
             sx={{
               ...sx,
               backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
-              // boxShadow: `0px 6px ${theme.palette.primary.dark}`,
+              boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
+                color.green * 0.8
+              }, ${color.blue * 0.8})`,
+              borderRadius: "7px",
               minWidth: "unset",
-              width: "36px",
-              height: "36px",
+              width: "40px",
+              height: "32px",
               padding: "0px",
+              marginBottom: "8px",
               "@media (hover: hover)": {
                 "&:hover": {
-                  backgroundColor: `rgb(${color.red * 0.7}, ${
-                    color.green * 0.7
-                  }, ${color.blue * 0.7})`,
+                  backgroundColor: `rgb(${color.red * 0.8}, ${
+                    color.green * 0.8
+                  }, ${color.blue * 0.8})`,
+                  boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
+                    color.green * 0.8
+                  }, ${color.blue * 0.8})`,
                 },
               },
             }}

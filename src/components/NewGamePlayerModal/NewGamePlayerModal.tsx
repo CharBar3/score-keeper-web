@@ -13,6 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import { FC, FormEvent, Fragment, useState } from "react";
 import uniqid from "uniqid";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
+import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import InputBar from "../InputBar/InputBar";
 
 interface NewGamePlayerModalProps {
@@ -64,13 +65,41 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
     showToast("Friend Added", "success");
   };
 
+  const handleRemovePlayer = (id: string) => {
+    setPlayers((prevState) => {
+      const newState = [];
+
+      for (const player of prevState) {
+        if (player.id != id) {
+          newState.push(player);
+        }
+      }
+
+      return newState;
+    });
+
+    setPlayerIds((prevState) => {
+      const newState: string[] = [];
+
+      for (const playerId of prevState) {
+        if (playerId != id) {
+          newState.push(playerId);
+        }
+      }
+      return newState;
+    });
+
+    showToast("Removed player", "success");
+  };
+
   let showFriends = null;
   if (friendsList) {
     showFriends = friendsList.map(({ username, id }) => {
-      if (playerIds.includes(id)) {
-        return;
-      }
+      let friendAlreadyInGame = false;
 
+      if (playerIds.includes(id)) {
+        friendAlreadyInGame = true;
+      }
       return (
         <Fragment key={id}>
           <ListItem
@@ -92,19 +121,35 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                 marginRight: 1,
               }}
             />
-            <Button
-              variant="blue"
-              sx={{
-                width: "40px",
-                minWidth: "40px",
-                height: "24px",
-                borderRadius: "7px",
-                padding: "4px",
-              }}
-              onClick={() => handleAddPlayer(id, username)}
-            >
-              <PlusIcon color="white" height="100%" />
-            </Button>
+            {friendAlreadyInGame ? (
+              <Button
+                variant="red"
+                sx={{
+                  width: "40px",
+                  minWidth: "40px",
+                  height: "24px",
+                  borderRadius: "7px",
+                  padding: "4px",
+                }}
+                onClick={() => handleRemovePlayer(id)}
+              >
+                <MinusIcon color="white" height="100%" />
+              </Button>
+            ) : (
+              <Button
+                variant="blue"
+                sx={{
+                  width: "40px",
+                  minWidth: "40px",
+                  height: "24px",
+                  borderRadius: "7px",
+                  padding: "4px",
+                }}
+                onClick={() => handleAddPlayer(id, username)}
+              >
+                <PlusIcon color="white" height="100%" />
+              </Button>
+            )}
           </ListItem>
         </Fragment>
       );
@@ -119,7 +164,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
           sx={{ width: "100%", margin: "0px" }}
           onClick={handleClickOpen}
         >
-          Add Friends
+          Add / Remove
         </Button>
         <Dialog
           open={open}

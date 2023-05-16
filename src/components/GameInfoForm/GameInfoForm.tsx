@@ -13,13 +13,12 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import * as _ from "lodash";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FC, Fragment, useState } from "react";
-import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
+import { FC, useState } from "react";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import InputBar from "../InputBar/InputBar";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
@@ -109,33 +108,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     }
   };
 
-  const handleRemovePlayer = (id: string) => {
-    setPlayers((prevState) => {
-      const newState = [];
-
-      for (const player of prevState) {
-        if (player.id != id) {
-          newState.push(player);
-        }
-      }
-
-      return newState;
-    });
-
-    setPlayerIds((prevState) => {
-      const newState: string[] = [];
-
-      for (const playerId of prevState) {
-        if (playerId != id) {
-          newState.push(playerId);
-        }
-      }
-      return newState;
-    });
-
-    showToast("Removed player", "success");
-  };
-
   const handlePickRole = (e: SelectChangeEvent, id: string) => {
     setPlayers((prevState) => {
       const newState: Player[] = [];
@@ -175,13 +147,24 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
     return (
       <Box key={id} sx={{ display: "flex", padding: "0px 0px 8px 0px" }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <ColorDialog
+        <Box
+          sx={{
+            flexGrow: 1,
+            paddingLeft: 1,
+            display: "flex",
+            alignItems: "center",
+            background: theme.palette.background.default,
+            borderRadius: "7px",
+            color: theme.palette.primary.main,
+          }}
+        >
+          {/* <ColorDialog
             color={color}
             setColor={setPlayerColor}
             title={name}
             sx={{ height: "23px", justifyContent: "flex-start" }}
-          />
+          /> */}
+          <Typography sx={{ fontSize: "16px" }}>{name}</Typography>
         </Box>
         <Box sx={{ display: "flex", flexGrow: 0 }}>
           <FormControl
@@ -190,8 +173,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
               margin: "0px 8px",
               "& .Mui-disabled": {
                 backgroundColor: "#EDEDED",
-                width: "64px",
-                height: "32px",
+                width: "56px",
+                height: "40px",
                 boxShadow: "none",
                 display: "flex",
                 justifyContent: "center",
@@ -205,8 +188,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
                 border: "none",
                 color: "white",
                 borderRadius: "7px",
-                width: "64px",
-                height: "24px",
+                width: "56px",
+                height: "32px",
                 backgroundColor: theme.palette.primary.main,
                 marginBottom:
                   role === Role.Owner ||
@@ -249,22 +232,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
               <MenuItem value={Role.View}>View</MenuItem>
             </Select>
           </FormControl>
-          <Box sx={{ width: "40px" }}>
-            {role != Role.Owner && (
-              <Button
-                variant="red"
-                sx={{
-                  minWidth: "unset",
-                  width: "40px",
-                  height: "24px",
-                  padding: "6px",
-                }}
-                onClick={() => handleRemovePlayer(id)}
-              >
-                <MinusIcon height="100%" />
-              </Button>
-            )}
-          </Box>
+          <ColorDialog color={color} setColor={setPlayerColor} />
         </Box>
       </Box>
     );
@@ -284,21 +252,33 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
             setInputValue={setInfo}
             defaultValue={info}
           />
-          <NewGamePlayerModal
-            setPlayers={setPlayers}
-            setPlayerIds={setPlayerIds}
-            playerIds={playerIds}
-          />
+          <Box sx={{ display: "flex" }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <NewGamePlayerModal
+                setPlayers={setPlayers}
+                setPlayerIds={setPlayerIds}
+                playerIds={playerIds}
+              />
+            </Box>
+            <Box sx={{ paddingLeft: 1, width: "104px" }}>
+              <ColorDialog
+                color={color}
+                setColor={setColor}
+                title="Game Color"
+                sx={{
+                  fontSize: "12px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                  minHeight: "36.5px",
+                }}
+              />
+            </Box>
+          </Box>
         </>
       )}
-      <List>{showPlayers}</List>
-      {playerRole === Role.Owner && (
-        <>
-          <ColorDialog color={color} setColor={setColor} title="Game Color" />
-        </>
-      )}
-      {/* <GameIconSelector /> */}
+      <List sx={{ padding: 0 }}>{showPlayers}</List>
 
+      {/* <GameIconSelector /> */}
       {game ? (
         <Box sx={{ display: "flex" }}>
           {playerRole === Role.Owner && (
