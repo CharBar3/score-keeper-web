@@ -46,7 +46,7 @@ const SignUpFrom: FC = () => {
   return (
     <Stack
       sx={{
-        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
+        maxWidth: { xs: "300px", sm: "320px" },
         width: "100%",
         margin: "auto",
       }}

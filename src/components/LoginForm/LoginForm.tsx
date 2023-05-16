@@ -3,7 +3,7 @@
 import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
@@ -45,7 +45,7 @@ const LoginForm: FC = () => {
   return (
     <Stack
       sx={{
-        maxWidth: { xs: "300px", sm: "300px", md: "500px", lg: "700px" },
+        maxWidth: { xs: "300px", sm: "320px" },
         width: "100%",
         margin: "auto",
       }}
@@ -54,7 +54,6 @@ const LoginForm: FC = () => {
       <Typography variant="h2" textAlign="center">
         Login
       </Typography>
-
       <InputBar placeholder="Email" setInputValue={setEmail} defaultValue="" />
       <InputBar
         placeholder="Password"
@@ -62,12 +61,12 @@ const LoginForm: FC = () => {
         defaultValue=""
         isPasswordInput={true}
       />
-
       <Button variant="blue" onClick={() => handleLogin()}>
         Login
       </Button>
-      {/* eslint-disable-next-line react/no-unescaped-entities */}
-      <Typography textAlign="center">Don't have an account?</Typography>
+      <Box sx={{ paddingTop: 5 }}>
+        <Typography textAlign="center">{`Don't have an account?`}</Typography>
+      </Box>
       <Link href="/signup">
         <Button variant="blue" sx={{ width: "100%" }}>
           Click here to Sign Up!

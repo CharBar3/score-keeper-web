@@ -127,6 +127,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
               notes={notes}
               hasPermission={hasPermission}
               id={id}
+              name={name}
               sx={{
                 width: "100%",
                 height: "44px",
