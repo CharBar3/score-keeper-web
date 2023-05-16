@@ -1,12 +1,11 @@
 "use client";
 
 import { useAuth } from "@/providers/Auth";
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import Link from "next/link";
 import { FC } from "react";
 import FriendsIcon from "../../../public/icons/friends_botton_icon-07.svg";
-import Link from "next/link";
-import { useTheme } from "@mui/material/styles";
-import { dark } from "@mui/material/styles/createPalette";
 import BottomBar from "../BottomBar/BottomBar";
 
 interface DashboardNavProps {}
