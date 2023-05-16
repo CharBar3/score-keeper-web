@@ -31,7 +31,7 @@ const DashboardNav: FC<DashboardNavProps> = () => {
             marginRight: 2,
           }}
         >
-          <FriendsIcon color="white" />
+          <FriendsIcon color="#ffffff" height="100%" />
         </Button>
       </Link>
       <Link href="/">
