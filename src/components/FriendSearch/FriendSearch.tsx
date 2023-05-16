@@ -5,7 +5,6 @@ import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
 import {
   Button,
-  Divider,
   List,
   ListItem,
   ListItemText,
@@ -15,6 +14,7 @@ import {
 import { FC, useCallback, useEffect, useState } from "react";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import SearchBar from "../SearchBar/SearchBar";
+import { theme } from "@/config/theme";
 
 interface SearchAddFriendProps {}
 
@@ -23,6 +23,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
   const { showToast } = useToast();
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  console.log(friendsList);
 
   const handleSearch = useCallback(
     async (searchTerm: string | null) => {
@@ -49,50 +50,84 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
     }
   };
 
-  const showSearchResults = searchResults?.map(({ id, username }) => {
-    if (!user) {
-      return;
-    }
-    if (id === user.id || user.friends.includes(id)) {
-      return;
+  let showSearchResults = null;
+
+  if (searchResults) {
+    searchResults.sort();
+    const organizedResults = [];
+
+    for (const result of searchResults) {
+      if (!user || result.id === user.id) {
+        break;
+      }
+
+      if (user.friends.includes(result.id)) {
+        organizedResults.push(result);
+      } else {
+        organizedResults.unshift(result);
+      }
     }
 
-    return (
-      <ListItem key={id} sx={{ padding: "0px" }}>
-        <ListItemText
-          primary={username}
-          sx={{
-            fontSize: "16px",
-            backgroundColor: "#EDEDED",
-            borderRadius: "7px",
-            paddingLeft: 2,
-          }}
-        />
+    showSearchResults = organizedResults.map(({ id, username }) => {
+      if (!user || id === user.id) {
+        return;
+      }
 
-        <Button
-          variant="blue"
-          onClick={() => handleAddFriend(id)}
-          sx={{
-            width: "40px",
-            height: "24px",
-            minWidth: "unset",
-            padding: "12px",
-            marginLeft: 1,
-          }}
-        >
-          <PlusIcon />
-        </Button>
-      </ListItem>
-    );
-  });
+      let inFriendsList = false;
+
+      if (user.friends.includes(id)) {
+        inFriendsList = true;
+      }
+
+      return (
+        <ListItem key={id} sx={{ padding: "0px" }}>
+          <ListItemText
+            primary={
+              inFriendsList
+                ? `${username} - is in your friends list!`
+                : username
+            }
+            sx={{
+              fontSize: "16px",
+              backgroundColor: inFriendsList
+                ? "rgba(34, 174, 115, 0.3)"
+                : theme.palette.background.default,
+              borderRadius: "7px",
+              paddingLeft: 2,
+            }}
+          />
+
+          {!inFriendsList && (
+            <Button
+              variant="blue"
+              onClick={() => handleAddFriend(id)}
+              sx={{
+                width: "40px",
+                height: "24px",
+                minWidth: "unset",
+                padding: "12px",
+                marginLeft: 1,
+              }}
+            >
+              <PlusIcon />
+            </Button>
+          )}
+        </ListItem>
+      );
+    });
+  }
 
   useEffect(() => {
     return () => {};
   }, [friendsList]);
 
   return (
-    <Stack spacing={1}>
-      <Typography textAlign="center" variant="h3">
+    <Stack sx={{ maxWidth: "600px", margin: "auto" }}>
+      <Typography
+        textAlign="center"
+        variant="h3"
+        sx={{ color: theme.palette.text.primary }}
+      >
         Add New Friends
       </Typography>
       <SearchBar

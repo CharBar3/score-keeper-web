@@ -14,7 +14,7 @@ declare module "@mui/material/Button" {
 const defaultTheme = createTheme({
   palette: {
     primary: { main: "#787D8C", light: "#F5F5F5", dark: "#4B4F59" },
-    text: { primary: "#4B4F59" },
+    text: { primary: "#787D8C" },
     background: { default: "#EDEDED" },
   },
   breakpoints: {

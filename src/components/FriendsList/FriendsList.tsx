@@ -3,7 +3,6 @@
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
 import {
-  Box,
   Button,
   List,
   ListItem,
@@ -11,8 +10,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { FC } from "react";
 import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
 interface FriendsListProps {
   canRemoveFriend: boolean;
@@ -21,6 +22,9 @@ interface FriendsListProps {
 const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
   const { friendsList, removeFriend } = useDataStore();
   const { showToast } = useToast();
+  const theme = useTheme();
+
+  console.log(friendsList);
 
   const handleClick = async (friendId: string) => {
     try {
@@ -47,19 +51,21 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
             }}
           />
           {canRemoveFriend && (
-            <Button
-              variant="red"
-              onClick={() => handleClick(id)}
-              sx={{
-                width: "40px",
-                height: "24px",
-                minWidth: "unset",
-                padding: "12px",
-                marginLeft: 1,
-              }}
-            >
-              <MinusIcon />
-            </Button>
+            <ConfirmationDialog actionFunction={() => handleClick(id)}>
+              <Button
+                variant="red"
+                // onClick={() => handleClick(id)}
+                sx={{
+                  width: "40px",
+                  height: "24px",
+                  minWidth: "unset",
+                  padding: "12px",
+                  marginLeft: 1,
+                }}
+              >
+                <MinusIcon />
+              </Button>
+            </ConfirmationDialog>
           )}
         </ListItem>
       );
@@ -67,7 +73,7 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
   }
 
   return (
-    <Stack sx={{ marginRight: 3, marginLeft: 3 }}>
+    <Stack sx={{ maxWidth: "600px", margin: "auto" }}>
       {/* <Box
         sx={{
           width: "100%",
@@ -77,7 +83,11 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
       >
         <Typography>Friend Added</Typography>
       </Box> */}
-      <Typography textAlign="center" variant="h3">
+      <Typography
+        textAlign="center"
+        variant="h3"
+        sx={{ color: theme.palette.text.primary }}
+      >
         My Friends
       </Typography>
       <List>{showFriends ? showFriends : <>loading</>}</List>

@@ -5,10 +5,9 @@ import { useToast } from "@/providers/ToastProvider";
 
 import { Box, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import InputBar from "../InputBar/InputBar";
 // import useStyles from "./LoginForm.styles";
 
@@ -54,11 +53,11 @@ const LoginForm: FC = () => {
       <Typography variant="h2" textAlign="center">
         Login
       </Typography>
-      <InputBar placeholder="Email" setInputValue={setEmail} defaultValue="" />
+      <InputBar placeholder="Email" setInputValue={setEmail} value={email} />
       <InputBar
         placeholder="Password"
         setInputValue={setPassword}
-        defaultValue=""
+        value={password}
         isPasswordInput={true}
       />
       <Button variant="blue" onClick={() => handleLogin()}>

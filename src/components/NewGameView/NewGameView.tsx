@@ -12,11 +12,11 @@ const NewGameView: FC<NewGameViewProps> = () => {
   const { user } = useDataStore();
 
   return (
-    <Stack>
+    <Stack sx={{ margin: "auto", maxWidth: "600px" }}>
       <Typography
         variant="h1"
         textAlign="center"
-        sx={{ color: theme.palette.primary.main }}
+        sx={{ color: theme.palette.primary.main, marginBottom: 2 }}
       >
         New Game
       </Typography>

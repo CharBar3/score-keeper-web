@@ -2,8 +2,7 @@
 
 import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
-import { Button, Stack, TextField, Typography } from "@mui/material";
-import Link from "next/link";
+import { Button, Stack, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import InputBar from "../InputBar/InputBar";
@@ -57,13 +56,13 @@ const SignUpFrom: FC = () => {
       </Typography>
 
       <InputBar
-        defaultValue=""
+        value={username}
         placeholder="Username"
         setInputValue={setUsername}
       />
-      <InputBar defaultValue="" placeholder="Email" setInputValue={setEmail} />
+      <InputBar value={email} placeholder="Email" setInputValue={setEmail} />
       <InputBar
-        defaultValue=""
+        value={password}
         placeholder="Password"
         setInputValue={setPassword}
         isPasswordInput={true}

@@ -32,7 +32,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 interface InputBarProps {
   placeholder: string;
-  defaultValue: string;
+  value: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   sx?: SxProps<Theme>;
   sxInputBase?: SxProps<Theme>;
@@ -41,7 +41,7 @@ interface InputBarProps {
 
 const InputBar: FC<InputBarProps> = ({
   placeholder,
-  defaultValue,
+  value,
   setInputValue,
   sx,
   sxInputBase,
@@ -52,7 +52,7 @@ const InputBar: FC<InputBarProps> = ({
       <StyledInputBase
         sx={sxInputBase}
         placeholder={placeholder}
-        defaultValue={defaultValue}
+        value={value}
         type={isPasswordInput ? "password" : "text"}
         onChange={(e) => {
           setInputValue(e.currentTarget.value);
