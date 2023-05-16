@@ -22,6 +22,7 @@ import { FC, useState } from "react";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import InputBar from "../InputBar/InputBar";
 import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
+import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -245,17 +246,14 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           <InputBar
             placeholder="Title"
             setInputValue={setTitle}
-            defaultValue={title}
+            value={title}
           />
-          <InputBar
-            placeholder="Info"
-            setInputValue={setInfo}
-            defaultValue={info}
-          />
+          <InputBar placeholder="Info" setInputValue={setInfo} value={info} />
           <Box sx={{ display: "flex" }}>
             <Box sx={{ flexGrow: 1 }}>
               <NewGamePlayerModal
                 setPlayers={setPlayers}
+                players={players}
                 setPlayerIds={setPlayerIds}
                 playerIds={playerIds}
               />
@@ -282,13 +280,18 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       {game ? (
         <Box sx={{ display: "flex" }}>
           {playerRole === Role.Owner && (
-            <Button
-              variant="red"
-              onClick={() => handleDeleteGame()}
+            <ConfirmationDialog
               sx={{ width: "0px", flexGrow: 1, marginRight: 1 }}
+              actionFunction={() => handleDeleteGame()}
             >
-              Delete
-            </Button>
+              <Button
+                variant="red"
+                // onClick={() => handleDeleteGame()}
+                sx={{ width: "100%" }}
+              >
+                Delete
+              </Button>
+            </ConfirmationDialog>
           )}
           <Button
             variant="dark"

@@ -18,12 +18,14 @@ import InputBar from "../InputBar/InputBar";
 
 interface NewGamePlayerModalProps {
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
+  players: Player[];
   setPlayerIds: React.Dispatch<React.SetStateAction<string[]>>;
   playerIds: string[];
 }
 
 const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
   setPlayers,
+  players,
   setPlayerIds,
   playerIds,
 }) => {
@@ -61,8 +63,6 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
       const newState = [...prevState, friendId];
       return newState;
     });
-
-    showToast("Friend Added", "success");
   };
 
   const handleRemovePlayer = (id: string) => {
@@ -88,17 +88,17 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
       }
       return newState;
     });
-
-    showToast("Removed player", "success");
   };
 
   let showFriends = null;
+
   if (friendsList) {
     showFriends = friendsList.map(({ username, id }) => {
       let friendAlreadyInGame = false;
 
       if (playerIds.includes(id)) {
         friendAlreadyInGame = true;
+        return;
       }
       return (
         <Fragment key={id}>
@@ -156,6 +156,55 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
     });
   }
 
+  let showPlayers = null;
+
+  if (players) {
+    showPlayers = players.map(({ name, id, role }) => {
+      if (role === Role.Owner) {
+        return;
+      }
+
+      return (
+        <Fragment key={id}>
+          <ListItem
+            sx={{
+              paddingTop: 0.5,
+              paddingBottom: 0.5,
+            }}
+          >
+            <ListItemText
+              primary={name}
+              sx={{
+                width: "100%",
+                height: "32px",
+                borderRadius: "7px",
+                backgroundColor: theme.palette.primary.light,
+                fontSize: "16px",
+                margin: 0,
+                paddingLeft: 2,
+                marginRight: 1,
+              }}
+            />
+
+            <Button
+              variant="red"
+              sx={{
+                width: "40px",
+                minWidth: "40px",
+                height: "24px",
+                borderRadius: "7px",
+                padding: "4px",
+              }}
+              onClick={() => handleRemovePlayer(id)}
+            >
+              <MinusIcon color="white" height="100%" />
+            </Button>
+          </ListItem>
+        </Fragment>
+      );
+    });
+  }
+
   return (
     <div>
       <div>
@@ -177,11 +226,17 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
             },
           }}
         >
-          <DialogTitle textAlign="center" sx={{ fontSize: "24px" }}>
+          <DialogTitle
+            textAlign="center"
+            sx={{ fontSize: "24px", marginBottom: "0px" }}
+          >
             Add Friends to Game
           </DialogTitle>
           <DialogContent sx={{ padding: "0px" }}>
-            <List>{showFriends ? showFriends : <>loading</>}</List>
+            <List sx={{ maxHeight: "300px", overflow: "auto" }}>
+              {showPlayers ? showPlayers : <>loading</>}
+              {showFriends ? showFriends : <>loading</>}
+            </List>
             <Box sx={{ paddingLeft: 2, paddingRight: 2 }}>
               <form
                 onSubmit={(e: FormEvent<HTMLFormElement>) => {
@@ -219,7 +274,8 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                   <InputBar
                     placeholder="Add Guest"
                     setInputValue={setGuestName}
-                    defaultValue={guestName}
+                    value={guestName}
+                    sx={{ width: "100%" }}
                   />
                   <Button
                     type="submit"

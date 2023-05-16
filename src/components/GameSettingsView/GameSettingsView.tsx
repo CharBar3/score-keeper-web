@@ -1,5 +1,5 @@
 "use client";
-import { Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { FC, useEffect } from "react";
 import GameInfoForm from "../GameInfoForm/GameInfoForm";
 import { useGame } from "@/providers/Game";
@@ -23,11 +23,11 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
   }, [gameId, setGameId, user, liveGame]);
 
   return (
-    <Stack>
+    <Stack sx={{ margin: "auto", maxWidth: "600px" }}>
       <Typography
         variant="h1"
         textAlign="center"
-        sx={{ color: theme.palette.primary.main }}
+        sx={{ color: theme.palette.primary.main, marginBottom: 2 }}
       >
         Game Settings
       </Typography>
