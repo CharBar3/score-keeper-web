@@ -1,9 +1,11 @@
-import Nav from "@/components/Nav/Nav";
 import "./globals.css";
 import { AuthProvider } from "@/providers/Auth";
 import Providers from "@/providers/Providers";
 import Toast from "@/components/Toast/Toast";
 import { ToastProvider } from "@/providers/ToastProvider";
+import Logo from "@/components/Logo/Logo";
+import NavBar from "@/components/NavBar/NavBar";
+import NavButtons from "@/components/NavButtons/NavButtons";
 
 export const metadata = {
   title: "Score Keeper",
@@ -21,7 +23,8 @@ export default function RootLayout({
         <Providers>
           <ToastProvider>
             <AuthProvider>
-              <Nav />
+              <NavBar>{/* <NavButtons /> */}</NavBar>
+              <Logo />
               {children}
               <Toast />
             </AuthProvider>

@@ -1,4 +1,3 @@
-import DashboardNav from "@/components/DashboardNav/DashboardNav";
 import { ProtectedContextProvider } from "@/providers/Protected";
 import { UserProvider } from "@/providers/User";
 

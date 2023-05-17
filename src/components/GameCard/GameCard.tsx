@@ -19,10 +19,10 @@ const GameCard: FC<GameCardProps> = ({ title, numberOfPlayers, color }) => {
   const [shadowHeight, setShadowHeight] = useState<number | null>(null);
   const [textHeight, setTextHeight] = useState<number | null>(null);
 
+  const borderColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
   const boxShadowColor = `rgb(${color.red * 0.8}, ${color.green * 0.8}, ${
     color.blue * 0.8
   })`;
-  const borderColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
@@ -69,7 +69,6 @@ const GameCard: FC<GameCardProps> = ({ title, numberOfPlayers, color }) => {
           // noWrap
           sx={{
             fontSize: `${textHeight ? textHeight / 10 : 10}px`,
-            color: theme.palette.primary.main,
           }}
         >
           {title}

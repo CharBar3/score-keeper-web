@@ -210,7 +210,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
       <div>
         <Button
           variant="blue"
-          sx={{ width: "100%", margin: "0px" }}
+          sx={{ width: "100%", margin: "0px 0px 8px 0px", height: "32px" }}
           onClick={handleClickOpen}
         >
           Add / Remove

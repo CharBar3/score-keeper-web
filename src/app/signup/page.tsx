@@ -1,4 +1,3 @@
-import HomeNav from "@/components/HomeNav/HomeNav";
 import SignUpFrom from "@/components/SignUpForm/SignUpForm";
 import { FC } from "react";
 
@@ -8,7 +7,6 @@ const SignUp: FC<SignUpProps> = () => {
   return (
     <>
       <SignUpFrom />
-      <HomeNav />
     </>
   );
 };

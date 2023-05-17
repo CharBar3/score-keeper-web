@@ -24,8 +24,6 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
   const { showToast } = useToast();
   const theme = useTheme();
 
-  console.log(friendsList);
-
   const handleClick = async (friendId: string) => {
     try {
       await removeFriend(friendId);
@@ -45,7 +43,7 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
             primary={username}
             sx={{
               fontSize: "16px",
-              backgroundColor: "#EDEDED",
+              backgroundColor: theme.palette.background.default,
               borderRadius: "7px",
               paddingLeft: 2,
             }}
@@ -59,8 +57,8 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
                   width: "40px",
                   height: "24px",
                   minWidth: "unset",
+                  margin: "0px 0px 8px 8px",
                   padding: "12px",
-                  marginLeft: 1,
                 }}
               >
                 <MinusIcon />
@@ -83,11 +81,7 @@ const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
       >
         <Typography>Friend Added</Typography>
       </Box> */}
-      <Typography
-        textAlign="center"
-        variant="h3"
-        sx={{ color: theme.palette.text.primary }}
-      >
+      <Typography textAlign="center" variant="h3">
         My Friends
       </Typography>
       <List>{showFriends ? showFriends : <>loading</>}</List>

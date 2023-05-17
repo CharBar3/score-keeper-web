@@ -35,6 +35,9 @@ export const theme = responsiveFontSizes(
   createTheme({
     ...defaultTheme,
     components: {
+      MuiTypography: {
+        styleOverrides: { root: { color: defaultTheme.palette.primary.main } },
+      },
       MuiStack: {
         defaultProps: {
           sx: {
@@ -44,27 +47,42 @@ export const theme = responsiveFontSizes(
         },
       },
       MuiButton: {
-        // styleOverrides: {
-        //   root: {
-        //     "&:hover": {
-        //       backgroundColor: "#8B0000",
-        //     },
-        //     "@media (hover: hover)": {
-        //       "&:hover": {
-        //         backgroundColor: "#8B0000",
-        //       },
-        //     },
-        //   },
-        // },
         variants: [
+          {
+            props: { variant: "dark" },
+            style: {
+              color: "white",
+              backgroundColor: defaultTheme.palette.primary.main,
+              boxShadow: `0px 8px ${defaultTheme.palette.primary.dark}`,
+              height: "40px",
+              margin: defaultTheme.spacing(1),
+              marginBottom: defaultTheme.spacing(2),
+              borderRadius: "7px",
+              textTransform: "initial",
+              fontSize: "16px",
+              minWidth: "88px",
+              "&:hover": {
+                backgroundColor: defaultTheme.palette.primary.dark,
+              },
+              "@media (hover: hover)": {
+                "&:hover": {
+                  backgroundColor: defaultTheme.palette.primary.dark,
+                },
+              },
+            },
+          },
           {
             props: { variant: "blue" },
             style: {
               backgroundColor: "#149FE5",
               color: "white",
               boxShadow: " 0px 8px #107CB3",
-              marginBottom: "8px",
+              margin: defaultTheme.spacing(1),
+              marginBottom: defaultTheme.spacing(2),
               borderRadius: "7px",
+              textTransform: "initial",
+              fontSize: "16px",
+              minWidth: "88px",
               "&:hover": {
                 backgroundColor: "#107CB3",
               },
@@ -81,33 +99,18 @@ export const theme = responsiveFontSizes(
               backgroundColor: "#EA5028",
               color: "white",
               boxShadow: "0px 8px #B83F1F",
-              marginBottom: "8px",
+              margin: defaultTheme.spacing(1),
+              marginBottom: defaultTheme.spacing(2),
               borderRadius: "7px",
+              textTransform: "initial",
+              fontSize: "16px",
+              minWidth: "88px",
               "&:hover": {
                 backgroundColor: "#B83F1F",
               },
               "@media (hover: hover)": {
                 "&:hover": {
                   backgroundColor: "#B83F1F",
-                },
-              },
-            },
-          },
-          {
-            props: { variant: "dark" },
-            style: {
-              color: "white",
-              backgroundColor: defaultTheme.palette.primary.main,
-              // boxShadow: "0px 6px #4B4F59",
-              boxShadow: `0px 8px ${defaultTheme.palette.primary.dark}`,
-              marginBottom: "8px",
-              borderRadius: "7px",
-              "&:hover": {
-                backgroundColor: defaultTheme.palette.primary.dark,
-              },
-              "@media (hover: hover)": {
-                "&:hover": {
-                  backgroundColor: defaultTheme.palette.primary.dark,
                 },
               },
             },

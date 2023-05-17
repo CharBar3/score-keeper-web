@@ -267,7 +267,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
                   fontSize: "12px",
                   paddingLeft: "10px",
                   paddingRight: "10px",
-                  minHeight: "36.5px",
+                  minHeight: "32px",
+                  height: "32px",
                 }}
               />
             </Box>
@@ -281,7 +282,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
         <Box sx={{ display: "flex" }}>
           {playerRole === Role.Owner && (
             <ConfirmationDialog
-              sx={{ width: "0px", flexGrow: 1, marginRight: 1 }}
+              sx={{ width: "0px", flexGrow: 1, marginRight: 2 }}
               actionFunction={() => handleDeleteGame()}
             >
               <Button
@@ -298,7 +299,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
             onClick={() => {
               router.push(`/dashboard/game/${game.id}`);
             }}
-            sx={{ width: "0px", flexGrow: 1, marginRight: 1 }}
+            sx={{ width: "0px", flexGrow: 1 }}
           >
             Cancel
           </Button>
@@ -313,7 +314,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
       ) : (
         <Box sx={{ display: "flex" }}>
           <Button
-            variant="red"
+            variant="dark"
             onClick={() => router.push("/dashboard")}
             sx={{ width: "50%", marginRight: 1 }}
           >
