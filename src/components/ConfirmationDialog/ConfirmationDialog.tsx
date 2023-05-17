@@ -26,7 +26,6 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
   };
 
   const handleClose = () => {
-    actionFunction();
     setOpen(false);
   };
 
@@ -43,7 +42,10 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
           </Button>
           <Button
             variant="red"
-            onClick={handleClose}
+            onClick={() => {
+              actionFunction();
+              handleClose();
+            }}
             autoFocus
             sx={{ flexGrow: 1 }}
           >

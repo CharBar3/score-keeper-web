@@ -1,10 +1,9 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FC } from "react";
 import NavButtons from "../NavButtons/NavButtons";
-import ScoreDeckLogo from "../../../public/Score-Deck-logo-02.svg";
 
 interface NavBarProps {}
 
