@@ -132,6 +132,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 width: "100%",
                 height: "44px",
                 display: "flex",
+                margin: "0px 0px 8px 0px",
                 justifyContent: "space-between",
                 [theme.breakpoints.down(670)]: {
                   height: "22px",
@@ -149,6 +150,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 sx={{
                   width: "100%",
                   height: "44px",
+                  margin: "0px 0px 8px 0px",
                   [theme.breakpoints.down(670)]: {
                     minWidth: "0px",
                     height: "22px",
@@ -167,6 +169,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 sx={{
                   width: "100%",
                   height: "44px",
+                  margin: "0px 0px 8px 0px",
                   [theme.breakpoints.down(670)]: {
                     minWidth: "0px",
                     height: "22px",

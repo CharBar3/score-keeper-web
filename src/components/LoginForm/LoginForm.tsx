@@ -60,14 +60,23 @@ const LoginForm: FC = () => {
         value={password}
         isPasswordInput={true}
       />
-      <Button variant="blue" onClick={() => handleLogin()}>
-        Login
-      </Button>
+      <Box>
+        <Button
+          variant="blue"
+          sx={{ margin: "0px 0px 8px 0px", width: "100%" }}
+          onClick={() => handleLogin()}
+        >
+          Login
+        </Button>
+      </Box>
       <Box sx={{ paddingTop: 5 }}>
         <Typography textAlign="center">{`Don't have an account?`}</Typography>
       </Box>
       <Link href="/signup">
-        <Button variant="blue" sx={{ width: "100%" }}>
+        <Button
+          variant="blue"
+          sx={{ margin: "0px 0px 8px 0px", width: "100%" }}
+        >
           Click here to Sign Up!
         </Button>
       </Link>

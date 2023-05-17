@@ -106,7 +106,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
                 height: "24px",
                 minWidth: "unset",
                 padding: "12px",
-                marginLeft: 1,
+                margin: "0px 0px 8px 8px",
               }}
             >
               <PlusIcon />
@@ -123,15 +123,11 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
 
   return (
     <Stack sx={{ maxWidth: "600px", margin: "auto" }}>
-      <Typography
-        textAlign="center"
-        variant="h3"
-        sx={{ color: theme.palette.text.primary }}
-      >
+      <Typography textAlign="center" variant="h1">
         Add New Friends
       </Typography>
       <SearchBar
-        placeholder="Find Friends"
+        placeholder="Search"
         onChangeSearch={handleSearch}
         debounce={1000}
         setIsSearching={setIsSearching}

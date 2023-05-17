@@ -1,10 +1,9 @@
 "use client";
-import { Box, Stack, Typography, useTheme } from "@mui/material";
-import { FC, useEffect } from "react";
-import GameInfoForm from "../GameInfoForm/GameInfoForm";
 import { useGame } from "@/providers/Game";
 import { useDataStore } from "@/providers/User";
-import { redirect } from "next/navigation";
+import { Stack, Typography, useTheme } from "@mui/material";
+import { FC } from "react";
+import GameInfoForm from "../GameInfoForm/GameInfoForm";
 
 interface GameSettingsViewProps {
   gameId: string;
@@ -14,13 +13,6 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
   const { setGameId, liveGame } = useGame();
   const { user } = useDataStore();
   const theme = useTheme();
-
-  useEffect(() => {
-    // if (user && liveGame && user.id != liveGame.ownerId) {
-    //   redirect(`/dashboard/game/${liveGame.id}`);
-    // }
-    setGameId(gameId);
-  }, [gameId, setGameId, user, liveGame]);
 
   return (
     <Stack sx={{ margin: "auto", maxWidth: "600px" }}>

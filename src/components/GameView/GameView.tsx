@@ -5,7 +5,7 @@ import { useGame } from "@/providers/Game";
 import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { FC, useEffect } from "react";
-import GameNav from "../GameNav/GameNav";
+
 import PlayerCard from "../PlayerCard/PlayerCard";
 import { useDataStore } from "@/providers/User";
 
@@ -72,7 +72,6 @@ const GameView: FC<GameViewProps> = ({ id }) => {
           {showPlayers}
         </Grid>
       </Stack>
-      <GameNav gameId={id} />
     </Box>
   );
 };
