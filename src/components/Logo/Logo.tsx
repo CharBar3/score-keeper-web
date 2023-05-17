@@ -2,6 +2,7 @@
 import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { useTheme } from "@mui/material/styles";
+import ScoreDeckLogo from "../../../public/Score-Deck-logo-02.svg";
 
 interface LogoProps {}
 
@@ -10,16 +11,16 @@ const Logo: FC<LogoProps> = () => {
   return (
     <Box
       sx={{
-        width: "100%",
         height: "106px",
-        display: "flex",
-        alignItems: "center",
-        [theme.breakpoints.up("sm")]: { display: "none" },
+        paddingLeft: 1,
+        [theme.breakpoints.up("sm")]: {
+          display: "flex",
+          justifyContent: "center",
+          padding: 0,
+        },
       }}
     >
-      <Typography variant="h2" textAlign="center">
-        Score Deck
-      </Typography>
+      <ScoreDeckLogo height="100%" width="200px" />
     </Box>
   );
 };

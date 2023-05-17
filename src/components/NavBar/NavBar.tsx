@@ -1,11 +1,10 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
 import { useTheme } from "@mui/material/styles";
-
 import { FC } from "react";
 import NavButtons from "../NavButtons/NavButtons";
+import ScoreDeckLogo from "../../../public/Score-Deck-logo-02.svg";
 
 interface NavBarProps {}
 
@@ -27,21 +26,9 @@ const NavBar: FC<NavBarProps> = () => {
         backgroundColor: "white",
         [theme.breakpoints.up("sm")]: {
           position: "static",
-          justifyContent: "space-between",
         },
       }}
     >
-      <Box
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        <Typography variant="h2" textAlign="center">
-          ScoreDeck
-        </Typography>
-      </Box>
       <NavButtons />
     </Box>
   );

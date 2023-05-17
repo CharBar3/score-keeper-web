@@ -8,7 +8,8 @@ import { FC, useState } from "react";
 import GameCard from "../GameCard/GameCard";
 import SearchBar from "../SearchBar/SearchBar";
 import { useTheme } from "@mui/material/styles";
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
+import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 
 interface GameListProps {}
 
@@ -53,20 +54,26 @@ const GameList: FC<GameListProps> = () => {
   return (
     <Stack spacing={1} sx={{ marginBottom: "56px" }}>
       <Grid container spacing={{ xs: 2, sm: 2, md: 2, lg: 3, xl: 3 }}>
-        <Grid xs={12}>
+        <Grid xs={9}>
           <SearchBar
             placeholder="Search Games"
             onChangeSearch={filterGames}
             debounce={null}
           />
         </Grid>
-        <Grid xs={6} sm={6} md={4} lg={3} xl={3}>
+        <Grid xs={3}>
           <Link href="dashboard/game/new">
-            <GameCard
-              title={"New Game"}
-              numberOfPlayers={0}
-              color={{ red: 193, green: 197, blue: 202 }}
-            />
+            <Button
+              variant="dark"
+              sx={{
+                minWidth: "0px",
+                margin: "0px 0px 8px 0px",
+                width: "100%",
+                height: "50px",
+              }}
+            >
+              <PlusIcon height="100%" />
+            </Button>
           </Link>
         </Grid>
         {showGames}
