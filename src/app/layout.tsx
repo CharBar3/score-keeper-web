@@ -23,9 +23,11 @@ export default function RootLayout({
         <Providers>
           <ToastProvider>
             <AuthProvider>
-              <NavBar>{/* <NavButtons /> */}</NavBar>
               <Logo />
+              <NavBar />
               {children}
+              {/* div for extra space at the bottom to accomodate navbar */}
+              <div style={{ height: "106px" }}></div>
               <Toast />
             </AuthProvider>
           </ToastProvider>
