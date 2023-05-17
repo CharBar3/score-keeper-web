@@ -22,11 +22,7 @@ interface NavButtonsProps {}
 const NavButtons: FC<NavButtonsProps> = () => {
   const { fireUser, logOut } = useAuth();
   const pathname = usePathname();
-
   const pathParams = pathname.split("/");
-
-  console.log("pathParam " + pathParams);
-  console.log("pathParam " + pathParams);
 
   return (
     <Box>
