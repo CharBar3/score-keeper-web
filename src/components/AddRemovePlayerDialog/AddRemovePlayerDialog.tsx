@@ -16,14 +16,14 @@ import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
 import InputBar from "../InputBar/InputBar";
 
-interface NewGamePlayerModalProps {
+interface AddRemovePlayerDialogProps {
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
   players: Player[];
   setPlayerIds: React.Dispatch<React.SetStateAction<string[]>>;
   playerIds: string[];
 }
 
-const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
+const AddRemovePlayerDialog: FC<AddRemovePlayerDialogProps> = ({
   setPlayers,
   players,
   setPlayerIds,
@@ -130,6 +130,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                   height: "24px",
                   borderRadius: "7px",
                   padding: "4px",
+                  margin: "0px 0px 8px 0px",
                 }}
                 onClick={() => handleRemovePlayer(id)}
               >
@@ -144,6 +145,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                   height: "24px",
                   borderRadius: "7px",
                   padding: "4px",
+                  margin: "0px 0px 8px 0px",
                 }}
                 onClick={() => handleAddPlayer(id, username)}
               >
@@ -194,6 +196,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                 height: "24px",
                 borderRadius: "7px",
                 padding: "4px",
+                margin: "0px 0px 8px 0px",
               }}
               onClick={() => handleRemovePlayer(id)}
             >
@@ -284,7 +287,7 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
                       width: "60px",
                       minWidth: "60px",
                       height: "40px",
-                      marginLeft: 1,
+                      margin: "0px 0px 8px 8px",
                     }}
                   >
                     <PlusIcon />
@@ -304,4 +307,4 @@ const NewGamePlayerModal: FC<NewGamePlayerModalProps> = ({
   );
 };
 
-export default NewGamePlayerModal;
+export default AddRemovePlayerDialog;
