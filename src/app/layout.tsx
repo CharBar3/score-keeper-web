@@ -1,14 +1,13 @@
-import "./globals.css";
-import { AuthProvider } from "@/providers/Auth";
-import Providers from "@/providers/Providers";
-import Toast from "@/components/Toast/Toast";
-import { ToastProvider } from "@/providers/ToastProvider";
 import Logo from "@/components/Logo/Logo";
 import NavBar from "@/components/NavBar/NavBar";
-import NavButtons from "@/components/NavButtons/NavButtons";
+import Toast from "@/components/Toast/Toast";
+import { AuthProvider } from "@/providers/Auth";
+import Providers from "@/providers/Providers";
+import { ToastProvider } from "@/providers/ToastProvider";
+import "./globals.css";
 
 export const metadata = {
-  title: "Score Keeper",
+  title: "Score Deck",
   description: "An app for keeping track of your score!",
 };
 

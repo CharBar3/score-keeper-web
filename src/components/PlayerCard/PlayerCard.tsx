@@ -15,6 +15,7 @@ import { useTheme } from "@mui/material/styles";
 import { FC } from "react";
 import NotesDialog from "../NotesDialog/NotesDialog";
 import ScoreChangePopover from "../ScoreChangePopover/ScoreChangePopover";
+import ScoreFormDialog from "../ScoreFormDialog/ScoreFormDialog";
 
 interface PlayerCardProps {
   id: string; // the players id.
@@ -100,29 +101,21 @@ const PlayerCard: FC<PlayerCardProps> = ({
       </CardContent>
       <CardActions
         sx={{
-          padding: "0px",
+          // padding: "0px",
+          display: "flex",
+          justifyContent: "center",
+          [theme.breakpoints.down(670)]: {
+            padding: "0px",
+          },
         }}
         disableSpacing={true}
       >
         <Grid
           container
-          spacing={isLessThan670px ? 1 : 2}
-          sx={{
-            paddingBottom: 2,
-            [theme.breakpoints.down(670)]: {
-              paddingBottom: "8px",
-              ["& GridBaseProps.spacing"]: "8px",
-            },
-          }}
+          spacing={isLessThan670px ? 0.5 : 2}
+          sx={{ width: "100%" }}
         >
-          <Grid
-            xs={12}
-            sx={{
-              [theme.breakpoints.down(670)]: {
-                // padding: "4px",
-              },
-            }}
-          >
+          <Grid xs={12}>
             <NotesDialog
               notes={notes}
               hasPermission={hasPermission}
@@ -141,7 +134,19 @@ const PlayerCard: FC<PlayerCardProps> = ({
               }}
             />
           </Grid>
-          <Grid xs={6}>
+          <Grid xs={12}>
+            <ScoreFormDialog
+              playerId={id}
+              sx={{
+                width: "100%",
+                height: "44px",
+                [theme.breakpoints.down(670)]: {
+                  height: "22px",
+                },
+              }}
+            />
+          </Grid>
+          {/* <Grid xs={6}>
             {hasPermission && (
               <ScoreChangePopover
                 action={Action.Decrease}
@@ -159,8 +164,8 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 }}
               />
             )}
-          </Grid>
-          <Grid xs={6}>
+          </Grid> */}
+          {/* <Grid xs={6}>
             {hasPermission && (
               <ScoreChangePopover
                 action={Action.Increase}
@@ -178,7 +183,7 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 }}
               />
             )}
-          </Grid>
+          </Grid> */}
         </Grid>
       </CardActions>
     </Card>

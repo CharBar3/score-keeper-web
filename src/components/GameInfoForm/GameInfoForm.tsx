@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import ColorDialog from "../ColorDialog/ColorDialog";
 import InputBar from "../InputBar/InputBar";
-import NewGamePlayerModal from "../NewGamePlayerModal/NewGamePlayerModal";
+import AddRemovePlayerDialog from "../AddRemovePlayerDialog/AddRemovePlayerDialog";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 
 interface GameInfoFormProps {
@@ -251,7 +251,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           <InputBar placeholder="Info" setInputValue={setInfo} value={info} />
           <Box sx={{ display: "flex" }}>
             <Box sx={{ flexGrow: 1 }}>
-              <NewGamePlayerModal
+              <AddRemovePlayerDialog
                 setPlayers={setPlayers}
                 players={players}
                 setPlayerIds={setPlayerIds}
