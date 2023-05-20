@@ -69,7 +69,7 @@ const GameList: FC<GameListProps> = () => {
                 minWidth: "0px",
                 margin: "0px 0px 8px 0px",
                 width: "100%",
-                height: "50px",
+                height: "40px",
               }}
             >
               <PlusIcon height="100%" />

@@ -279,10 +279,10 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
       {/* <GameIconSelector /> */}
       {game ? (
-        <Box sx={{ display: "flex" }}>
+        <Stack direction="row" spacing={2}>
           {playerRole === Role.Owner && (
             <ConfirmationDialog
-              sx={{ width: "0px", flexGrow: 1, marginRight: 2 }}
+              sx={{ width: "0px", flexGrow: 1 }}
               actionFunction={() => handleDeleteGame()}
             >
               <Button
@@ -310,13 +310,13 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           >
             Save
           </Button>
-        </Box>
+        </Stack>
       ) : (
-        <Box sx={{ display: "flex" }}>
+        <Stack direction="row" spacing={1}>
           <Button
             variant="dark"
             onClick={() => router.push("/dashboard")}
-            sx={{ width: "50%", marginRight: 1 }}
+            sx={{ flexGrow: 1 }}
           >
             Cancel
           </Button>
@@ -324,11 +324,11 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
           <Button
             variant="dark"
             onClick={() => handleCreateGame()}
-            sx={{ width: "50%", marginLeft: 1 }}
+            sx={{ flexGrow: 1 }}
           >
-            Create Game
+            Create
           </Button>
-        </Box>
+        </Stack>
       )}
     </Stack>
   );

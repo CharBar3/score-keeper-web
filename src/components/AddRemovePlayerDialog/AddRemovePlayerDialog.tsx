@@ -290,7 +290,7 @@ const AddRemovePlayerDialog: FC<AddRemovePlayerDialogProps> = ({
                       margin: "0px 0px 8px 8px",
                     }}
                   >
-                    <PlusIcon />
+                    <PlusIcon height="100%" />
                   </Button>
                 </Box>
               </form>

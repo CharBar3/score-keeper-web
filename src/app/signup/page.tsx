@@ -4,11 +4,7 @@ import { FC } from "react";
 interface SignUpProps {}
 
 const SignUp: FC<SignUpProps> = () => {
-  return (
-    <>
-      <SignUpFrom />
-    </>
-  );
+  return <SignUpFrom />;
 };
 
 export default SignUp;

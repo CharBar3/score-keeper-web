@@ -4,11 +4,7 @@ import { FC } from "react";
 interface AddProps {}
 
 const Add: FC<AddProps> = () => {
-  return (
-    <div>
-      <FriendSearch />
-    </div>
-  );
+  return <FriendSearch />;
 };
 
 export default Add;
