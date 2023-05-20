@@ -10,7 +10,7 @@ import SearchBar from "../SearchBar/SearchBar";
 interface FriendsListProps {}
 
 const FriendsList: FC<FriendsListProps> = () => {
-  const { friendsList } = useDataStore();
+  const { user } = useDataStore();
   const [friendFilter, setFriendFilter] = useState("");
 
   const filterFriends = (searchTerm: string | null) => {
@@ -25,18 +25,19 @@ const FriendsList: FC<FriendsListProps> = () => {
 
   let showFriends = null;
 
-  if (friendsList) {
-    showFriends = friendsList
+  if (user) {
+    showFriends = user.friends
       .filter(({ username }) =>
         username.toLowerCase().includes(friendFilter.toLowerCase())
       )
-      .map(({ username, id }) => {
+      .map(({ username, id, status }) => {
         return (
           <FriendListItem
             key={id}
             id={id}
             username={username}
             inFriendsList={true}
+            status={status}
           />
         );
       });
@@ -54,7 +55,7 @@ const FriendsList: FC<FriendsListProps> = () => {
         onChangeSearch={filterFriends}
       />
 
-      {friendsList?.length == 0 ? (
+      {user?.friends.length == 0 ? (
         <Box
           sx={{
             margin: "auto",
@@ -70,7 +71,7 @@ const FriendsList: FC<FriendsListProps> = () => {
           </Link>
         </Box>
       ) : (
-        <Typography textAlign="center">Click to remove</Typography>
+        <Typography textAlign="center">Click to update</Typography>
       )}
 
       <List sx={{ padding: 0 }}>
