@@ -1,6 +1,6 @@
 "use client";
 
-import { Friend } from "@/models";
+import { Friend, FriendShowParams } from "@/models";
 import { useDataStore } from "@/providers/User";
 import { Box, List, Skeleton, Stack, Typography } from "@mui/material";
 import { FC, useCallback, useEffect, useState } from "react";
@@ -12,7 +12,9 @@ interface SearchAddFriendProps {}
 const FriendSearch: FC<SearchAddFriendProps> = () => {
   const { user, friendsList, findFriend } = useDataStore();
 
-  const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
+  const [searchResults, setSearchResults] = useState<FriendShowParams[] | null>(
+    null
+  );
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = useCallback(
@@ -35,19 +37,19 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
 
   if (searchResults) {
     searchResults.sort();
-    const organizedResults = [];
+    // const organizedResults = [];
 
-    for (const result of searchResults) {
-      if (!user || result.id === user.id) {
-        break;
-      }
+    // for (const result of searchResults) {
+    //   if (!user || result.id === user.id) {
+    //     break;
+    //   }
 
-      if (user.friends.includes(result.id)) {
-        organizedResults.push(result);
-      } else {
-        organizedResults.unshift(result);
-      }
-    }
+    //   if (user.friends.includes(result.id)) {
+    //     organizedResults.push(result);
+    //   } else {
+    //     organizedResults.unshift(result);
+    //   }
+    // }
 
     showSearchResults = searchResults.map(({ id, username }) => {
       if (!user || id === user.id) {
@@ -55,10 +57,14 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
       }
 
       let inFriendsList = false;
+      let status = null;
 
-      if (user.friends.includes(id)) {
-        inFriendsList = true;
-      }
+      user.friends.find((friend) => {
+        if (friend.id === id) {
+          inFriendsList = true;
+          status = friend.status;
+        }
+      });
 
       return (
         <FriendListItem
@@ -66,6 +72,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
           id={id}
           username={username}
           inFriendsList={inFriendsList}
+          status={status}
         />
       );
     });

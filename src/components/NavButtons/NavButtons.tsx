@@ -1,6 +1,6 @@
 "use client";
 import { useAuth } from "@/providers/Auth";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC } from "react";
@@ -27,7 +27,7 @@ const NavButtons: FC<NavButtonsProps> = () => {
   return (
     <Box>
       {!fireUser && (
-        <>
+        <Stack direction="row" spacing={2}>
           {pathParams.at(-1) != Path.Home && (
             <Link href="/">
               <Button variant="dark">About</Button>
@@ -49,7 +49,7 @@ const NavButtons: FC<NavButtonsProps> = () => {
               </Button>
             </Link>
           )}
-        </>
+        </Stack>
       )}
       {fireUser && (
         <>

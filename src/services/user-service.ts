@@ -12,7 +12,7 @@ import {
   where,
   writeBatch,
 } from "firebase/firestore";
-import { Friend, Game, User } from "../models";
+import { Friend, FriendShowParams, FriendStatus, Game, User } from "../models";
 
 export class UserService {
   public static createFirestoreUserDocument = async (
@@ -42,8 +42,8 @@ export class UserService {
 
   public static fetchUserFriends = async (
     userId: string
-  ): Promise<Friend[] | []> => {
-    const friends: Friend[] = [];
+  ): Promise<FriendShowParams[] | []> => {
+    const friends: FriendShowParams[] = [];
     const q = query(
       collection(db, "users"),
       where("friends", "array-contains", userId)
@@ -66,15 +66,49 @@ export class UserService {
   ): Promise<void> => {
     const batch = writeBatch(db);
 
-    // Add friendId to user friends list
+    // Get user and friend document snaps
     const userRef = doc(db, "users", userId);
-    batch.update(userRef, { friends: arrayUnion(friendId) });
-
-    // Add userId to friend's friends list
     const friendRef = doc(db, "users", friendId);
-    batch.update(friendRef, {
-      friends: arrayUnion(userId),
-    });
+    const userSnap = await getDoc(userRef);
+    const friendSnap = await getDoc(friendRef);
+
+    // Add friend to user friendsList status pending
+    // pending means the request has been sent out
+    // but the request has not been accepted yet
+    if (friendSnap.exists()) {
+      const friendDocument = friendSnap.data() as User;
+
+      const newFriend: Friend = {
+        id: friendDocument.id,
+        username: friendDocument.username,
+        status: FriendStatus.Pending,
+      };
+
+      batch.update(userRef, {
+        friends: arrayUnion(newFriend),
+      });
+    } else {
+      throw new Error("addUserFriend Error: friend document does not exist");
+    }
+
+    // Add user to friends friendsList status requested
+    // requested means another user has requested to be friends
+    // the friend of the user can accept or decline
+    if (userSnap.exists()) {
+      const userDocument = userSnap.data() as User;
+
+      const newFriend: Friend = {
+        id: userDocument.id,
+        username: userDocument.username,
+        status: FriendStatus.Requested,
+      };
+
+      batch.update(friendRef, {
+        friends: arrayUnion(newFriend),
+      });
+    } else {
+      throw new Error("addUserFriend Error: user document does not exist");
+    }
 
     await batch.commit();
   };
@@ -85,16 +119,103 @@ export class UserService {
   ): Promise<void> => {
     const batch = writeBatch(db);
 
+    // Get user and friend document snaps
     const userRef = doc(db, "users", userId);
-    batch.update(userRef, { friends: arrayRemove(friendId) });
-
     const friendRef = doc(db, "users", friendId);
-    batch.update(friendRef, {
-      friends: arrayRemove(userId),
-    });
+    const userSnap = await getDoc(userRef);
+    const friendSnap = await getDoc(friendRef);
+
+    if (friendSnap.exists()) {
+      const friendDocument = friendSnap.data() as User;
+
+      const index = friendDocument.friends.findIndex(({ id }) => id === userId);
+
+      batch.update(friendRef, {
+        friends: arrayRemove(friendDocument.friends[index]),
+      });
+    } else {
+      throw new Error("addUserFriend Error: friend document does not exist");
+    }
+
+    if (userSnap.exists()) {
+      const userDocument = userSnap.data() as User;
+
+      const index = userDocument.friends.findIndex(({ id }) => id === friendId);
+
+      batch.update(userRef, {
+        friends: arrayRemove(userDocument.friends[index]),
+      });
+    } else {
+      throw new Error("addUserFriend Error: user document does not exist");
+    }
 
     await batch.commit();
   };
+
+  public static acceptUserFriend = async (
+    friendId: string,
+    userId: string
+  ): Promise<void> => {
+    const batch = writeBatch(db);
+
+    // Get user and friend document snaps
+    const userRef = doc(db, "users", userId);
+    const friendRef = doc(db, "users", friendId);
+    const userSnap = await getDoc(userRef);
+    const friendSnap = await getDoc(friendRef);
+
+    if (userSnap.exists()) {
+      const userDocument = userSnap.data() as User;
+
+      const userFriends = userDocument.friends;
+
+      const friendIndex = userFriends.findIndex(({ id }) => id === friendId);
+
+      userFriends[friendIndex].status = FriendStatus.Accepted;
+
+      batch.update(userRef, {
+        friends: [...userFriends],
+      });
+    } else {
+      throw new Error("addUserFriend Error");
+    }
+
+    if (friendSnap.exists()) {
+      const friendDocument = friendSnap.data() as User;
+
+      const friendFriends = friendDocument.friends;
+
+      const userIndex = friendFriends.findIndex(({ id }) => id === userId);
+
+      friendFriends[userIndex].status = FriendStatus.Accepted;
+
+      batch.update(friendRef, {
+        friends: [...friendFriends],
+      });
+    } else {
+      throw new Error("addUserFriend Error");
+    }
+
+    await batch.commit();
+  };
+
+  // public static removeUserFriend = async (
+  //   friendId: string,
+  //   userId: string
+  // ): Promise<void> => {
+  //   const batch = writeBatch(db);
+
+  //   const userRef = doc(db, "users", userId);
+
+  //   batch.update(userRef, { friends: arrayRemove(friendId) });
+
+  //   const friendRef = doc(db, "users", friendId);
+  //   batch.update(friendRef, {
+  //     friends: arrayRemove(userId),
+  //   });
+
+  //   await batch.commit();
+  // };
 
   public static fetchUserGame = async (
     gameId: string
@@ -136,7 +257,7 @@ export class UserService {
 
   public static findFriendByUsername = async (
     search: string
-  ): Promise<Friend[] | []> => {
+  ): Promise<FriendShowParams[] | []> => {
     const username = search.toLowerCase();
     if (username.length === 0) {
       return [];
@@ -148,7 +269,7 @@ export class UserService {
     );
     const querySnapshot = await getDocs(q);
 
-    const searchResults: Friend[] = [];
+    const searchResults: FriendShowParams[] = [];
     querySnapshot.forEach((doc) => {
       const document = {
         id: doc.id,

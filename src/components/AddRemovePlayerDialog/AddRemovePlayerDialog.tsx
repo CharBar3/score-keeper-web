@@ -1,6 +1,6 @@
 "use client";
 
-import { Player, Role } from "@/models";
+import { FriendStatus, Player, Role } from "@/models";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
@@ -29,7 +29,7 @@ const AddRemovePlayerDialog: FC<AddRemovePlayerDialogProps> = ({
   setPlayerIds,
   playerIds,
 }) => {
-  const { friendsList, generateRandomColor } = useDataStore();
+  const { user, generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -92,9 +92,13 @@ const AddRemovePlayerDialog: FC<AddRemovePlayerDialogProps> = ({
 
   let showFriends = null;
 
-  if (friendsList) {
-    showFriends = friendsList.map(({ username, id }) => {
+  if (user) {
+    showFriends = user.friends.map(({ username, id, status }) => {
       let friendAlreadyInGame = false;
+
+      if (status !== FriendStatus.Accepted) {
+        return;
+      }
 
       if (playerIds.includes(id)) {
         friendAlreadyInGame = true;

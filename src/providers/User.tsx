@@ -14,18 +14,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Color, Friend, Game, User } from "../models";
+import { Color, Friend, FriendShowParams, Game, User } from "../models";
 
 interface DataStoreContextProps {
   user: User | null;
   friendsList: Array<Friend> | null;
   gameList: Array<Game> | null;
-  getFriends: () => Promise<void>;
+  // getFriends: () => Promise<void>;
   getGames: () => Promise<void>;
   addFriend: (friendId: string) => Promise<void>;
   removeFriend: (friendId: string) => Promise<void>;
-
-  findFriend: (username: string) => Promise<Friend[] | []>;
+  acceptFriend: (friendId: string) => Promise<void>;
+  findFriend: (username: string) => Promise<FriendShowParams[] | []>;
   generateRandomColor: () => Color;
 }
 
@@ -33,9 +33,9 @@ const DataStoreContext = createContext<DataStoreContextProps>({
   user: null,
   friendsList: null,
   gameList: null,
-  getFriends: async () => {
-    console.log("Error: Function not added to value prop");
-  },
+  // getFriends: async () => {
+  //   console.log("Error: Function not added to value prop");
+  // },
   getGames: async () => {
     console.log("Error: Function not added to value prop");
   },
@@ -43,6 +43,9 @@ const DataStoreContext = createContext<DataStoreContextProps>({
     console.log("Error: Function not added to value prop");
   },
   removeFriend: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  acceptFriend: async () => {
     console.log("Error: Function not added to value prop");
   },
   findFriend: async () => {
@@ -68,12 +71,12 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
   const [friendsList, setFriendsList] = useState<Array<Friend> | null>(null);
   const [gameList, setGameList] = useState<Array<Game> | null>(null);
 
-  const getFriends = useCallback(async () => {
-    if (!user) {
-      return;
-    }
-    setFriendsList(await UserService.fetchUserFriends(user.id));
-  }, [user]);
+  // const getFriends = useCallback(async () => {
+  //   if (!user) {
+  //     return;
+  //   }
+  //   setFriendsList(await UserService.fetchUserFriends(user.id));
+  // }, [user]);
 
   const getGames = useCallback(async () => {
     if (!user) {
@@ -98,6 +101,16 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
         return;
       }
       await UserService.removeUserFriend(friendId, user.id);
+    },
+    [user]
+  );
+
+  const acceptFriend = useCallback(
+    async (friendId: string) => {
+      if (!user) {
+        return;
+      }
+      await UserService.acceptUserFriend(friendId, user.id);
     },
     [user]
   );
@@ -137,9 +150,13 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
   }, [fireUser]);
 
   useEffect(() => {
-    getFriends();
+    // getFriends();
     getGames();
-  }, [user, getFriends, getGames]);
+  }, [
+    user,
+    //  getFriends,
+    getGames,
+  ]);
 
   return (
     <DataStoreContext.Provider
@@ -147,11 +164,12 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
         user,
         friendsList,
         gameList,
-        getFriends,
+        // getFriends,
         getGames,
         removeFriend,
         addFriend,
         findFriend,
+        acceptFriend,
         generateRandomColor,
       }}
     >
