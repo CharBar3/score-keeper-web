@@ -1,23 +1,18 @@
 "use client";
 import {
-  Box,
   Button,
   ButtonProps,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   InputBase,
+  InputBaseProps,
   SxProps,
-  TextField,
-  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { FC, useState } from "react";
-import InputBar from "../InputBar/InputBar";
 import Grid from "@mui/material/Unstable_Grid2";
+import { FC, useState } from "react";
 
 import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
@@ -27,7 +22,7 @@ interface ScoreFormDialogProps {
   sx?: SxProps;
 }
 
-const StyledInputBase = styled(InputBase)<ButtonProps>(({ theme }) => ({
+const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
   // display: "flex",
   borderWidth: "4px",
   borderStyle: "solid",

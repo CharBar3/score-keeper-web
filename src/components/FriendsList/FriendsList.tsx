@@ -1,90 +1,104 @@
 "use client";
 
-import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { FC } from "react";
-import MinusIcon from "../../../public/icons/minus_icon_55px.svg";
-import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
+import { Box, Button, List, Skeleton, Stack, Typography } from "@mui/material";
+import Link from "next/link";
+import { FC, useState } from "react";
+import FriendListItem from "../FriendListItem/FriendListItem";
+import SearchBar from "../SearchBar/SearchBar";
 
-interface FriendsListProps {
-  canRemoveFriend: boolean;
-}
+interface FriendsListProps {}
 
-const FriendsList: FC<FriendsListProps> = ({ canRemoveFriend }) => {
-  const { friendsList, removeFriend } = useDataStore();
-  const { showToast } = useToast();
-  const theme = useTheme();
+const FriendsList: FC<FriendsListProps> = () => {
+  const { friendsList } = useDataStore();
+  const [friendFilter, setFriendFilter] = useState("");
 
-  const handleClick = async (friendId: string) => {
-    try {
-      await removeFriend(friendId);
-      showToast("Friend succesfully removed!", "success");
-    } catch (error) {
-      showToast("Failed to remove friend!", "error");
+  const filterFriends = (searchTerm: string | null) => {
+    // startTransition(() => {
+    if (searchTerm) {
+      setFriendFilter(searchTerm);
+    } else {
+      setFriendFilter("");
     }
+    // });
   };
 
   let showFriends = null;
 
   if (friendsList) {
-    showFriends = friendsList.map(({ username, id }) => {
-      return (
-        <ListItem key={id} sx={{ padding: " 0px" }}>
-          <ListItemText
-            primary={username}
-            sx={{
-              fontSize: "16px",
-              backgroundColor: theme.palette.background.default,
-              borderRadius: "7px",
-              paddingLeft: 2,
-            }}
+    showFriends = friendsList
+      .filter(({ username }) =>
+        username.toLowerCase().includes(friendFilter.toLowerCase())
+      )
+      .map(({ username, id }) => {
+        return (
+          <FriendListItem
+            key={id}
+            id={id}
+            username={username}
+            inFriendsList={true}
           />
-          {canRemoveFriend && (
-            <ConfirmationDialog actionFunction={() => handleClick(id)}>
-              <Button
-                variant="red"
-                // onClick={() => handleClick(id)}
-                sx={{
-                  width: "40px",
-                  height: "24px",
-                  minWidth: "unset",
-                  margin: "0px 0px 8px 8px",
-                  padding: "12px",
-                }}
-              >
-                <MinusIcon />
-              </Button>
-            </ConfirmationDialog>
-          )}
-        </ListItem>
-      );
-    });
+        );
+      });
   }
 
   return (
-    <Stack sx={{ maxWidth: "600px", margin: "auto" }}>
-      {/* <Box
-        sx={{
-          width: "100%",
-          height: "40px",
-          backgroundColor: "rgba(34, 174, 115, 0.3)",
-        }}
-      >
-        <Typography>Friend Added</Typography>
-      </Box> */}
+    <Stack spacing={1} sx={{ margin: "auto", maxWidth: "600px" }}>
       <Typography textAlign="center" variant="h3">
         My Friends
       </Typography>
-      <List>{showFriends ? showFriends : <>loading</>}</List>
+
+      <SearchBar
+        placeholder="Search"
+        debounce={null}
+        onChangeSearch={filterFriends}
+      />
+
+      {friendsList?.length == 0 ? (
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 4,
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography>Oops you have no friends</Typography>
+          <Link href="/dashboard/friends/add">
+            <Button variant="blue">Add Friends</Button>
+          </Link>
+        </Box>
+      ) : (
+        <Typography textAlign="center">Click to remove</Typography>
+      )}
+
+      <List sx={{ padding: 0 }}>
+        {showFriends ? (
+          showFriends
+        ) : (
+          <Box>
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+          </Box>
+        )}
+      </List>
     </Stack>
   );
 };

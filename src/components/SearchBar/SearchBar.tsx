@@ -9,13 +9,13 @@ const StyledSearchBox = styled("div")(({ theme }) => ({
   borderWidth: "4px",
   borderStyle: "solid",
   borderColor: theme.palette.primary.main,
-  height: "50px",
+  flexGrow: 1,
+  height: "40px",
   display: "flex",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  marginRight: theme.spacing(2),
-  cursor: "pointer",
+  marginRight: theme.spacing(0.5),
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -30,7 +30,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   minWidth: "unset",
   "& .MuiInputBase-input": {
     display: "flex",
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
 }));
 

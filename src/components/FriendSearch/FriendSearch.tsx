@@ -1,29 +1,19 @@
 "use client";
 
 import { Friend } from "@/models";
-import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, List, Skeleton, Stack, Typography } from "@mui/material";
 import { FC, useCallback, useEffect, useState } from "react";
-import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
+import FriendListItem from "../FriendListItem/FriendListItem";
 import SearchBar from "../SearchBar/SearchBar";
-import { theme } from "@/config/theme";
 
 interface SearchAddFriendProps {}
 
 const FriendSearch: FC<SearchAddFriendProps> = () => {
-  const { user, friendsList, addFriend, findFriend } = useDataStore();
-  const { showToast } = useToast();
+  const { user, friendsList, findFriend } = useDataStore();
+
   const [searchResults, setSearchResults] = useState<Friend[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  console.log(friendsList);
 
   const handleSearch = useCallback(
     async (searchTerm: string | null) => {
@@ -40,15 +30,6 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
     },
     [findFriend]
   );
-
-  const handleAddFriend = async (newFriendId: string) => {
-    try {
-      await addFriend(newFriendId);
-      showToast("Friend added succesfully!", "success");
-    } catch (error) {
-      showToast("Failed to add friend!", "error");
-    }
-  };
 
   let showSearchResults = null;
 
@@ -68,7 +49,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
       }
     }
 
-    showSearchResults = organizedResults.map(({ id, username }) => {
+    showSearchResults = searchResults.map(({ id, username }) => {
       if (!user || id === user.id) {
         return;
       }
@@ -80,39 +61,12 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
       }
 
       return (
-        <ListItem key={id} sx={{ padding: "0px" }}>
-          <ListItemText
-            primary={
-              inFriendsList
-                ? `${username} - is in your friends list!`
-                : username
-            }
-            sx={{
-              fontSize: "16px",
-              backgroundColor: inFriendsList
-                ? "rgba(34, 174, 115, 0.3)"
-                : theme.palette.background.default,
-              borderRadius: "7px",
-              paddingLeft: 2,
-            }}
-          />
-
-          {!inFriendsList && (
-            <Button
-              variant="blue"
-              onClick={() => handleAddFriend(id)}
-              sx={{
-                width: "40px",
-                height: "24px",
-                minWidth: "unset",
-                padding: "12px",
-                margin: "0px 0px 8px 8px",
-              }}
-            >
-              <PlusIcon />
-            </Button>
-          )}
-        </ListItem>
+        <FriendListItem
+          key={id}
+          id={id}
+          username={username}
+          inFriendsList={inFriendsList}
+        />
       );
     });
   }
@@ -122,8 +76,8 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
   }, [friendsList]);
 
   return (
-    <Stack sx={{ maxWidth: "600px", margin: "auto" }}>
-      <Typography textAlign="center" variant="h1">
+    <Stack spacing={1} sx={{ maxWidth: "600px", margin: "auto" }}>
+      <Typography textAlign="center" variant="h3">
         Add New Friends
       </Typography>
       <SearchBar
@@ -132,8 +86,32 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
         debounce={1000}
         setIsSearching={setIsSearching}
       />
-      <List>
-        {isSearching && <h1>Loading...</h1>}
+      {searchResults && (
+        <Typography textAlign="center">Click to add</Typography>
+      )}
+      <List sx={{ padding: 0 }}>
+        {isSearching && (
+          <Box>
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+            <Skeleton
+              variant="rounded"
+              animation="pulse"
+              height={"32px"}
+              sx={{ marginBottom: 1 }}
+            />
+          </Box>
+        )}
         {showSearchResults}
       </List>
     </Stack>

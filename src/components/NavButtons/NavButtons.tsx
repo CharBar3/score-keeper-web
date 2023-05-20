@@ -1,9 +1,9 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
-import { FC } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { useAuth } from "@/providers/Auth";
+import { Box, Button } from "@mui/material";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FC } from "react";
 import FriendsIcon from "../../../public/icons/friends_botton_icon-07.svg";
 
 enum Path {
@@ -13,14 +13,14 @@ enum Path {
   Dashboard = "dashboard",
   Friends = "friends",
   AddFriends = "add",
-
   Game = "game",
+  New = "new",
 }
 
 interface NavButtonsProps {}
 
 const NavButtons: FC<NavButtonsProps> = () => {
-  const { fireUser, logOut } = useAuth();
+  const { fireUser, logOut, isLoading } = useAuth();
   const pathname = usePathname();
   const pathParams = pathname.split("/");
 
@@ -73,6 +73,7 @@ const NavButtons: FC<NavButtonsProps> = () => {
                     width: "64px",
                     paddingLeft: "14px",
                     paddingRight: "14px",
+                    margin: "0px 16px",
                   }}
                 >
                   <FriendsIcon color="#ffffff" height="20px" />
@@ -111,20 +112,24 @@ const NavButtons: FC<NavButtonsProps> = () => {
               </Link>
             </>
           )}
-          {pathParams.at(-2) === Path.Game && (
-            <>
-              <Link href="/dashboard">
-                <Button variant="dark" sx={{ marginRight: 1, width: "125px" }}>
-                  Dashboard
-                </Button>
-              </Link>
-              <Link href={`/dashboard/game/${pathParams.at(-1)}/settings`}>
-                <Button variant="dark" sx={{ marginLeft: 1, width: "125px" }}>
-                  Settings
-                </Button>
-              </Link>
-            </>
-          )}
+          {pathParams.at(-2) === Path.Game &&
+            pathParams.at(-1) !== Path.New && (
+              <>
+                <Link href="/dashboard">
+                  <Button
+                    variant="dark"
+                    sx={{ marginRight: 1, width: "125px" }}
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href={`/dashboard/game/${pathParams.at(-1)}/settings`}>
+                  <Button variant="dark" sx={{ marginLeft: 1, width: "125px" }}>
+                    Settings
+                  </Button>
+                </Link>
+              </>
+            )}
         </>
       )}
     </Box>
