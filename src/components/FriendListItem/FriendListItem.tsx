@@ -84,7 +84,7 @@ const FriendListItem: FC<FriendListItemProps> = ({
   }));
 
   return (
-    <ListItem key={id} sx={{ padding: "0px" }}>
+    <ListItem key={id} sx={{ padding: 0.5 }}>
       <Box
         sx={{
           display: "flex",
