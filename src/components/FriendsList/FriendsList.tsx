@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FC, useState } from "react";
 import FriendListItem from "../FriendListItem/FriendListItem";
 import SearchBar from "../SearchBar/SearchBar";
+import { Friend, FriendStatus } from "@/models";
 
 interface FriendsListProps {}
 
@@ -26,6 +27,9 @@ const FriendsList: FC<FriendsListProps> = () => {
   let showFriends = null;
 
   if (user) {
+    user.friends.sort((a, b) => a.username.localeCompare(b.username));
+    user.friends.sort((a, b) => b.status.localeCompare(a.status));
+
     showFriends = user.friends
       .filter(({ username }) =>
         username.toLowerCase().includes(friendFilter.toLowerCase())
