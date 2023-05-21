@@ -10,12 +10,14 @@ import { FC, ReactNode, useState } from "react";
 
 interface ConfirmationDialogProps {
   children: ReactNode;
+  message?: string;
   actionFunction: Function;
   sx?: SxProps;
 }
 
 const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
   children,
+  message = "Are you sure?",
   actionFunction,
   sx,
 }) => {
@@ -35,7 +37,7 @@ const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
         {children}
       </Box>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle textAlign="center">Are you sure?</DialogTitle>
+        <DialogTitle textAlign="center">{message}</DialogTitle>
         <DialogActions>
           <Button variant="dark" onClick={handleClose} sx={{ flexGrow: 1 }}>
             Cancel
