@@ -2,10 +2,19 @@
 
 import { Friend, FriendShowParams } from "@/models";
 import { useDataStore } from "@/providers/User";
-import { Box, List, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Collapse,
+  List,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { FC, useCallback, useEffect, useState } from "react";
 import FriendListItem from "../FriendListItem/FriendListItem";
 import SearchBar from "../SearchBar/SearchBar";
+import { TransitionGroup } from "react-transition-group";
 
 interface SearchAddFriendProps {}
 
@@ -36,20 +45,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
   let showSearchResults = null;
 
   if (searchResults) {
-    searchResults.sort();
-    // const organizedResults = [];
-
-    // for (const result of searchResults) {
-    //   if (!user || result.id === user.id) {
-    //     break;
-    //   }
-
-    //   if (user.friends.includes(result.id)) {
-    //     organizedResults.push(result);
-    //   } else {
-    //     organizedResults.unshift(result);
-    //   }
-    // }
+    searchResults.sort((a, b) => a.username.localeCompare(b.username));
 
     showSearchResults = searchResults.map(({ id, username }) => {
       if (!user || id === user.id) {
@@ -67,20 +63,17 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
       });
 
       return (
-        <FriendListItem
-          key={id}
-          id={id}
-          username={username}
-          inFriendsList={inFriendsList}
-          status={status}
-        />
+        <Collapse key={id}>
+          <FriendListItem
+            id={id}
+            username={username}
+            inFriendsList={inFriendsList}
+            status={status}
+          />
+        </Collapse>
       );
     });
   }
-
-  useEffect(() => {
-    return () => {};
-  }, [friendsList]);
 
   return (
     <Stack spacing={1} sx={{ maxWidth: "600px", margin: "auto" }}>
@@ -93,33 +86,25 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
         debounce={1000}
         setIsSearching={setIsSearching}
       />
-      {searchResults && (
-        <Typography textAlign="center">Click to add</Typography>
-      )}
+
+      <Collapse in={isSearching}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "32px",
+          }}
+        >
+          <>
+            <Typography>Searching</Typography>
+            <CircularProgress size={"24px"} sx={{ marginLeft: 1 }} />
+          </>
+        </Box>
+      </Collapse>
+
       <List sx={{ padding: 0 }}>
-        {isSearching && (
-          <Box>
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-          </Box>
-        )}
-        {showSearchResults}
+        <TransitionGroup>{showSearchResults}</TransitionGroup>
       </List>
     </Stack>
   );
