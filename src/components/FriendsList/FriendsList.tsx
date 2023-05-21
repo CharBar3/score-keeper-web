@@ -1,12 +1,20 @@
 "use client";
 
 import { useDataStore } from "@/providers/User";
-import { Box, Button, List, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  List,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Link from "next/link";
 import { FC, useState } from "react";
+import { TransitionGroup } from "react-transition-group";
 import FriendListItem from "../FriendListItem/FriendListItem";
 import SearchBar from "../SearchBar/SearchBar";
-import { Friend, FriendStatus } from "@/models";
 
 interface FriendsListProps {}
 
@@ -36,13 +44,14 @@ const FriendsList: FC<FriendsListProps> = () => {
       )
       .map(({ username, id, status }) => {
         return (
-          <FriendListItem
-            key={id}
-            id={id}
-            username={username}
-            inFriendsList={true}
-            status={status}
-          />
+          <Collapse key={id}>
+            <FriendListItem
+              id={id}
+              username={username}
+              inFriendsList={true}
+              status={status}
+            />
+          </Collapse>
         );
       });
   }
@@ -59,7 +68,7 @@ const FriendsList: FC<FriendsListProps> = () => {
         onChangeSearch={filterFriends}
       />
 
-      {user?.friends.length == 0 ? (
+      <Collapse in={user?.friends.length == 0}>
         <Box
           sx={{
             margin: "auto",
@@ -69,18 +78,18 @@ const FriendsList: FC<FriendsListProps> = () => {
             flexDirection: "column",
           }}
         >
-          <Typography>Oops you have no friends</Typography>
+          <Typography sx={{ marginBottom: 1 }}>
+            Oops you have no friends
+          </Typography>
           <Link href="/dashboard/friends/add">
             <Button variant="blue">Add Friends</Button>
           </Link>
         </Box>
-      ) : (
-        <Typography textAlign="center">Click to update</Typography>
-      )}
+      </Collapse>
 
       <List sx={{ padding: 0 }}>
         {showFriends ? (
-          showFriends
+          <TransitionGroup>{showFriends}</TransitionGroup>
         ) : (
           <Box>
             <Skeleton

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { usePathname } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import XIcon from "../../../public/icons/X_icon_01-24.svg";
 import CheckMarkIcon from "../../../public/icons/check_mark_icon_01.svg";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
@@ -40,6 +40,16 @@ const FriendListItem: FC<FriendListItemProps> = ({
   const path = usePathname().split("/").at(-1);
   const [isEditing, setIsEditing] = useState(false);
   const [isloading, setIsLoading] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
+  const [statusText, setStatusText] = useState(status);
+
+  useEffect(() => {
+    setShowStatus(false);
+    setTimeout(() => {
+      setStatusText(status);
+      setShowStatus(true);
+    }, 300);
+  }, [status]);
 
   const handleRemoveFriend = async () => {
     setIsEditing(false);
@@ -97,8 +107,23 @@ const FriendListItem: FC<FriendListItemProps> = ({
     padding: "0px",
   }));
 
+  let chipColor = theme.palette.background.default;
+
+  if (statusText === FriendStatus.Accepted) {
+    chipColor = "rgba(35, 174, 115, 0.6)";
+  } else if (statusText === FriendStatus.Requested) {
+    chipColor = "rgba(20, 159, 229, 0.6)";
+  } else if (statusText === FriendStatus.Pending) {
+    chipColor = "rgba(255, 204, 5, 0.6)";
+  }
+
   return (
-    <ClickAwayListener onClickAway={() => setIsEditing(false)}>
+    <ClickAwayListener
+      onClickAway={() => {
+        setIsEditing(false);
+        setShowStatus(true);
+      }}
+    >
       <ListItem
         key={id}
         id={id}
@@ -115,10 +140,15 @@ const FriendListItem: FC<FriendListItemProps> = ({
             height: "32px",
             borderRadius: "7px",
             "&:hover": {
-              cursor: "pointer",
+              cursor: isloading ? "wait" : "pointer",
             },
           }}
-          onClick={() => setIsEditing((prev) => !prev)}
+          onClick={() => {
+            if (!isloading) {
+              setShowStatus((prev) => !prev);
+              setIsEditing((prev) => !prev);
+            }
+          }}
         >
           <ListItemText
             primary={username}
@@ -139,16 +169,19 @@ const FriendListItem: FC<FriendListItemProps> = ({
               <CircularProgress size={"24px"} />
             </Box>
           )}
-          <Collapse in={!isEditing && !!status} orientation="horizontal">
+
+          <Collapse in={showStatus && !!status} orientation="horizontal">
             <Chip
               label={
-                status != FriendStatus.Accepted
-                  ? status ?? "pending"
-                  : "friends"
+                statusText != FriendStatus.Accepted && statusText
+                  ? statusText.charAt(0).toUpperCase() + statusText.slice(1)
+                  : "Friends"
               }
               sx={{
                 borderRadius: "7px",
-                backgroundColor: "rgba(34, 174, 115, 0.3)",
+                backgroundColor: chipColor,
+                color: theme.palette.primary.dark,
+                minWidth: "87px",
               }}
             />
           </Collapse>
