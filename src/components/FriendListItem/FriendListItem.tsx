@@ -36,6 +36,7 @@ const FriendListItem: FC<FriendListItemProps> = ({
 }) => {
   const { removeFriend, addFriend, acceptFriend } = useDataStore();
   const { showToast } = useToast();
+
   const theme = useTheme();
   const path = usePathname().split("/").at(-1);
   const [isEditing, setIsEditing] = useState(false);
@@ -58,9 +59,18 @@ const FriendListItem: FC<FriendListItemProps> = ({
     setTimeout(async () => {
       try {
         await removeFriend(id);
-        showToast("Friend succesfully removed!", "success");
+
+        if (status === FriendStatus.Pending) {
+          showToast("Request cancelled", "info");
+        } else {
+          showToast(`${username} unfriended`, "success");
+        }
       } catch (error) {
-        showToast("Failed to remove friend!", "error");
+        if (status === FriendStatus.Pending) {
+          showToast("Failed to cancel request", "error");
+        } else {
+          showToast(`Failed to unfriend ${username}`, "error");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -74,9 +84,9 @@ const FriendListItem: FC<FriendListItemProps> = ({
     setTimeout(async () => {
       try {
         await addFriend(id);
-        showToast("Friend request sent!", "success");
+        showToast("Request sent", "success");
       } catch (error) {
-        showToast("Failed to send request!", "error");
+        showToast("Failed to send request", "error");
       } finally {
         setIsLoading(false);
       }
@@ -90,9 +100,9 @@ const FriendListItem: FC<FriendListItemProps> = ({
     setTimeout(async () => {
       try {
         await acceptFriend(id);
-        showToast("Friend request accepted!", "success");
+        showToast("Request accepted!", "success");
       } catch (error) {
-        showToast("Failed to accept friend request", "error");
+        showToast("Failed to accept request", "error");
       } finally {
         setIsLoading(false);
       }

@@ -12,12 +12,9 @@ const Logo: FC<LogoProps> = () => {
     <Box
       sx={{
         height: "106px",
-        paddingLeft: 1,
-        [theme.breakpoints.up("sm")]: {
-          display: "flex",
-          justifyContent: "center",
-          padding: 0,
-        },
+        display: "flex",
+        justifyContent: "center",
+        padding: 0,
       }}
     >
       <ScoreDeckLogo height="100%" width="200px" />

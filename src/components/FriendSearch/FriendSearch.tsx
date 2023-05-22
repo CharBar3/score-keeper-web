@@ -1,25 +1,24 @@
 "use client";
 
-import { Friend, FriendShowParams } from "@/models";
+import { FriendShowParams } from "@/models";
 import { useDataStore } from "@/providers/User";
 import {
   Box,
   CircularProgress,
   Collapse,
   List,
-  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useState } from "react";
+import { TransitionGroup } from "react-transition-group";
 import FriendListItem from "../FriendListItem/FriendListItem";
 import SearchBar from "../SearchBar/SearchBar";
-import { TransitionGroup } from "react-transition-group";
 
 interface SearchAddFriendProps {}
 
 const FriendSearch: FC<SearchAddFriendProps> = () => {
-  const { user, friendsList, findFriend } = useDataStore();
+  const { user, findFriend } = useDataStore();
 
   const [searchResults, setSearchResults] = useState<FriendShowParams[] | null>(
     null

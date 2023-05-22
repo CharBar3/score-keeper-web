@@ -4,6 +4,7 @@ import { useDataStore } from "@/providers/User";
 import {
   Box,
   Button,
+  CircularProgress,
   Collapse,
   List,
   Skeleton,
@@ -67,51 +68,42 @@ const FriendsList: FC<FriendsListProps> = () => {
         debounce={null}
         onChangeSearch={filterFriends}
       />
-
-      <Collapse in={user?.friends.length == 0}>
-        <Box
-          sx={{
-            margin: "auto",
-            padding: 4,
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Typography sx={{ marginBottom: 1 }}>
-            Oops you have no friends
-          </Typography>
-          <Link href="/dashboard/friends/add">
-            <Button variant="blue">Add Friends</Button>
-          </Link>
-        </Box>
-      </Collapse>
+      <Box>
+        <Collapse in={user?.friends.length == 0}>
+          <Box
+            sx={{
+              margin: "auto",
+              padding: 4,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Typography sx={{ marginBottom: 1 }}>
+              Oops you have no friends
+            </Typography>
+            <Link href="/dashboard/friends/add">
+              <Button variant="blue">Add Friends</Button>
+            </Link>
+          </Box>
+        </Collapse>
+        <Collapse in={showFriends ? false : true}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "32px",
+            }}
+          >
+            <Typography>Loading</Typography>
+            <CircularProgress size={"24px"} sx={{ marginLeft: 1 }} />
+          </Box>
+        </Collapse>
+      </Box>
 
       <List sx={{ padding: 0 }}>
-        {showFriends ? (
-          <TransitionGroup>{showFriends}</TransitionGroup>
-        ) : (
-          <Box>
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-            <Skeleton
-              variant="rounded"
-              animation="pulse"
-              height={"32px"}
-              sx={{ marginBottom: 1 }}
-            />
-          </Box>
-        )}
+        <TransitionGroup>{showFriends}</TransitionGroup>
       </List>
     </Stack>
   );
