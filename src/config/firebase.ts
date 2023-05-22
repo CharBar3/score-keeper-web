@@ -9,19 +9,22 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBPuUZM_zFQIow_e7tDxbqdB_w2vNVjdtU",
-  authDomain: "score-keeper-8e7fc.firebaseapp.com",
-  projectId: "score-keeper-8e7fc",
-  storageBucket: "score-keeper-8e7fc.appspot.com",
-  messagingSenderId: "164917498911",
-  appId: "1:164917498911:web:f0b8873b58e0737813712a",
-  measurementId: "G-ZQYKKR93LY",
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 // export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
-// connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
 export const db = getFirestore(app);
-// connectFirestoreEmulator(db, "localhost", 8080);
+
+if (process.env.NEXT_PUBLIC_USE_EMULATORS === "true") {
+  connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "localhost", 8080);
+}

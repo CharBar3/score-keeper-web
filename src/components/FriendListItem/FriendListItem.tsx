@@ -1,4 +1,4 @@
-import { FriendStatus } from "@/models";
+import { Friend, FriendStatus } from "@/models";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
 import {
@@ -34,7 +34,7 @@ const FriendListItem: FC<FriendListItemProps> = ({
   status,
   inFriendsList,
 }) => {
-  const { removeFriend, addFriend, acceptFriend } = useDataStore();
+  const { removeFriend, addFriend, acceptFriend, user } = useDataStore();
   const { showToast } = useToast();
 
   const theme = useTheme();
@@ -59,7 +59,6 @@ const FriendListItem: FC<FriendListItemProps> = ({
     setTimeout(async () => {
       try {
         await removeFriend(id);
-
         if (status === FriendStatus.Pending) {
           showToast("Request cancelled", "info");
         } else {
@@ -80,7 +79,6 @@ const FriendListItem: FC<FriendListItemProps> = ({
   const handleAddFriend = async () => {
     setIsEditing(false);
     setIsLoading(true);
-
     setTimeout(async () => {
       try {
         await addFriend(id);
@@ -96,7 +94,6 @@ const FriendListItem: FC<FriendListItemProps> = ({
   const handleAcceptFriend = async () => {
     setIsEditing(false);
     setIsLoading(true);
-
     setTimeout(async () => {
       try {
         await acceptFriend(id);
@@ -138,7 +135,7 @@ const FriendListItem: FC<FriendListItemProps> = ({
         key={id}
         id={id}
         sx={{
-          padding: 0.5,
+          padding: "4px 0px",
         }}
       >
         <Box

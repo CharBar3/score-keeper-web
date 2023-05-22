@@ -2,12 +2,17 @@
 
 import { Role } from "@/models";
 import { useGame } from "@/providers/Game";
-import { Box, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Collapse,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { FC, useEffect } from "react";
-
-import PlayerCard from "../PlayerCard/PlayerCard";
 import { useDataStore } from "@/providers/User";
+import PlayerCard from "../PlayerCard/PlayerCard";
 
 interface GameViewProps {
   id: string;
@@ -22,7 +27,23 @@ const GameView: FC<GameViewProps> = ({ id }) => {
   }, [id, setGameId]);
 
   if (!liveGame) {
-    return <Typography variant="h1">Loading...</Typography>;
+    return (
+      <>
+        <Collapse in={!liveGame}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "32px",
+            }}
+          >
+            <Typography>Loading</Typography>
+            <CircularProgress size={"24px"} sx={{ marginLeft: 1 }} />
+          </Box>
+        </Collapse>
+      </>
+    );
   }
 
   const showPlayers = liveGame.players.map((player) => {

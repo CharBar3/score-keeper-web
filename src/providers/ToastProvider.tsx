@@ -1,6 +1,13 @@
 "use client";
 
-import { FC, ReactNode, createContext, useContext, useState } from "react";
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type ToastSeverity = "error" | "warning" | "info" | "success";
 
@@ -35,11 +42,6 @@ export const ToastProvider: FC<ToastContextProviderProps> = ({ children }) => {
 
   const handleClose = () => {
     setIsOpen(false);
-
-    setTimeout(() => {
-      setMessage(null);
-      setSeverity("info");
-    }, 100);
   };
 
   const showToast = (message: string, severity: ToastSeverity) => {
