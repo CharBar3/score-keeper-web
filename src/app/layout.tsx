@@ -4,6 +4,7 @@ import Toast from "@/components/Toast/Toast";
 import { AuthProvider } from "@/providers/Auth";
 import Providers from "@/providers/Providers";
 import { ToastProvider } from "@/providers/ToastProvider";
+
 import "./globals.css";
 
 export const metadata = {
@@ -22,12 +23,12 @@ export default function RootLayout({
         <Providers>
           <ToastProvider>
             <AuthProvider>
+              <Toast />
               <Logo />
               <NavBar />
               {children}
               {/* div for extra space at the bottom to accomodate navbar */}
               <div style={{ height: "106px" }}></div>
-              <Toast />
             </AuthProvider>
           </ToastProvider>
         </Providers>
