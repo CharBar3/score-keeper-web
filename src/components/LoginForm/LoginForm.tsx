@@ -29,9 +29,9 @@ const LoginForm: FC = () => {
   const handleLogin = async () => {
     try {
       await loginWithEmailPassword(email, password);
-      showToast("Login Successful!", "success");
+      showToast("Login successful", "success");
     } catch (error) {
-      showToast(`Login Failed! ${(error as Error).message}`, "error");
+      showToast(`Failed to login ${(error as Error).message}`, "error");
     }
   };
 

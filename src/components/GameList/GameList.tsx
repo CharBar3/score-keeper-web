@@ -8,7 +8,14 @@ import { FC, useState } from "react";
 import GameCard from "../GameCard/GameCard";
 import SearchBar from "../SearchBar/SearchBar";
 import { useTheme } from "@mui/material/styles";
-import { Button, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  Stack,
+  Typography,
+} from "@mui/material";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 
 interface GameListProps {}
@@ -75,6 +82,21 @@ const GameList: FC<GameListProps> = () => {
               <PlusIcon height="100%" />
             </Button>
           </Link>
+        </Grid>
+        <Grid xs={12}>
+          <Collapse in={!showGames}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "32px",
+              }}
+            >
+              <Typography>Loading</Typography>
+              <CircularProgress size={"24px"} sx={{ marginLeft: 1 }} />
+            </Box>
+          </Collapse>
         </Grid>
         {showGames}
       </Grid>

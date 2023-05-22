@@ -1,5 +1,6 @@
 "use client";
 
+import { FriendStatus } from "@/models";
 import { useDataStore } from "@/providers/User";
 import {
   Box,
@@ -7,7 +8,6 @@ import {
   CircularProgress,
   Collapse,
   List,
-  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
@@ -33,13 +33,41 @@ const FriendsList: FC<FriendsListProps> = () => {
     // });
   };
 
+  let showPendingAndRequestedFriends = null;
   let showFriends = null;
 
   if (user) {
     user.friends.sort((a, b) => a.username.localeCompare(b.username));
     user.friends.sort((a, b) => b.status.localeCompare(a.status));
 
-    showFriends = user.friends
+    const pendingAndRequestedFriends = [];
+    const friends = [];
+
+    for (const friend of user.friends) {
+      if (friend.status === FriendStatus.Accepted) {
+        friends.push(friend);
+      } else {
+        pendingAndRequestedFriends.push(friend);
+      }
+    }
+
+    showFriends = friends
+      .filter(({ username }) =>
+        username.toLowerCase().includes(friendFilter.toLowerCase())
+      )
+      .map(({ username, id, status }) => {
+        return (
+          <Collapse key={id}>
+            <FriendListItem
+              id={id}
+              username={username}
+              inFriendsList={true}
+              status={status}
+            />
+          </Collapse>
+        );
+      });
+    showPendingAndRequestedFriends = pendingAndRequestedFriends
       .filter(({ username }) =>
         username.toLowerCase().includes(friendFilter.toLowerCase())
       )
@@ -87,7 +115,7 @@ const FriendsList: FC<FriendsListProps> = () => {
             </Link>
           </Box>
         </Collapse>
-        <Collapse in={showFriends ? false : true}>
+        <Collapse in={!showFriends || !showPendingAndRequestedFriends}>
           <Box
             sx={{
               display: "flex",
@@ -103,6 +131,7 @@ const FriendsList: FC<FriendsListProps> = () => {
       </Box>
 
       <List sx={{ padding: 0 }}>
+        <TransitionGroup>{showPendingAndRequestedFriends}</TransitionGroup>
         <TransitionGroup>{showFriends}</TransitionGroup>
       </List>
     </Stack>

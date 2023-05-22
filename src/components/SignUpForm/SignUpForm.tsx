@@ -18,9 +18,9 @@ const SignUpFrom: FC = () => {
   const handleSignUp = async () => {
     try {
       await createAccount(email, password, username);
-      showToast("Sign Up Successful!", "success");
+      showToast("Sing up successful", "success");
     } catch (error) {
-      showToast("Sign Up Failed!", "error");
+      showToast("Failed to signup", "error");
     }
   };
 

@@ -15,7 +15,7 @@ const Toast: FC = () => {
   return (
     <Snackbar
       open={isOpen}
-      autoHideDuration={6000}
+      autoHideDuration={4000}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       TransitionComponent={SlideTransition}
       onClose={() => handleClose()}
