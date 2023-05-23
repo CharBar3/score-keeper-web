@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { useTheme } from "@mui/material/styles";
 import ScoreDeckLogo from "../../../public/Score-Deck-logo-02.svg";
+import Link from "next/link";
 
 interface LogoProps {}
 
@@ -17,7 +18,9 @@ const Logo: FC<LogoProps> = () => {
         padding: 0,
       }}
     >
-      <ScoreDeckLogo height="100%" width="200px" />
+      <Link href="/">
+        <ScoreDeckLogo height="100%" width="200px" />
+      </Link>
     </Box>
   );
 };
