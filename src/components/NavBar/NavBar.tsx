@@ -13,6 +13,7 @@ const NavBar: FC<NavBarProps> = () => {
   return (
     <Box
       sx={{
+        zIndex: 1,
         position: "fixed",
         bottom: "0",
         left: "0",
