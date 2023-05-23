@@ -3,12 +3,14 @@
 import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Collapse, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import { Link as MUILink } from "@mui/material";
 import { redirect } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import InputBar from "../InputBar/InputBar";
+import ResetPasswordDialog from "../ResetPasswordDialog/ResetPasswordDialog";
 // import useStyles from "./LoginForm.styles";
 
 // interface LoginFormProps {}
@@ -25,14 +27,22 @@ const LoginForm: FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     try {
       await loginWithEmailPassword(email, password);
       showToast("Login successful", "success");
+      setShowPasswordReset(false);
     } catch (error) {
+      setShowPasswordReset(true);
       showToast(`Failed to login ${(error as Error).message}`, "error");
     }
+  };
+
+  const handleToggle = () => {
+    setShowPassword((prev) => !prev);
   };
 
   useEffect(() => {
@@ -53,12 +63,19 @@ const LoginForm: FC = () => {
       <Typography variant="h2" textAlign="center">
         Login
       </Typography>
-      <InputBar placeholder="Email" setInputValue={setEmail} value={email} />
+      <InputBar
+        placeholder="Email"
+        setInputValue={setEmail}
+        value={email}
+        inputType="email"
+      />
       <InputBar
         placeholder="Password"
         setInputValue={setPassword}
         value={password}
-        isPasswordInput={true}
+        inputType={showPassword ? "text" : "password"}
+        toggleFunction={handleToggle}
+        showIcon={true}
       />
       <Box>
         <Button
@@ -69,6 +86,11 @@ const LoginForm: FC = () => {
           Login
         </Button>
       </Box>
+      <Collapse in={showPasswordReset}>
+        <ResetPasswordDialog>
+          <MUILink>Reset Password</MUILink>
+        </ResetPasswordDialog>
+      </Collapse>
       <Box sx={{ paddingTop: 5 }}>
         <Typography textAlign="center">{`Don't have an account?`}</Typography>
       </Box>

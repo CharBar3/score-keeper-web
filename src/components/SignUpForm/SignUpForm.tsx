@@ -60,12 +60,17 @@ const SignUpFrom: FC = () => {
         placeholder="Username"
         setInputValue={setUsername}
       />
-      <InputBar value={email} placeholder="Email" setInputValue={setEmail} />
+      <InputBar
+        value={email}
+        placeholder="Email"
+        setInputValue={setEmail}
+        inputType="email"
+      />
       <InputBar
         value={password}
         placeholder="Password"
         setInputValue={setPassword}
-        isPasswordInput={true}
+        inputType="password"
       />
 
       <Button variant="blue" onClick={() => handleSignUp()}>

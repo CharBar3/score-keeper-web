@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   FC,
@@ -26,6 +27,7 @@ interface AuthContextProps {
   loginWithEmailPassword: Function;
   createAccount: Function;
   logOut: Function;
+  resetPassword: Function;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -38,6 +40,9 @@ const AuthContext = createContext<AuthContextProps>({
     console.log("Make sure function is added to value prop");
   },
   logOut: () => {
+    console.log("Make sure function is added to value prop");
+  },
+  resetPassword: () => {
     console.log("Make sure function is added to value prop");
   },
 });
@@ -90,26 +95,21 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
       console.log("Auth Provider Error " + error);
       throw error;
     }
-
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     DatabaseService.createFirestoreUserDocument(
-    //       userCredential.user,
-    //       username
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode);
-    //     console.log(errorMessage);
-    //     // ..
-    //   });
   };
 
   const logOut = async () => {
     try {
       await signOut(auth);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+  const resetPassword = async (email: string) => {
+    console.log("reset password email");
+    console.log(email);
+    try {
+      await sendPasswordResetEmail(auth, email);
     } catch (error) {
       console.error(error);
       throw error;
@@ -134,6 +134,7 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
         loginWithEmailPassword,
         createAccount,
         logOut,
+        resetPassword,
       }}
     >
       {children}

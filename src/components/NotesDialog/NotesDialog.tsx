@@ -63,9 +63,6 @@ const NotesDialog: FC<NotesDialogProps> = ({
         <DialogContent>
           <Stack spacing={1}>
             <TextField
-              // variant="standard"
-              // InputProps={{ disableUnderline: true }}
-              autoFocus
               multiline
               defaultValue={notes}
               sx={{

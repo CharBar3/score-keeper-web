@@ -1,5 +1,6 @@
-import { InputBase, SxProps, Theme, styled } from "@mui/material";
+import { InputBase, SxProps, Theme, styled, useTheme } from "@mui/material";
 import { Dispatch, FC, SetStateAction } from "react";
+import EyeIcon from "../../../public/icons/eye_icon_01.svg";
 
 const StyledSearchBox = styled("div")(({ theme }) => ({
   display: "flex",
@@ -11,7 +12,7 @@ const StyledSearchBox = styled("div")(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(1),
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -36,8 +37,12 @@ interface InputBarProps {
   setInputValue: Dispatch<SetStateAction<string>>;
   sx?: SxProps<Theme>;
   sxInputBase?: SxProps<Theme>;
-  isPasswordInput?: boolean;
+  inputType?: InputType;
+  showIcon?: boolean;
+  toggleFunction?: Function;
 }
+
+type InputType = "password" | "email" | "text";
 
 const InputBar: FC<InputBarProps> = ({
   placeholder,
@@ -45,19 +50,27 @@ const InputBar: FC<InputBarProps> = ({
   setInputValue,
   sx,
   sxInputBase,
-  isPasswordInput = false,
+  inputType = "text",
+  showIcon = false,
+  toggleFunction,
 }) => {
+  const theme = useTheme();
   return (
     <StyledSearchBox sx={sx}>
       <StyledInputBase
         sx={sxInputBase}
         placeholder={placeholder}
         value={value}
-        type={isPasswordInput ? "password" : "text"}
+        type={inputType}
         onChange={(e) => {
           setInputValue(e.currentTarget.value);
         }}
       />
+      {showIcon && toggleFunction && (
+        <SearchIconWrapper onClick={() => toggleFunction()}>
+          <EyeIcon fill="lightgrey" />
+        </SearchIconWrapper>
+      )}
     </StyledSearchBox>
   );
 };
