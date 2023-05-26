@@ -23,6 +23,7 @@ import ColorDialog from "../ColorDialog/ColorDialog";
 import InputBar from "../InputBar/InputBar";
 import AddRemovePlayerDialog from "../AddRemovePlayerDialog/AddRemovePlayerDialog";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
+import { useAuth } from "@/providers/Auth";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -30,6 +31,7 @@ interface GameInfoFormProps {
 }
 
 const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
+  const { fireUser } = useAuth();
   const { updateGame, deleteGame, createGame, playerRole } = useGame();
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
@@ -53,8 +55,11 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   const [playerIds, setPlayerIds] = useState<string[]>(
     _.cloneDeep(game?.playerIds) ?? [user.id]
   );
+  // const [color, setColor] = useState<Color>(
+  //   _.cloneDeep(game?.color) ?? generateRandomColor()
+  // );
   const [color, setColor] = useState<Color>(
-    _.cloneDeep(game?.color) ?? generateRandomColor()
+    game ? _.cloneDeep(game?.color) : generateRandomColor()
   );
 
   const handleCreateGame = async () => {

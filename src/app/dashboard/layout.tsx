@@ -8,9 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <section>
-      <ProtectedContextProvider>
-        <UserProvider>{children}</UserProvider>
-      </ProtectedContextProvider>
+      <ProtectedContextProvider>{children}</ProtectedContextProvider>
     </section>
   );
 }

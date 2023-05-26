@@ -2,7 +2,7 @@
 import { useGame } from "@/providers/Game";
 import { useDataStore } from "@/providers/User";
 import { Stack, Typography, useTheme } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import GameInfoForm from "../GameInfoForm/GameInfoForm";
 
 interface GameSettingsViewProps {
@@ -13,6 +13,10 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
   const { setGameId, liveGame } = useGame();
   const { user } = useDataStore();
   const theme = useTheme();
+
+  useEffect(() => {
+    setGameId(gameId);
+  }, [gameId, setGameId]);
 
   return (
     <Stack sx={{ margin: "auto", maxWidth: "600px" }}>

@@ -1,14 +1,18 @@
 "use client";
 
 import { UserService } from "@/services/user-service";
+import { FirebaseError } from "firebase/app";
 import {
+  EmailAuthProvider,
   User,
   createUserWithEmailAndPassword,
   deleteUser,
+  linkWithCredential,
   onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInAnonymously,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   FC,
@@ -19,12 +23,13 @@ import {
   useState,
 } from "react";
 import { auth } from "../config/firebase";
-import { FirebaseError } from "firebase/app";
 
 interface AuthContextProps {
   fireUser: User | null;
   isLoading: boolean;
   loginWithEmailPassword: Function;
+  createAnonymousAccount: Function;
+  upgradeAnonymousAccount: Function;
   createAccount: Function;
   logOut: Function;
   resetPassword: Function;
@@ -34,6 +39,13 @@ const AuthContext = createContext<AuthContextProps>({
   fireUser: null,
   isLoading: true,
   loginWithEmailPassword: () => {
+    console.log("Make sure function is added to value prop");
+  },
+
+  createAnonymousAccount: () => {
+    console.log("Make sure function is added to value prop");
+  },
+  upgradeAnonymousAccount: () => {
     console.log("Make sure function is added to value prop");
   },
   createAccount: () => {
@@ -70,6 +82,36 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
       }
       console.error(error);
       throw error;
+    }
+  };
+
+  const createAnonymousAccount = async (username: string) => {
+    try {
+      const anonymousUserCredentials = await signInAnonymously(auth);
+      await UserService.createFirestoreUserDocument(
+        anonymousUserCredentials.user,
+        username
+      );
+    } catch (error) {
+      if (fireUser) {
+        await deleteUser(fireUser);
+      }
+      console.log(error);
+    }
+  };
+
+  const upgradeAnonymousAccount = async (email: string, password: string) => {
+    if (!auth.currentUser) {
+      return;
+    }
+    try {
+      const currentUser = auth.currentUser;
+      const credential = EmailAuthProvider.credential(email, password);
+      await linkWithCredential(currentUser, credential);
+
+      console.log("account upgraded");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -132,6 +174,8 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
         fireUser,
         isLoading,
         loginWithEmailPassword,
+        createAnonymousAccount,
+        upgradeAnonymousAccount,
         createAccount,
         logOut,
         resetPassword,

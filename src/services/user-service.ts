@@ -249,6 +249,7 @@ export class UserService {
         playerIds: document.playerIds,
         players: document.players,
         color: document.color,
+        joinCode: document.joinCode,
       };
       games.push(game);
     });

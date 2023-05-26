@@ -15,10 +15,10 @@ import { useTheme } from "@mui/material/styles";
 
 interface ColorDialogProps {
   color: Color;
-  title?: string;
   setColor:
     | React.Dispatch<React.SetStateAction<Color>>
     | ((newColor: Color) => void);
+  title?: string;
   sx?: SxProps;
 }
 
@@ -161,62 +161,34 @@ const ColorDialog: FC<ColorDialogProps> = ({ color, setColor, title, sx }) => {
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        {title ? (
-          <Button
-            variant="contained"
-            onClick={handleClickOpen}
-            sx={{
-              ...sx,
-              color: currentTextColor,
-              backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
+        <Button
+          variant="contained"
+          onClick={handleClickOpen}
+          sx={{
+            ...sx,
+            backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
+            boxShadow: `0px 8px rgb(${color.red * 0.8}, ${color.green * 0.8}, ${
+              color.blue * 0.8
+            })`,
+            borderRadius: "7px",
+            minWidth: "unset",
+            width: title ? "100%" : "40px",
+            height: "32px",
+            padding: "0px",
+            marginBottom: "8px",
+
+            "&:hover": {
+              backgroundColor: `rgb(${color.red * 0.8}, ${color.green * 0.8}, ${
+                color.blue * 0.8
+              })`,
               boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
                 color.green * 0.8
               }, ${color.blue * 0.8})`,
-              minWidth: "unset",
-              borderRadius: "7px",
-              marginBottom: "8px",
-              width: "100%",
-              "&:hover": {
-                backgroundColor: `rgb(${color.red * 0.8}, ${
-                  color.green * 0.8
-                }, ${color.blue * 0.8})`,
-                boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
-                  color.green * 0.8
-                }, ${color.blue * 0.8})`,
-              },
-            }}
-          >
-            {title}
-          </Button>
-        ) : (
-          <Button
-            variant="contained"
-            onClick={handleClickOpen}
-            sx={{
-              ...sx,
-              backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
-              boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
-                color.green * 0.8
-              }, ${color.blue * 0.8})`,
-              borderRadius: "7px",
-              minWidth: "unset",
-              width: "40px",
-              height: "32px",
-              padding: "0px",
-              marginBottom: "8px",
-              "@media (hover: hover)": {
-                "&:hover": {
-                  backgroundColor: `rgb(${color.red * 0.8}, ${
-                    color.green * 0.8
-                  }, ${color.blue * 0.8})`,
-                  boxShadow: `0px 8px rgb(${color.red * 0.8}, ${
-                    color.green * 0.8
-                  }, ${color.blue * 0.8})`,
-                },
-              },
-            }}
-          ></Button>
-        )}
+            },
+          }}
+        >
+          {title}
+        </Button>
       </Box>
       <Dialog
         open={open}
