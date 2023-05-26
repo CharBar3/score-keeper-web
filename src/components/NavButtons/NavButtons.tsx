@@ -3,6 +3,7 @@ import { useAuth } from "@/providers/Auth";
 import { Box, Button, Stack } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 import FriendsIcon from "../../../public/icons/friends_botton_icon-07.svg";
 
@@ -21,6 +22,7 @@ interface NavButtonsProps {}
 
 const NavButtons: FC<NavButtonsProps> = () => {
   const { fireUser, logOut, isLoading } = useAuth();
+  const router = useRouter();
   const pathname = usePathname();
   const pathParams = pathname.split("/");
 
@@ -62,9 +64,26 @@ const NavButtons: FC<NavButtonsProps> = () => {
           )}
           {pathParams.at(-1) === Path.Dashboard && (
             <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-              <Button variant="dark" onClick={() => logOut()}>
-                Sign Out
-              </Button>
+              {!fireUser.isAnonymous ? (
+                <Button
+                  variant="dark"
+                  onClick={() => {
+                    logOut();
+                  }}
+                >
+                  Sign Out
+                </Button>
+              ) : (
+                <Button
+                  variant="dark"
+                  onClick={() => {
+                    router.push("/upgrade");
+                  }}
+                >
+                  Upgrade Account
+                </Button>
+              )}
+
               <Link href="/dashboard/friends">
                 <Button
                   variant="dark"

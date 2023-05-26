@@ -6,6 +6,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import InputBar from "../InputBar/InputBar";
+import AnonSignupDialog from "../AnonSignupForm/AnonSignupDialog";
 
 const SignUpFrom: FC = () => {
   const { fireUser, createAccount } = useAuth();
@@ -51,6 +52,7 @@ const SignUpFrom: FC = () => {
       }}
       spacing={2}
     >
+      <AnonSignupDialog />
       <Typography variant="h2" textAlign="center">
         Sign Up
       </Typography>

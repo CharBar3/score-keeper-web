@@ -6,7 +6,10 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  query,
   updateDoc,
+  where,
   writeBatch,
 } from "firebase/firestore";
 
@@ -108,6 +111,8 @@ export class GameService {
       });
     }
 
+    const joinCode = await this.codeGenerator();
+
     const newGame: Game = {
       id: newGameRef.id,
       title: title,
@@ -116,6 +121,7 @@ export class GameService {
       playerIds: playerIds,
       players: processedPlayers,
       color: color,
+      joinCode: joinCode,
     };
 
     const batch = writeBatch(db);
@@ -205,7 +211,46 @@ export class GameService {
     }
   };
 
+  public static codeGenerator = async (): Promise<string> => {
+    console.log("codeGen called");
+    const randomNumber = () => {
+      return Math.floor(Math.random() * possibleCharacters.length);
+    };
+
+    const possibleCharacters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    const joinCode =
+      possibleCharacters[randomNumber()] +
+      possibleCharacters[randomNumber()] +
+      possibleCharacters[randomNumber()] +
+      possibleCharacters[randomNumber()];
+
+    // Checks to see if the code is already used
+    const checkCode = async (): Promise<boolean> => {
+      const gamesRef = collection(db, "games");
+      const q = query(gamesRef, where("joinCode", "==", joinCode));
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.docs.length > 0) {
+        return true;
+      }
+
+      return false;
+    };
+
+    const codeNotSafe = await checkCode();
+
+    if (codeNotSafe) {
+      return this.codeGenerator();
+    }
+
+    return joinCode;
+  };
+
   public static colorGenerator = (): Color => {
+    // console.log("color generator called");
     const randomNumber = () => {
       return Math.floor(Math.random() * 256);
     };

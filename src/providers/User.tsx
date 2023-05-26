@@ -67,7 +67,6 @@ export const UserProvider: FC<DataStoreContextProviderProps> = ({
 }) => {
   const { fireUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
-
   const [friendsList, setFriendsList] = useState<Array<Friend> | null>(null);
   const [gameList, setGameList] = useState<Array<Game> | null>(null);
 

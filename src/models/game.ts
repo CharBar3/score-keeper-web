@@ -8,6 +8,7 @@ export interface Game {
   playerIds: string[];
   players: Player[];
   color: Color;
+  joinCode: string;
 }
 
 export interface Color {
