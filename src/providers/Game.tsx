@@ -88,7 +88,15 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await GameService.increaseScore(liveGame.id, playerId, scoreIncrease);
+        await GameService.updatePlayer(
+          liveGame.id,
+          playerId,
+          null,
+          null,
+          scoreIncrease,
+          null,
+          null
+        );
       } catch (error) {
         console.log(error);
         throw error;
@@ -103,7 +111,15 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await GameService.decreaseScore(liveGame.id, playerId, scoreDecrease);
+        await GameService.updatePlayer(
+          liveGame.id,
+          playerId,
+          null,
+          null,
+          scoreDecrease,
+          null,
+          null
+        );
       } catch (error) {
         console.log(error);
         throw error;
@@ -118,7 +134,15 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await GameService.updateNotes(liveGame.id, playerId, notes);
+        await GameService.updatePlayer(
+          liveGame.id,
+          playerId,
+          null,
+          null,
+          null,
+          notes,
+          null
+        );
       } catch (error) {
         console.log(error);
         throw error;
@@ -139,7 +163,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         return;
       }
       try {
-        return await GameService.createUserGame(
+        return await GameService.createGame(
           title,
           info,
           user,
@@ -169,7 +193,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await GameService.updateUserGame(
+        await GameService.updateGame(
           gameId,
           newTitle,
           newInfo,
@@ -191,7 +215,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       }
 
       try {
-        await GameService.deleteUserGame(gameId);
+        await GameService.deleteGame(gameId);
       } catch (error) {
         console.log(error);
         throw error;
