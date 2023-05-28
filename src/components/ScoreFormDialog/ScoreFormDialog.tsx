@@ -104,7 +104,7 @@ const StyledActionButton = styled(Button)<ButtonProps>(({ theme }) => ({
 }));
 
 const ScoreFormDialog: FC<ScoreFormDialogProps> = ({ playerId, sx }) => {
-  const { increaseScore } = useGame();
+  const { updateScore } = useGame();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [scoreInputValue, setScoreInputValue] = useState<string>("0");
@@ -134,7 +134,7 @@ const ScoreFormDialog: FC<ScoreFormDialogProps> = ({ playerId, sx }) => {
       return;
     }
 
-    increaseScore(playerId, parseInt(scoreInputValue));
+    updateScore(playerId, parseInt(scoreInputValue));
     handleClose();
   };
 

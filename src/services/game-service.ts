@@ -31,7 +31,6 @@ export class GameService {
 
       for (const player of gameDoc.players) {
         if ((player.id = playerId)) {
-          console.log(player);
           player.name = name ?? player.name;
           player.role = role ?? player.role;
           player.score += score ?? player.score;
