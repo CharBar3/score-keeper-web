@@ -7,6 +7,7 @@ import { ToastProvider } from "@/providers/ToastProvider";
 
 import "./globals.css";
 import { UserProvider } from "@/providers/User";
+import { GameProvider } from "@/providers/Game";
 
 export const metadata = {
   title: "Score Deck",
@@ -25,12 +26,14 @@ export default function RootLayout({
           <ToastProvider>
             <AuthProvider>
               <UserProvider>
-                <Toast />
-                <Logo />
-                <NavBar />
-                {children}
-                {/* div for extra space at the bottom to accomodate navbar */}
-                <div style={{ height: "106px" }}></div>
+                <GameProvider>
+                  <Toast />
+                  <Logo />
+                  <NavBar />
+                  {children}
+                  {/* div for extra space at the bottom to accomodate navbar */}
+                  <div style={{ height: "106px" }}></div>
+                </GameProvider>
               </UserProvider>
             </AuthProvider>
           </ToastProvider>

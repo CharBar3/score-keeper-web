@@ -6,27 +6,19 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
 import { FC, useState } from "react";
 import DownArrow from "../../../public/icons/down_arrow_icon_55px.svg";
-import { useTheme } from "@mui/material/styles";
 
 interface NotesDialogProps {
   notes: string;
   id: string;
   sx: SxProps;
-  hasPermission: boolean;
   name: string;
 }
 
-const NotesDialog: FC<NotesDialogProps> = ({
-  notes,
-  id,
-  sx,
-  hasPermission,
-  name,
-}) => {
+const NotesDialog: FC<NotesDialogProps> = ({ notes, id, sx, name }) => {
   const { updateNotes } = useGame();
   const theme = useTheme();
 
@@ -43,7 +35,6 @@ const NotesDialog: FC<NotesDialogProps> = ({
 
   const handleClick = () => {
     try {
-      console.log(newNotes);
       updateNotes(id, newNotes);
       handleClose();
     } catch (error) {
@@ -93,24 +84,22 @@ const NotesDialog: FC<NotesDialogProps> = ({
             />
           </Stack>
         </DialogContent>
-        {hasPermission && (
-          <DialogActions>
-            <Button
-              variant="dark"
-              onClick={handleClose}
-              sx={{ flexGrow: 1, width: "0px", minWidth: "0px" }}
-            >
-              cancel
-            </Button>
-            <Button
-              variant="blue"
-              onClick={handleClick}
-              sx={{ flexGrow: 1, width: "0px", minWidth: "0px" }}
-            >
-              Save
-            </Button>
-          </DialogActions>
-        )}
+        <DialogActions>
+          <Button
+            variant="dark"
+            onClick={handleClose}
+            sx={{ flexGrow: 1, width: "0px", minWidth: "0px" }}
+          >
+            cancel
+          </Button>
+          <Button
+            variant="blue"
+            onClick={handleClick}
+            sx={{ flexGrow: 1, width: "0px", minWidth: "0px" }}
+          >
+            Save
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

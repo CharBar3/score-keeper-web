@@ -30,7 +30,7 @@ export class GameService {
       const gameDoc = gameSnap.data();
 
       for (const player of gameDoc.players) {
-        if ((player.id = playerId)) {
+        if (player.id === playerId) {
           player.name = name ?? player.name;
           player.role = role ?? player.role;
           player.score += score ?? player.score;

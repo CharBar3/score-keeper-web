@@ -16,10 +16,9 @@ import {
 import { useDataStore } from "./User";
 
 interface LiveGameContextProps {
-  liveGame: Game | null;
-  playerRole: Role | null;
+  game: Game | null;
+  activePlayer: Player | null;
   setGameId: (value: string) => void;
-  updateScore: (playerId: string, difference: number) => Promise<void>;
   createGame: (
     title: string,
     info: string,
@@ -36,16 +35,20 @@ interface LiveGameContextProps {
     newColor: Color
   ) => Promise<void>;
   deleteGame: (gameId: string) => Promise<void>;
+  updateScore: (playerId: string, difference: number) => Promise<void>;
   updateNotes: (playerId: string, notes: string) => Promise<void>;
+  updatePlayerSettings: (
+    playerId: string,
+    name: string,
+    role: Role,
+    color: Color
+  ) => Promise<void>;
 }
 
 const LiveGameContext = createContext<LiveGameContextProps>({
-  liveGame: null,
-  playerRole: null,
+  game: null,
+  activePlayer: null,
   setGameId: async () => {
-    console.log("Error: Function not added to value prop");
-  },
-  updateScore: async () => {
     console.log("Error: Function not added to value prop");
   },
   createGame: async () => {
@@ -58,7 +61,13 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   deleteGame: async () => {
     console.log("Error: Function not added to value prop");
   },
+  updateScore: async () => {
+    console.log("Error: Function not added to value prop");
+  },
   updateNotes: async () => {
+    console.log("Error: Function not added to value prop");
+  },
+  updatePlayerSettings: async () => {
     console.log("Error: Function not added to value prop");
   },
 });
@@ -73,19 +82,45 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
   const { user } = useDataStore();
 
   const [gameId, setGameId] = useState<string | null>(null);
-  const [liveGame, setLiveGame] = useState<Game | null>(null);
-  const [playerRole, setPlayerRole] = useState<Role | null>(null);
+  const [game, setGame] = useState<Game | null>(null);
+  const [activePlayer, setActivePlayer] = useState<Player | null>(null);
+
+  useEffect(() => {
+    console.log("game provider reload check");
+    let unsub = () => {};
+    if (gameId) {
+      unsub = onSnapshot(doc(db, "games", gameId), (doc) => {
+        setGame(doc.data() as Game);
+      });
+    }
+    return () => {
+      if (gameId) {
+        unsub();
+      }
+    };
+  }, [gameId]);
+
+  useEffect(() => {
+    if (!user || !game) {
+      return;
+    }
+    for (const player of game.players) {
+      if (player.id === user.id) {
+        setActivePlayer(player);
+        break;
+      }
+    }
+  }, [user, game]);
 
   const updateScore = useCallback(
     async (playerId: string, difference: number) => {
-      console.log("update score called");
-      if (!liveGame) {
+      if (!game) {
         return;
       }
 
       try {
         await GameService.updatePlayer(
-          liveGame.id,
+          game.id,
           playerId,
           null,
           null,
@@ -98,18 +133,18 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         throw error;
       }
     },
-    [liveGame]
+    [game]
   );
 
   const updateNotes = useCallback(
     async (playerId: string, notes: string) => {
-      if (!liveGame) {
+      if (!game) {
         return;
       }
 
       try {
         await GameService.updatePlayer(
-          liveGame.id,
+          game.id,
           playerId,
           null,
           null,
@@ -122,7 +157,31 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         throw error;
       }
     },
-    [liveGame]
+    [game]
+  );
+
+  const updatePlayerSettings = useCallback(
+    async (playerId: string, name: string, role: Role, color: Color) => {
+      if (!game) {
+        return;
+      }
+
+      try {
+        await GameService.updatePlayer(
+          game.id,
+          playerId,
+          name,
+          role,
+          null,
+          null,
+          color
+        );
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    [game]
   );
 
   const createGame = useCallback(
@@ -162,7 +221,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       newPlayerIds: string[],
       newColor: Color
     ) => {
-      if (!liveGame) {
+      if (!game) {
         return;
       }
 
@@ -180,11 +239,11 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         throw error;
       }
     },
-    [liveGame]
+    [game]
   );
   const deleteGame = useCallback(
     async (gameId: string) => {
-      if (!liveGame) {
+      if (!game) {
         return;
       }
 
@@ -195,53 +254,21 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         throw error;
       }
     },
-    [liveGame]
+    [game]
   );
-
-  useEffect(() => {
-    console.log("game provider reload check");
-    let unsub = () => {};
-    if (gameId) {
-      unsub = onSnapshot(doc(db, "games", gameId), (doc) => {
-        setLiveGame(doc.data() as Game);
-      });
-    }
-    return () => {
-      if (gameId) {
-        unsub();
-      }
-    };
-  }, [gameId]);
-
-  useEffect(() => {
-    if (!user || !liveGame) {
-      setPlayerRole(Role.Owner);
-      return;
-    }
-    if (user.id === liveGame.ownerId) {
-      setPlayerRole(Role.Owner);
-    } else {
-      for (const player of liveGame.players) {
-        if (user.id === player.id) {
-          setPlayerRole(player.role);
-        }
-      }
-    }
-
-    // return () => {};
-  }, [user, liveGame]);
 
   return (
     <LiveGameContext.Provider
       value={{
-        liveGame,
-        playerRole,
+        game,
+        activePlayer,
         setGameId,
-        updateScore,
         createGame,
         updateGame,
         deleteGame,
+        updateScore,
         updateNotes,
+        updatePlayerSettings,
       }}
     >
       {children}

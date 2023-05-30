@@ -19,17 +19,17 @@ interface GameViewProps {
 }
 
 const GameView: FC<GameViewProps> = ({ id }) => {
-  const { liveGame, setGameId, playerRole } = useGame();
+  const { game, setGameId } = useGame();
   const { user } = useDataStore();
 
   useEffect(() => {
     setGameId(id);
   }, [id, setGameId]);
 
-  if (!liveGame) {
+  if (!game) {
     return (
       <>
-        <Collapse in={!liveGame}>
+        <Collapse in={!game}>
           <Box
             sx={{
               display: "flex",
@@ -46,15 +46,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
     );
   }
 
-  const showPlayers = liveGame.players.map((player) => {
-    let hasPermission = false;
-
-    if (playerRole === Role.Admin || playerRole === Role.Owner) {
-      hasPermission = true;
-    } else if (playerRole === Role.Edit && user && user.id === player.id) {
-      hasPermission = true;
-    }
-
+  const showPlayers = game.players.map((player) => {
     return (
       <Grid key={player.id}>
         <PlayerCard
@@ -64,7 +56,7 @@ const GameView: FC<GameViewProps> = ({ id }) => {
           score={player.score}
           notes={player.notes}
           color={player.color}
-          hasPermission={hasPermission}
+          role={player.role}
         />
       </Grid>
     );
@@ -73,10 +65,10 @@ const GameView: FC<GameViewProps> = ({ id }) => {
   return (
     <Box sx={{ marginBottom: "56px" }}>
       <Typography textAlign="center" variant="h1">
-        {liveGame.title}
+        {game.title}
       </Typography>
       <Typography textAlign="center" variant="h4">
-        {liveGame.info}
+        {game.info}
       </Typography>
 
       {/* {liveGame.ownerId === user?.id && (

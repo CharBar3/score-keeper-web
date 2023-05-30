@@ -10,7 +10,7 @@ interface GameSettingsViewProps {
 }
 
 const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
-  const { setGameId, liveGame } = useGame();
+  const { setGameId, game } = useGame();
   const { user } = useDataStore();
   const theme = useTheme();
 
@@ -27,10 +27,10 @@ const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
       >
         Game Settings
       </Typography>
-      {!liveGame || !user ? (
+      {!game || !user ? (
         <Typography variant="h1">Loading...</Typography>
       ) : (
-        <GameInfoForm game={liveGame} user={user} />
+        <GameInfoForm game={game} user={user} />
       )}
     </Stack>
   );

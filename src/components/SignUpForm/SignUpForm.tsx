@@ -25,11 +25,11 @@ const SignUpFrom: FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (fireUser) {
-      redirect("/dashboard");
-    }
-  }, [fireUser]);
+  // useEffect(() => {
+  //   if (fireUser) {
+  //     redirect("/dashboard");
+  //   }
+  // }, [fireUser]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
