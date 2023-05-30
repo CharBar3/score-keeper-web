@@ -171,14 +171,56 @@ export class GameService {
     }
   };
 
+  public static joinGame = async (
+    userId: string,
+    gameName: string,
+    joinCode: string
+  ): Promise<string> => {
+    const gamesRef = collection(db, "games");
+    const q = query(gamesRef, where("joinCode", "==", joinCode));
+    const querySnapshot = await getDocs(q);
+
+    const newPlayer = {
+      id: userId,
+      name: gameName,
+      role: Role.Edit,
+      notes: "",
+      score: 0,
+      color: this.colorGenerator(),
+    };
+
+    let gameId = "";
+
+    querySnapshot.forEach((doc) => {
+      gameId = doc.id;
+    });
+
+    const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
+
+    if (gameSnap.exists()) {
+      const gameDoc = gameSnap.data();
+
+      if (!gameDoc.playerIds.includes(userId)) {
+        await updateDoc(gameRef, {
+          players: [...gameDoc.players, newPlayer],
+          playerIds: [...gameDoc.playerIds, newPlayer.id],
+        });
+      }
+    }
+
+    return gameId;
+  };
+
   public static codeGenerator = async (): Promise<string> => {
     console.log("codeGen called");
     const randomNumber = () => {
       return Math.floor(Math.random() * possibleCharacters.length);
     };
 
-    const possibleCharacters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    // const possibleCharacters =
+    //   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     const joinCode =
       possibleCharacters[randomNumber()] +

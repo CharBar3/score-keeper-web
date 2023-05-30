@@ -4,19 +4,26 @@ import { useDataStore } from "@/providers/User";
 import { Stack, Typography, useTheme } from "@mui/material";
 import { FC, useEffect } from "react";
 import GameInfoForm from "../GameInfoForm/GameInfoForm";
+import { useRouter } from "next/navigation";
+import { Role } from "@/models";
 
 interface GameSettingsViewProps {
   gameId: string;
 }
 
 const GameSettingsView: FC<GameSettingsViewProps> = ({ gameId }) => {
-  const { setGameId, game } = useGame();
+  const { setGameId, game, activePlayer } = useGame();
   const { user } = useDataStore();
+  const router = useRouter();
   const theme = useTheme();
 
   useEffect(() => {
+    if (activePlayer?.role != Role.Owner) {
+      router.push(`/dashboard/game/${gameId}`);
+    }
+
     setGameId(gameId);
-  }, [gameId, setGameId]);
+  }, [activePlayer, router, setGameId, gameId]);
 
   return (
     <Stack sx={{ margin: "auto", maxWidth: "600px" }}>

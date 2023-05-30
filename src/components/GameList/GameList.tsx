@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import PlusIcon from "../../../public/icons/plus_icon_55px.svg";
 import { TransitionGroup } from "react-transition-group";
+import JoinGameDialog from "../JoinGameDialog/JoinGameDialog";
 
 interface GameListProps {}
 
@@ -82,6 +83,13 @@ const GameList: FC<GameListProps> = () => {
 
   return (
     <Stack spacing={1} sx={{ maxWidth: "900px", margin: "auto" }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ flexGrow: 1, padding: "0px 8px" }}
+      >
+        <JoinGameDialog />
+      </Stack>
       <Stack
         direction="row"
         spacing={2}

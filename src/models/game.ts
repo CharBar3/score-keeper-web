@@ -11,10 +11,9 @@ export interface Game {
   joinCode: string;
 }
 
+export type GameCreateParams = Omit<Game, "id">;
 export interface Color {
   red: number;
   green: number;
   blue: number;
 }
-
-export type GameCreateParams = Omit<Game, "id">;

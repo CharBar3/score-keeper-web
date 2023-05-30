@@ -35,6 +35,7 @@ interface LiveGameContextProps {
     newColor: Color
   ) => Promise<void>;
   deleteGame: (gameId: string) => Promise<void>;
+  joinGame: (joinCode: string) => Promise<string | void>;
   updateScore: (playerId: string, difference: number) => Promise<void>;
   updateNotes: (playerId: string, notes: string) => Promise<void>;
   updatePlayerSettings: (
@@ -60,6 +61,10 @@ const LiveGameContext = createContext<LiveGameContextProps>({
   },
   deleteGame: async () => {
     console.log("Error: Function not added to value prop");
+  },
+  joinGame: async () => {
+    console.log("Error: Function not added to value prop");
+    return "";
   },
   updateScore: async () => {
     console.log("Error: Function not added to value prop");
@@ -256,6 +261,26 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
     },
     [game]
   );
+  const joinGame = useCallback(
+    async (joinCode: string) => {
+      if (!user) {
+        return;
+      }
+
+      try {
+        const gameId = await GameService.joinGame(
+          user.id,
+          user.username,
+          joinCode
+        );
+        return gameId;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    [user]
+  );
 
   return (
     <LiveGameContext.Provider
@@ -266,6 +291,7 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
         createGame,
         updateGame,
         deleteGame,
+        joinGame,
         updateScore,
         updateNotes,
         updatePlayerSettings,
