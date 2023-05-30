@@ -67,15 +67,12 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography textAlign="center" variant="h1">
         {game.title}
       </Typography>
+      <Typography textAlign="center" variant="h3">
+        Join Code: {game.joinCode}
+      </Typography>
       <Typography textAlign="center" variant="h4">
         {game.info}
       </Typography>
-
-      {/* {liveGame.ownerId === user?.id && (
-        <Link href={`dashboard/game/${id}/settings`}>
-          <Button variant="contained">Settings</Button>
-        </Link>
-      )} */}
       <Stack>
         <Grid
           container
