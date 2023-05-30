@@ -31,8 +31,7 @@ interface GameInfoFormProps {
 }
 
 const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
-  const { fireUser } = useAuth();
-  const { updateGame, deleteGame, createGame, playerRole } = useGame();
+  const { updateGame, deleteGame, createGame } = useGame();
   const { generateRandomColor } = useDataStore();
   const { showToast } = useToast();
   const router = useRouter();
@@ -55,11 +54,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   const [playerIds, setPlayerIds] = useState<string[]>(
     _.cloneDeep(game?.playerIds) ?? [user.id]
   );
-  // const [color, setColor] = useState<Color>(
-  //   _.cloneDeep(game?.color) ?? generateRandomColor()
-  // );
   const [color, setColor] = useState<Color>(
-    game ? _.cloneDeep(game?.color) : generateRandomColor()
+    _.cloneDeep(game?.color) ?? generateRandomColor()
   );
 
   const handleCreateGame = async () => {
@@ -130,12 +126,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
   };
 
   let showPlayers = players.map(({ id, name, role, color }) => {
-    if (playerRole != Role.Owner && playerRole != Role.Admin) {
-      if (playerRole === Role.Edit && user.id != id) {
-        return;
-      }
-    }
-
     const setPlayerColor = (newColor: Color) => {
       setPlayers((prevState) => {
         const newState: Player[] = [];
@@ -198,11 +188,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
                 height: "32px",
                 backgroundColor: theme.palette.primary.main,
                 marginBottom:
-                  role === Role.Owner ||
-                  role === Role.Guest ||
-                  playerRole == Role.Edit
-                    ? ""
-                    : "8px",
+                  role === Role.Owner || role === Role.Guest ? "" : "8px",
                 boxShadow: `0px 8px ${theme.palette.primary.dark}`,
                 fontSize: "12px",
 
@@ -217,11 +203,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
                 },
               }}
               disabled={
-                role === Role.Owner ||
-                role === Role.Guest ||
-                playerRole == Role.Edit
-                  ? true
-                  : false
+                role === Role.Owner || role === Role.Guest ? true : false
               }
               inputProps={{ IconComponent: () => null }}
               onChange={(e) => handlePickRole(e, id)}
@@ -246,59 +228,51 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
   return (
     <Stack spacing={1} sx={{ minWidth: "unset" }}>
-      {playerRole === Role.Owner && (
-        <>
-          <InputBar
-            placeholder="Title"
-            setInputValue={setTitle}
-            value={title}
+      <InputBar placeholder="Title" setInputValue={setTitle} value={title} />
+      <InputBar placeholder="Info" setInputValue={setInfo} value={info} />
+      <Box sx={{ display: "flex" }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <AddRemovePlayerDialog
+            setPlayers={setPlayers}
+            players={players}
+            setPlayerIds={setPlayerIds}
+            playerIds={playerIds}
           />
-          <InputBar placeholder="Info" setInputValue={setInfo} value={info} />
-          <Box sx={{ display: "flex" }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <AddRemovePlayerDialog
-                setPlayers={setPlayers}
-                players={players}
-                setPlayerIds={setPlayerIds}
-                playerIds={playerIds}
-              />
-            </Box>
-            <Box sx={{ paddingLeft: 1, width: "104px" }}>
-              <ColorDialog
-                color={color}
-                setColor={setColor}
-                title="Game Color"
-                sx={{
-                  fontSize: "12px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                  minHeight: "32px",
-                  height: "32px",
-                }}
-              />
-            </Box>
-          </Box>
-        </>
-      )}
+        </Box>
+        <Box sx={{ paddingLeft: 1, width: "104px" }}>
+          <ColorDialog
+            color={color}
+            setColor={setColor}
+            title="Game Color"
+            sx={{
+              fontSize: "12px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              minHeight: "32px",
+              height: "32px",
+            }}
+          />
+        </Box>
+      </Box>
+
       <List sx={{ padding: 0 }}>{showPlayers}</List>
 
       {/* <GameIconSelector /> */}
       {game ? (
         <Stack direction="row" spacing={2}>
-          {playerRole === Role.Owner && (
-            <ConfirmationDialog
-              sx={{ width: "0px", flexGrow: 1 }}
-              actionFunction={() => handleDeleteGame()}
+          <ConfirmationDialog
+            sx={{ width: "0px", flexGrow: 1 }}
+            actionFunction={() => handleDeleteGame()}
+          >
+            <Button
+              variant="red"
+              // onClick={() => handleDeleteGame()}
+              sx={{ width: "100%" }}
             >
-              <Button
-                variant="red"
-                // onClick={() => handleDeleteGame()}
-                sx={{ width: "100%" }}
-              >
-                Delete
-              </Button>
-            </ConfirmationDialog>
-          )}
+              Delete
+            </Button>
+          </ConfirmationDialog>
+
           <Button
             variant="dark"
             onClick={() => {

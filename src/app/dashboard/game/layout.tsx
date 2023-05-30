@@ -5,9 +5,5 @@ export default function GameLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <GameProvider>
-      <section>{children}</section>
-    </GameProvider>
-  );
+  return <section>{children}</section>;
 }

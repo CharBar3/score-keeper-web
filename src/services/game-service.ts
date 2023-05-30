@@ -1,5 +1,5 @@
 import { db } from "@/config/firebase";
-import { Color, Game, Player, User } from "@/models";
+import { Color, Game, Player, Role, User } from "@/models";
 import {
   arrayRemove,
   arrayUnion,
@@ -14,81 +14,41 @@ import {
 } from "firebase/firestore";
 
 export class GameService {
-  public static increaseScore = async (
+  public static updatePlayer = async (
     gameId: string,
     playerId: string,
-    scoreIncrease: number
-  ): Promise<void> => {
+    name?: string | null,
+    role?: Role | null,
+    score?: number | null,
+    notes?: string | null,
+    color?: Color | null
+  ) => {
     const gameRef = doc(db, "games", gameId);
+    const gameSnap = await getDoc(gameRef);
 
-    const docSnap = await getDoc(gameRef);
+    if (gameSnap.exists()) {
+      const gameDoc = gameSnap.data();
 
-    if (docSnap.exists()) {
-      const document = docSnap.data();
+      for (const player of gameDoc.players) {
+        if (player.id === playerId) {
+          player.name = name ?? player.name;
+          player.role = role ?? player.role;
+          player.score += score ?? player.score;
+          player.notes = notes ?? player.notes;
+          player.color = color ?? player.color;
 
-      for (const player of document.players as Player[]) {
-        if (player.id == playerId) {
-          player.score += scoreIncrease;
           await updateDoc(gameRef, {
-            players: [...document.players],
+            players: [...gameDoc.players],
           });
+          break;
         }
       }
     } else {
-      console.log("no player exists");
-    }
-  };
-  public static decreaseScore = async (
-    gameId: string,
-    playerId: string,
-    scoreIncrease: number
-  ): Promise<void> => {
-    const gameRef = doc(db, "games", gameId);
-
-    const docSnap = await getDoc(gameRef);
-
-    if (docSnap.exists()) {
-      const document = docSnap.data();
-
-      for (const player of document.players as Player[]) {
-        if (player.id == playerId) {
-          player.score -= scoreIncrease;
-          await updateDoc(gameRef, {
-            players: [...document.players],
-          });
-        }
-      }
-    } else {
-      console.log("no player exists");
+      console.log("gamedoc does not exists");
     }
   };
 
-  public static updateNotes = async (
-    gameId: string,
-    playerId: string,
-    notes: string
-  ): Promise<void> => {
-    const gameRef = doc(db, "games", gameId);
-
-    const docSnap = await getDoc(gameRef);
-
-    if (docSnap.exists()) {
-      const document = docSnap.data();
-
-      for (const player of document.players as Player[]) {
-        if (player.id == playerId) {
-          player.notes = notes;
-          await updateDoc(gameRef, {
-            players: [...document.players],
-          });
-        }
-      }
-    } else {
-      console.log("no player exists");
-    }
-  };
-
-  public static createUserGame = async (
+  public static createGame = async (
     title: string,
     info: string,
     owner: User,
@@ -139,7 +99,7 @@ export class GameService {
     return newGameRef.id;
   };
 
-  public static updateUserGame = async (
+  public static updateGame = async (
     gameId: string,
     newTitle: string,
     newInfo: string,
@@ -187,7 +147,7 @@ export class GameService {
     }
   };
 
-  public static deleteUserGame = async (gameId: string): Promise<void> => {
+  public static deleteGame = async (gameId: string): Promise<void> => {
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
 

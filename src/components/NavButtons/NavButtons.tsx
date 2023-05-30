@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import FriendsIcon from "../../../public/icons/friends_botton_icon-07.svg";
+import { useGame } from "@/providers/Game";
+import { Role } from "@/models";
 
 enum Path {
   Home = "",
@@ -22,6 +24,7 @@ interface NavButtonsProps {}
 
 const NavButtons: FC<NavButtonsProps> = () => {
   const { fireUser, logOut, isLoading } = useAuth();
+  const { activePlayer } = useGame();
   const router = useRouter();
   const pathname = usePathname();
   const pathParams = pathname.split("/");
@@ -142,11 +145,16 @@ const NavButtons: FC<NavButtonsProps> = () => {
                     Dashboard
                   </Button>
                 </Link>
-                <Link href={`/dashboard/game/${pathParams.at(-1)}/settings`}>
-                  <Button variant="dark" sx={{ marginLeft: 1, width: "125px" }}>
-                    Settings
-                  </Button>
-                </Link>
+                {activePlayer?.role === Role.Owner && (
+                  <Link href={`/dashboard/game/${pathParams.at(-1)}/settings`}>
+                    <Button
+                      variant="dark"
+                      sx={{ marginLeft: 1, width: "125px" }}
+                    >
+                      Settings
+                    </Button>
+                  </Link>
+                )}
               </>
             )}
         </>

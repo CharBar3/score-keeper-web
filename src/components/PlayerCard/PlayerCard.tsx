@@ -1,12 +1,11 @@
 "use client";
 
 import { Color, Role } from "@/models";
-import { useGame } from "@/providers/Game";
-import { useDataStore } from "@/providers/User";
 import {
   Card,
   CardActions,
   CardContent,
+  Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -14,23 +13,17 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { useTheme } from "@mui/material/styles";
 import { FC } from "react";
 import NotesDialog from "../NotesDialog/NotesDialog";
-import ScoreChangePopover from "../ScoreChangePopover/ScoreChangePopover";
 import ScoreFormDialog from "../ScoreFormDialog/ScoreFormDialog";
+import PlayerSettingsDialog from "../PlayerSettingsDialog/PlayerSettingsDialog";
+import { useGame } from "@/providers/Game";
 
 interface PlayerCardProps {
-  id: string; // the players id.
-  name: string; // defaults to the players username but can be updated
-  // role: Role;
+  id: string;
+  name: string;
+  role: Role;
   score: number;
   notes: string;
   color: Color;
-  // adminIds: string[];
-  hasPermission: boolean;
-}
-
-enum Action {
-  Increase = "increase",
-  Decrease = "decrease",
 }
 
 const PlayerCard: FC<PlayerCardProps> = ({
@@ -38,15 +31,22 @@ const PlayerCard: FC<PlayerCardProps> = ({
   name,
   score,
   notes,
+  role,
   color,
-  hasPermission,
 }) => {
   const theme = useTheme();
+  const { activePlayer } = useGame();
+
+  let hasPermission = false;
+
+  if (activePlayer?.role === Role.Owner || activePlayer?.id === id) {
+    hasPermission = true;
+  }
 
   const boxShadowColor = `rgb(${color.red}, ${color.green}, ${color.blue})`;
   const borderColor = `rgba(${color.red}, ${color.green}, ${color.blue}, .6)`;
-
   const isLessThan670px = useMediaQuery(theme.breakpoints.down(670));
+
   return (
     <Card
       sx={{
@@ -118,7 +118,6 @@ const PlayerCard: FC<PlayerCardProps> = ({
           <Grid xs={12}>
             <NotesDialog
               notes={notes}
-              hasPermission={hasPermission}
               id={id}
               name={name}
               sx={{
@@ -129,61 +128,37 @@ const PlayerCard: FC<PlayerCardProps> = ({
                 justifyContent: "space-between",
                 [theme.breakpoints.down(670)]: {
                   height: "22px",
-                  // boxShadow: "0px 3px",
                 },
               }}
             />
           </Grid>
-          <Grid xs={12}>
-            <ScoreFormDialog
-              playerId={id}
-              sx={{
-                width: "100%",
-                height: "44px",
-                [theme.breakpoints.down(670)]: {
-                  height: "22px",
-                },
-              }}
-            />
+
+          <Grid xs={12} sx={{ display: "flex" }}>
+            <Stack
+              direction="row"
+              sx={{ width: "100%" }}
+              spacing={{ xs: 0.5, sm: 1 }}
+            >
+              {hasPermission && (
+                <PlayerSettingsDialog
+                  id={id}
+                  name={name}
+                  role={role}
+                  color={color}
+                />
+              )}
+              <ScoreFormDialog
+                playerId={id}
+                sx={{
+                  width: "100%",
+                  height: "44px",
+                  [theme.breakpoints.down(670)]: {
+                    height: "22px",
+                  },
+                }}
+              />
+            </Stack>
           </Grid>
-          {/* <Grid xs={6}>
-            {hasPermission && (
-              <ScoreChangePopover
-                action={Action.Decrease}
-                playerId={id}
-                color={boxShadowColor}
-                sx={{
-                  width: "100%",
-                  height: "44px",
-                  margin: "0px 0px 8px 0px",
-                  [theme.breakpoints.down(670)]: {
-                    minWidth: "0px",
-                    height: "22px",
-                    // boxShadow: "0px 3px",
-                  },
-                }}
-              />
-            )}
-          </Grid> */}
-          {/* <Grid xs={6}>
-            {hasPermission && (
-              <ScoreChangePopover
-                action={Action.Increase}
-                playerId={id}
-                color={boxShadowColor}
-                sx={{
-                  width: "100%",
-                  height: "44px",
-                  margin: "0px 0px 8px 0px",
-                  [theme.breakpoints.down(670)]: {
-                    minWidth: "0px",
-                    height: "22px",
-                    // boxShadow: "0px 3px",
-                  },
-                }}
-              />
-            )}
-          </Grid> */}
         </Grid>
       </CardActions>
     </Card>
