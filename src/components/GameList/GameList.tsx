@@ -85,35 +85,35 @@ const GameList: FC<GameListProps> = () => {
     <Stack spacing={1} sx={{ maxWidth: "900px", margin: "auto" }}>
       <Stack
         direction="row"
-        spacing={2}
+        spacing={1}
         sx={{ flexGrow: 1, padding: "0px 8px" }}
       >
-        <JoinGameDialog />
+        <Box sx={{ width: "100%" }}>
+          <JoinGameDialog />
+        </Box>
+        <Box sx={{ width: "100%" }}>
+          <Link href="dashboard/game/new">
+            <Button
+              variant="dark"
+              sx={{
+                minWidth: "0px",
+                margin: "0px 0px 8px 0px",
+                width: "100%",
+                height: "40px",
+              }}
+            >
+              New Game
+            </Button>
+          </Link>
+        </Box>
       </Stack>
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ flexGrow: 1, padding: "0px 8px" }}
-      >
+      <Box sx={{ paddingLeft: 1, paddingRight: 1 }}>
         <SearchBar
           placeholder="Search Games"
           onChangeSearch={filterGames}
           debounce={null}
         />
-        <Link href="dashboard/game/new">
-          <Button
-            variant="dark"
-            sx={{
-              minWidth: "0px",
-              margin: "0px 0px 8px 0px",
-              width: "100%",
-              height: "40px",
-            }}
-          >
-            <PlusIcon height="100%" />
-          </Button>
-        </Link>
-      </Stack>
+      </Box>
       <Collapse in={!showGames}>
         <Box
           sx={{
@@ -127,6 +127,7 @@ const GameList: FC<GameListProps> = () => {
           <CircularProgress size={"24px"} sx={{ marginLeft: 1 }} />
         </Box>
       </Collapse>
+
       <Grid container spacing={{ xs: 2 }}>
         {showGames}
       </Grid>

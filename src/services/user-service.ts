@@ -240,18 +240,8 @@ export class UserService {
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      const document = doc.data();
-      const game = {
-        id: document.id,
-        title: document.title,
-        info: document.info,
-        ownerId: document.ownerId,
-        playerIds: document.playerIds,
-        players: document.players,
-        color: document.color,
-        joinCode: document.joinCode,
-      };
-      games.push(game);
+      const document = doc.data() as Game;
+      games.push(document);
     });
     return games;
   };
