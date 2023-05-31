@@ -8,7 +8,8 @@ export interface Game {
   playerIds: string[];
   players: Player[];
   color: Color;
-  joinCode: string;
+  joinInfo: { code: string; createdAt: string } | null;
+  createdAt: string;
 }
 
 export type GameCreateParams = Omit<Game, "id">;

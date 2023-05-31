@@ -4,6 +4,7 @@ import { Role } from "@/models";
 import { useGame } from "@/providers/Game";
 import {
   Box,
+  Button,
   CircularProgress,
   Collapse,
   Stack,
@@ -19,7 +20,7 @@ interface GameViewProps {
 }
 
 const GameView: FC<GameViewProps> = ({ id }) => {
-  const { game, setGameId } = useGame();
+  const { game, setGameId, generateNewCode } = useGame();
   const { user } = useDataStore();
 
   useEffect(() => {
@@ -67,9 +68,23 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography textAlign="center" variant="h1">
         {game.title}
       </Typography>
-      <Typography textAlign="center" variant="h3">
-        Join Code: {game.joinCode}
-      </Typography>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        spacing={1}
+        sx={{ marginBottom: 2 }}
+      >
+        <Typography textAlign="center" variant="h3">
+          Join Code: {game.joinInfo && game.joinInfo.code}
+        </Typography>
+        {!game.joinInfo && (
+          <Button variant="blue" onClick={generateNewCode}>
+            Generate
+          </Button>
+        )}
+      </Stack>
+
       <Typography textAlign="center" variant="h4">
         {game.info}
       </Typography>

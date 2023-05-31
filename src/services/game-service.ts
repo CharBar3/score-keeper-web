@@ -1,6 +1,9 @@
 import { db } from "@/config/firebase";
 import { Color, Game, Player, Role, User } from "@/models";
+import { DateTime } from "luxon";
 import {
+  DocumentData,
+  DocumentReference,
   arrayRemove,
   arrayUnion,
   collection,
@@ -72,6 +75,7 @@ export class GameService {
     }
 
     const joinCode = await this.codeGenerator();
+    const timestamp = DateTime.now().toUTC().toISO();
 
     const newGame: Game = {
       id: newGameRef.id,
@@ -81,7 +85,8 @@ export class GameService {
       playerIds: playerIds,
       players: processedPlayers,
       color: color,
-      joinCode: joinCode,
+      joinInfo: { code: joinCode, createdAt: timestamp! },
+      createdAt: timestamp!,
     };
 
     const batch = writeBatch(db);
@@ -212,51 +217,59 @@ export class GameService {
     return gameId;
   };
 
+  public static generateNewCode = async (gameId: string) => {
+    const gameRef = doc(db, "games", gameId);
+    await updateDoc(gameRef, {
+      joinInfo: {
+        code: await this.codeGenerator(),
+        createdAt: DateTime.now().toUTC().toISO(),
+      },
+    });
+  };
+
   public static codeGenerator = async (): Promise<string> => {
-    console.log("codeGen called");
-    const randomNumber = () => {
+    const possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    const randomChar = () => {
       return Math.floor(Math.random() * possibleCharacters.length);
     };
 
-    // const possibleCharacters =
-    //   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    const possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
     const joinCode =
-      possibleCharacters[randomNumber()] +
-      possibleCharacters[randomNumber()] +
-      possibleCharacters[randomNumber()] +
-      possibleCharacters[randomNumber()];
+      possibleCharacters[randomChar()] +
+      possibleCharacters[randomChar()] +
+      possibleCharacters[randomChar()] +
+      possibleCharacters[randomChar()];
 
-    // Checks to see if the code is already used
-    const checkCode = async (): Promise<boolean> => {
-      const gamesRef = collection(db, "games");
-      const q = query(gamesRef, where("joinCode", "==", joinCode));
+    const gamesRef = collection(db, "games");
+    const q = query(gamesRef, where("joinInfo.code", "==", joinCode));
+    const querySnapshot = await getDocs(q);
 
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.docs.length > 0) {
-        return true;
-      }
-
-      return false;
-    };
-
-    const codeNotSafe = await checkCode();
-
-    if (codeNotSafe) {
-      return this.codeGenerator();
+    if (querySnapshot.docs.length === 0) {
+      return joinCode;
     }
 
-    return joinCode;
+    querySnapshot.forEach(async (doc) => {
+      const gameDoc = doc.data();
+
+      const secondsSinceCreated =
+        DateTime.now().toUTC().toSeconds() -
+        DateTime.fromISO(gameDoc.joinInfo.createdAt).toSeconds();
+
+      if (secondsSinceCreated > 86400) {
+        await updateDoc(doc.ref, {
+          joinInfo: null,
+        });
+        return joinCode;
+      }
+    });
+
+    return await this.codeGenerator();
   };
 
   public static colorGenerator = (): Color => {
-    // console.log("color generator called");
     const randomNumber = () => {
       return Math.floor(Math.random() * 256);
     };
-
     return {
       red: randomNumber(),
       green: randomNumber(),

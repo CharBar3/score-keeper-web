@@ -1,6 +1,8 @@
 import {
+  Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
@@ -43,7 +45,7 @@ const JoinGameDialog: FC<JoinGameDialogProps> = () => {
 
   return (
     <>
-      <Button variant="dark" onClick={handleClickOpen}>
+      <Button variant="dark" sx={{ width: "100%" }} onClick={handleClickOpen}>
         Join Game
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -54,13 +56,15 @@ const JoinGameDialog: FC<JoinGameDialogProps> = () => {
             setInputValue={setJoinCode}
             placeholder="Join Code"
           />
-          <Button variant="dark" onClick={handleClose}>
+        </DialogContent>
+        <DialogActions sx={{ display: "flex" }}>
+          <Button variant="dark" onClick={handleClose} sx={{ width: "100%" }}>
             Cancel
           </Button>
-          <Button variant="blue" onClick={handleJoin}>
+          <Button variant="blue" onClick={handleJoin} sx={{ width: "100%" }}>
             Join
           </Button>
-        </DialogContent>
+        </DialogActions>
       </Dialog>
     </>
   );
