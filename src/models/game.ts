@@ -1,5 +1,14 @@
 import { Player } from "./player";
 
+export enum IconNames {
+  Cards = "cards",
+  Castle = "castle",
+  GamePeices = "gamepeices",
+  Jewel = "jewel",
+  MoneySign = "moneysign",
+  Train = "train",
+}
+
 export interface Game {
   id: string;
   title: string;
@@ -10,6 +19,7 @@ export interface Game {
   color: Color;
   joinInfo: { code: string; createdAt: string } | null;
   createdAt: string;
+  icon: IconNames;
 }
 
 export type GameCreateParams = Omit<Game, "id">;

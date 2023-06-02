@@ -1,5 +1,5 @@
 import { db } from "@/config/firebase";
-import { Color, Game, Player, Role, User } from "@/models";
+import { Color, Game, IconNames, Player, Role, User } from "@/models";
 import { DateTime } from "luxon";
 import {
   DocumentData,
@@ -57,7 +57,8 @@ export class GameService {
     owner: User,
     players: Player[],
     playerIds: string[],
-    color: Color
+    color: Color,
+    icon: IconNames
   ): Promise<string> => {
     const newGameRef = doc(collection(db, "games"));
 
@@ -87,6 +88,7 @@ export class GameService {
       color: color,
       joinInfo: { code: joinCode, createdAt: timestamp! },
       createdAt: timestamp!,
+      icon,
     };
 
     const batch = writeBatch(db);
@@ -110,7 +112,8 @@ export class GameService {
     newInfo: string,
     newPlayers: Player[],
     newPlayerIds: string[],
-    newColor: Color
+    newColor: Color,
+    newIcon: IconNames
   ): Promise<void> => {
     const gameRef = doc(db, "games", gameId);
     const gameSnap = await getDoc(gameRef);
@@ -144,6 +147,7 @@ export class GameService {
         playerIds: newPlayerIds,
         players: newPlayers,
         color: newColor,
+        icon: newIcon,
       });
 
       await batch.commit();

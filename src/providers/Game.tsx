@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/config/firebase";
-import { Color, Game, Player, Role } from "@/models";
+import { Color, Game, IconNames, Player, Role } from "@/models";
 import { GameService } from "@/services/game-service";
 import { doc, onSnapshot } from "firebase/firestore";
 import {
@@ -24,7 +24,8 @@ interface LiveGameContextProps {
     info: string,
     players: Player[],
     playerIds: string[],
-    color: Color
+    color: Color,
+    icon: IconNames
   ) => Promise<string | void>;
   updateGame: (
     gameId: string,
@@ -32,7 +33,8 @@ interface LiveGameContextProps {
     newInfo: string,
     newPlayers: Player[],
     newPlayerIds: string[],
-    newColor: Color
+    newColor: Color,
+    newIcon: IconNames
   ) => Promise<void>;
   deleteGame: (gameId: string) => Promise<void>;
   joinGame: (joinCode: string) => Promise<string | void>;
@@ -88,7 +90,7 @@ interface LiveGameContextProviderProps {
 export const GameProvider: FC<LiveGameContextProviderProps> = ({
   children,
 }) => {
-  const { user } = useDataStore();
+  const { user, getGames } = useDataStore();
 
   const [gameId, setGameId] = useState<string | null>(null);
   const [game, setGame] = useState<Game | null>(null);
@@ -199,7 +201,8 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       info: string,
       players: Player[],
       playerIds: string[],
-      color: Color
+      color: Color,
+      icon: IconNames
     ) => {
       if (!user) {
         return;
@@ -211,7 +214,8 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
           user,
           players,
           playerIds,
-          color
+          color,
+          icon
         );
       } catch (error) {
         console.log(error);
@@ -228,7 +232,8 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
       newInfo: string,
       newPlayers: Player[],
       newPlayerIds: string[],
-      newColor: Color
+      newColor: Color,
+      newIcon: IconNames
     ) => {
       if (!game) {
         return;
@@ -241,14 +246,16 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
           newInfo,
           newPlayers,
           newPlayerIds,
-          newColor
+          newColor,
+          newIcon
         );
+        await getGames();
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    [game]
+    [game, getGames]
   );
   const deleteGame = useCallback(
     async (gameId: string) => {
