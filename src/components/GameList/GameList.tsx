@@ -55,7 +55,7 @@ const GameList: FC<GameListProps> = () => {
       .filter(({ title }) =>
         title.toLowerCase().includes(gameFilter.toLowerCase())
       )
-      .map(({ id, title, color, players }, index) => {
+      .map(({ id, title, color, players, icon }, index) => {
         return (
           <Grid key={id} xs={6} sm={6} md={4}>
             <Link href={`dashboard/game/${id}`}>
@@ -64,6 +64,7 @@ const GameList: FC<GameListProps> = () => {
                 color={color}
                 numberOfPlayers={players.length}
                 index={index}
+                icon={icon}
               />
             </Link>
           </Grid>

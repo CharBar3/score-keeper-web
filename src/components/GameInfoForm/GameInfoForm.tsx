@@ -1,6 +1,6 @@
 "use client";
 
-import { Color, Game, Player, Role, User } from "@/models";
+import { Color, Game, IconNames, Player, Role, User } from "@/models";
 import { useGame } from "@/providers/Game";
 import { useToast } from "@/providers/ToastProvider";
 import { useDataStore } from "@/providers/User";
@@ -24,6 +24,7 @@ import InputBar from "../InputBar/InputBar";
 import AddRemovePlayerDialog from "../AddRemovePlayerDialog/AddRemovePlayerDialog";
 import ConfirmationDialog from "../ConfirmationDialog/ConfirmationDialog";
 import { useAuth } from "@/providers/Auth";
+import GameIconSelector from "../GameIconSelector/GameIconSelector";
 
 interface GameInfoFormProps {
   game?: Game;
@@ -58,6 +59,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     _.cloneDeep(game?.color) ?? generateRandomColor()
   );
 
+  const [icon, setIcon] = useState(_.cloneDeep(game?.icon) ?? IconNames.Cards);
+
   const handleCreateGame = async () => {
     if (!user) {
       return;
@@ -73,7 +76,8 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
         info,
         players,
         playerIds,
-        color
+        color,
+        icon
       );
       showToast("Game succesfully created!", "success");
       router.push(`/dashboard/game/${newGameId}`);
@@ -88,7 +92,7 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     }
 
     try {
-      await updateGame(game.id, title, info, players, playerIds, color);
+      await updateGame(game.id, title, info, players, playerIds, color, icon);
       showToast("Game succesfully updated!", "success");
       router.push(`/dashboard/game/${game.id}`);
     } catch (error) {
@@ -230,6 +234,11 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
     <Stack spacing={1} sx={{ minWidth: "unset" }}>
       <InputBar placeholder="Title" setInputValue={setTitle} value={title} />
       <InputBar placeholder="Info" setInputValue={setInfo} value={info} />
+      <GameIconSelector
+        gameColor={color}
+        gameIcon={icon}
+        setGameIcon={setIcon}
+      />
       <Box sx={{ display: "flex" }}>
         <Box sx={{ flexGrow: 1 }}>
           <AddRemovePlayerDialog
@@ -257,7 +266,6 @@ const GameInfoForm: FC<GameInfoFormProps> = ({ game, user }) => {
 
       <List sx={{ padding: 0 }}>{showPlayers}</List>
 
-      {/* <GameIconSelector /> */}
       {game ? (
         <Stack direction="row" spacing={2}>
           <ConfirmationDialog
