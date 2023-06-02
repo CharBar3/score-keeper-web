@@ -14,6 +14,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { FC, useEffect } from "react";
 import { useDataStore } from "@/providers/User";
 import PlayerCard from "../PlayerCard/PlayerCard";
+import ScoreTrackSlider from "../ScoreTrackSlider/ScoreTrackSlider";
 
 interface GameViewProps {
   id: string;
@@ -88,6 +89,9 @@ const GameView: FC<GameViewProps> = ({ id }) => {
       <Typography textAlign="center" variant="h4">
         {game.info}
       </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <ScoreTrackSlider players={game.players} />
+      </Box>
       <Stack>
         <Grid
           container
