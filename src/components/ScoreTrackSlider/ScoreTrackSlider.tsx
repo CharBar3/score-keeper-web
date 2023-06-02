@@ -61,8 +61,6 @@ const ScoreTrackSlider: FC<ScoreTrackSliderProps> = ({ players }) => {
           {
             [`& .MuiSlider-thumb[data-index="0"]`]: {
               backgroundColor: "transparent",
-              position: "relative",
-              left: "24px",
               borderRadius: "0px",
               width: "0px",
               height: "0px",
