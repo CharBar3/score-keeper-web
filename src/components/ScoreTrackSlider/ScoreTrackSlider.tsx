@@ -15,13 +15,21 @@ const ScoreTrackSlider: FC<ScoreTrackSliderProps> = ({ players }) => {
     return a.score - b.score;
   });
 
+  let lowestScore = 0;
+
   const values: number[] = cloneDeepPlayers.map(({ score }) => {
+    if (score < lowestScore) {
+      lowestScore = score;
+    }
+
     return score;
   });
 
+  values.unshift(lowestScore);
+
   const colors = cloneDeepPlayers.map(({ color }, index) => {
     return {
-      [`& .MuiSlider-thumb[data-index="${index}"]`]: {
+      [`& .MuiSlider-thumb[data-index="${index + 1}"]`]: {
         backgroundColor: `rgb(${color.red}, ${color.green}, ${color.blue})`,
       },
     };
@@ -35,25 +43,9 @@ const ScoreTrackSlider: FC<ScoreTrackSliderProps> = ({ players }) => {
         width: "100%",
         maxWidth: "900px",
         padding: "50px",
-        paddingLeft: "42px",
         display: "flex",
       }}
     >
-      <Box
-        sx={{
-          position: "relative",
-          // zIndex: "1",
-          left: "8px",
-          top: "1px",
-          borderRadius: "0px",
-          width: "0px",
-          height: "0px",
-          borderTop: "14px solid transparent",
-          borderBottom: "14px solid transparent",
-          borderLeft: "24px solid #EDEDED",
-        }}
-      ></Box>
-
       <Slider
         track={false}
         value={values}
@@ -67,18 +59,17 @@ const ScoreTrackSlider: FC<ScoreTrackSliderProps> = ({ players }) => {
           ...colors,
           // { "& .MuiSlider-thumb": { "&:hover": { cursor: "auto" } } },
           {
-            // [`& .MuiSlider-thumb[data-index="0"]`]: {
-            //   // all: "unset",
-            //   backgroundColor: "transparent",
-            //   position: "relative",
-            //   left: "24px",
-            //   borderRadius: "0px",
-            //   width: "0px",
-            //   height: "0px",
-            //   borderTop: "14px solid transparent",
-            //   borderBottom: "14px solid transparent",
-            //   borderLeft: "24px solid #EDEDED",
-            // },
+            [`& .MuiSlider-thumb[data-index="0"]`]: {
+              backgroundColor: "transparent",
+              position: "relative",
+              left: "24px",
+              borderRadius: "0px",
+              width: "0px",
+              height: "0px",
+              borderTop: "14px solid transparent",
+              borderBottom: "14px solid transparent",
+              borderLeft: "24px solid #EDEDED",
+            },
           },
           { "& .MuiSlider-rail": { color: "#EDEDED", opacity: 1 } },
         ]}
@@ -86,8 +77,6 @@ const ScoreTrackSlider: FC<ScoreTrackSliderProps> = ({ players }) => {
       />
     </Box>
   );
-
-  return <></>;
 };
 
 export default ScoreTrackSlider;
