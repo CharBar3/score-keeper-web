@@ -182,7 +182,7 @@ export class GameService {
     joinCode: string
   ): Promise<string> => {
     const gamesRef = collection(db, "games");
-    const q = query(gamesRef, where("joinCode", "==", joinCode));
+    const q = query(gamesRef, where("joinInfo.code", "==", joinCode));
     const querySnapshot = await getDocs(q);
 
     const newPlayer = {
