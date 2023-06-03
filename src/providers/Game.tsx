@@ -285,13 +285,14 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
           user.username,
           joinCode
         );
+        getGames();
         return gameId;
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    [user]
+    [user, getGames]
   );
 
   const generateNewCode = useCallback(async () => {
