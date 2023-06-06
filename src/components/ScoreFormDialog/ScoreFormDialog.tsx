@@ -44,10 +44,8 @@ const StyledSmallButton = styled(Button)<ButtonProps>(({ theme }) => ({
   width: "48px",
   height: "32px",
   color: "white",
-  backgroundColor: theme.palette.primary.main,
-  boxShadow: `0px 8px ${theme.palette.primary.dark}`,
-  // marginBottom: theme.spacing(1),
   borderRadius: "7px",
+  margin: 0,
   textTransform: "initial",
   fontSize: "20px",
   minWidth: "48px",
@@ -65,9 +63,8 @@ const StyledBigButton = styled(Button)<ButtonProps>(({ theme }) => ({
   width: "112px",
   height: "32px",
   color: "white",
-  backgroundColor: theme.palette.primary.main,
-  boxShadow: `0px 8px ${theme.palette.primary.dark}`,
   borderRadius: "7px",
+  margin: 0,
   textTransform: "initial",
   fontSize: "20px",
   minWidth: "48px",
@@ -167,69 +164,91 @@ const ScoreFormDialog: FC<ScoreFormDialogProps> = ({ playerId, sx }) => {
             onChange={(e) => setScoreInputValue(e.currentTarget.value)}
           />
           <Grid container spacing={2}>
+            <Grid xs={6}>
+              <StyledBigButton variant="red"> -1</StyledBigButton>
+            </Grid>
+            <Grid xs={6}>
+              <StyledBigButton
+                variant="blue"
+                onClick={() => handleUpdateNumber(1)}
+              >
+                +1
+              </StyledBigButton>
+            </Grid>
+
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(-2)}>
+              <StyledSmallButton
+                variant="red"
+                onClick={() => handleUpdateNumber(-2)}
+              >
                 -2
               </StyledSmallButton>
             </Grid>
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(-3)}>
+              <StyledSmallButton
+                variant="red"
+                onClick={() => handleUpdateNumber(-3)}
+              >
                 -3
               </StyledSmallButton>
             </Grid>
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(-5)}>
-                -5
-              </StyledSmallButton>
-            </Grid>
-            <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(-10)}>
-                -10
-              </StyledSmallButton>
-            </Grid>
-            <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(2)}>
+              <StyledSmallButton
+                variant="blue"
+                onClick={() => handleUpdateNumber(2)}
+              >
                 +2
               </StyledSmallButton>
             </Grid>
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(3)}>
+              <StyledSmallButton
+                variant="blue"
+                onClick={() => handleUpdateNumber(3)}
+              >
                 +3
               </StyledSmallButton>
             </Grid>
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(5)}>
+              <StyledSmallButton
+                variant="red"
+                onClick={() => handleUpdateNumber(-5)}
+              >
+                -5
+              </StyledSmallButton>
+            </Grid>
+            <Grid xs={3}>
+              <StyledSmallButton
+                variant="red"
+                onClick={() => handleUpdateNumber(-10)}
+              >
+                -10
+              </StyledSmallButton>
+            </Grid>
+
+            <Grid xs={3}>
+              <StyledSmallButton
+                variant="blue"
+                onClick={() => handleUpdateNumber(5)}
+              >
                 +5
               </StyledSmallButton>
             </Grid>
             <Grid xs={3}>
-              <StyledSmallButton onClick={() => handleUpdateNumber(10)}>
+              <StyledSmallButton
+                variant="blue"
+                onClick={() => handleUpdateNumber(10)}
+              >
                 +10
               </StyledSmallButton>
             </Grid>
-            <Grid xs={6}>
-              <StyledBigButton onClick={() => handleUpdateNumber(1)}>
-                +1
-              </StyledBigButton>
-            </Grid>
-            <Grid xs={6}>
-              <StyledBigButton onClick={() => handleUpdateNumber(-1)}>
-                -1
-              </StyledBigButton>
-            </Grid>
+
             <Grid xs={6}>
               <StyledActionButton onClick={handleClose}>
                 Cancel
               </StyledActionButton>
             </Grid>
             <Grid xs={6}>
-              <StyledActionButton
-                sx={{
-                  backgroundColor: "#149FE5",
-                  boxShadow: " 0px 8px #107CB3",
-                }}
-                onClick={handleApply}
-              >
+              <StyledActionButton onClick={handleApply}>
                 Apply
               </StyledActionButton>
             </Grid>
