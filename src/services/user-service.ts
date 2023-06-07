@@ -273,7 +273,26 @@ export class UserService {
     return searchResults;
   };
 
-  static generateKeywords(name: string): string[] {
+  /**
+   * Checks to see if a username is available to use
+   *
+   * returns true if the username is available
+   * returns false if the username is taken
+   */
+  public static checkUsername = async (username: string): Promise<boolean> => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.log("the query was empty");
+      return true;
+    }
+
+    return false;
+  };
+
+  public static generateKeywords(name: string): string[] {
     const words = name.split(" ");
     const keywords = [...createKeywords(`${name}`)];
 
