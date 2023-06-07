@@ -248,7 +248,7 @@ export class GameService {
     const q = query(gamesRef, where("joinInfo.code", "==", joinCode));
     const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.docs.length === 0) {
+    if (querySnapshot.empty) {
       return joinCode;
     }
 

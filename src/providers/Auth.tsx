@@ -96,7 +96,8 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
       if (fireUser) {
         await deleteUser(fireUser);
       }
-      console.log(error);
+
+      throw error;
     }
   };
 

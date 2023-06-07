@@ -4,13 +4,13 @@ import { useToast } from "@/providers/ToastProvider";
 import { Alert, Slide, SlideProps, Snackbar, useTheme } from "@mui/material";
 import { FC } from "react";
 
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction="down" />;
+}
+
 const Toast: FC = () => {
   const theme = useTheme();
   const { message, severity, isOpen, handleClose } = useToast();
-
-  function SlideTransition(props: SlideProps) {
-    return <Slide {...props} direction="down" />;
-  }
 
   return (
     <Snackbar
@@ -18,7 +18,11 @@ const Toast: FC = () => {
       autoHideDuration={4000}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       TransitionComponent={SlideTransition}
-      onClose={() => handleClose()}
+      onClose={(event, reason) => {
+        if (reason != "clickaway") {
+          handleClose();
+        }
+      }}
     >
       <Alert
         onClose={() => handleClose()}
