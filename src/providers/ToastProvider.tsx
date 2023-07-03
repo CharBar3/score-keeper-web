@@ -38,8 +38,6 @@ export const ToastProvider: FC<ToastContextProviderProps> = ({ children }) => {
   };
 
   const showToast = (message: string, severity: ToastSeverity) => {
-    console.log("show toast called");
-
     if (isOpen) {
       setIsOpen(false);
       setTimeout(() => {
