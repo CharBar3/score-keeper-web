@@ -93,6 +93,8 @@ export const AuthProvider: FC<AuthContextProviderProps> = ({ children }) => {
         username
       );
     } catch (error) {
+      console.log("createAnonAccount Error");
+      console.log(error);
       if (fireUser) {
         await deleteUser(fireUser);
       }
