@@ -97,7 +97,6 @@ export const GameProvider: FC<LiveGameContextProviderProps> = ({
   const [activePlayer, setActivePlayer] = useState<Player | null>(null);
 
   useEffect(() => {
-    console.log("game provider reload check");
     let unsub = () => {};
     if (gameId) {
       unsub = onSnapshot(doc(db, "games", gameId), (doc) => {

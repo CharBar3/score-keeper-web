@@ -285,7 +285,6 @@ export class UserService {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.log("the query was empty");
       return true;
     }
 
