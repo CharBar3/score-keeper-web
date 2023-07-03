@@ -36,9 +36,9 @@ export class GameService {
         if (player.id === playerId) {
           player.name = name ?? player.name;
           player.role = role ?? player.role;
-          player.score += score ?? player.score;
           player.notes = notes ?? player.notes;
           player.color = color ?? player.color;
+          player.score += score ?? 0;
 
           await updateDoc(gameRef, {
             players: [...gameDoc.players],
