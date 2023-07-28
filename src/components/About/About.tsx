@@ -40,14 +40,14 @@ const About: FC<AboutProps> = () => {
           <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
           <ListItemText
             primary="The math is done for you!"
-            secondary="No more one person stuck with the pencil and paper doing math inbetween rounds."
+            secondary="No more losing focus on the game when you have to calculate your new score in between rounds."
           />
         </ListItem>
         <ListItem>
           <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
           <ListItemText
             primary="Everyone keeps track of their own score!"
-            secondary="As soon as you're done with your turn, it's very easy to puch in how many points you got."
+            secondary="As soon as a player finishes their turn it’s very easy to update their score individually."
           />
         </ListItem>
         <ListItem>
@@ -60,8 +60,8 @@ const About: FC<AboutProps> = () => {
         <ListItem>
           <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
           <ListItemText
-            primary="Cool colors!"
-            secondary="Everyone can adjust their color all the way down to the RGB values so you can get exactly the color you're looking for!"
+            primary="Custom colors!"
+            secondary="Everyone can adjust their color all the way down to the RGB values."
           />
         </ListItem>
       </List>
