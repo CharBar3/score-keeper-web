@@ -38,14 +38,6 @@ export const theme = responsiveFontSizes(
       MuiTypography: {
         styleOverrides: { root: { color: defaultTheme.palette.primary.main } },
       },
-      MuiStack: {
-        defaultProps: {
-          sx: {
-            maxWidth: { sm: "800px", md: "800px", lg: "1000px", xl: "1200px" },
-            margin: "auto",
-          },
-        },
-      },
       MuiButton: {
         variants: [
           {
@@ -110,14 +102,6 @@ export const theme = responsiveFontSizes(
             },
           },
         ],
-      },
-      MuiTextField: {
-        styleOverrides: {},
-      },
-      MuiDivider: {
-        defaultProps: {
-          // sx: { border: "1px solid grey" },
-        },
       },
       MuiListItemText: {
         defaultProps: {
