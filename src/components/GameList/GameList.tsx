@@ -27,13 +27,11 @@ interface GameListProps {}
 const growAnimation = keyframes`
 0% {
   opacity: 0;
-  // transform: translate(0) scale(0);
   width: 0%
 }
 100% {
   opacity: 1;
   width: 100%
-  // transform: translate(200px, 200px) scale(1);
 }
 `;
 

@@ -4,6 +4,7 @@ import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 
 import { Box, Collapse, Stack, Typography } from "@mui/material";
+
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { Link as MUILink } from "@mui/material";
@@ -54,8 +55,9 @@ const LoginForm: FC = () => {
   return (
     <Stack
       sx={{
-        maxWidth: { xs: "300px", sm: "320px" },
+        // maxWidth: { xs: "300px", sm: "320px" },
         width: "100%",
+        maxWidth: "300px",
         margin: "auto",
       }}
       spacing={2}
