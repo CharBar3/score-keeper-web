@@ -115,6 +115,14 @@ const GameList: FC<GameListProps> = () => {
           debounce={null}
         />
       </Box>
+      {gameList && (
+        <Collapse in={gameList.length < 1}>
+          <Typography textAlign="center" maxWidth="600px" margin="auto">
+            Looks like you {"don't"} have any games in progress. Once you create
+            a game {"you'll"} see it displayed here.
+          </Typography>
+        </Collapse>
+      )}
       <Collapse in={!showGames}>
         <Box
           sx={{
