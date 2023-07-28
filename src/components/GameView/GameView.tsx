@@ -66,6 +66,9 @@ const GameView: FC<GameViewProps> = ({ id }) => {
 
   return (
     <Box sx={{ marginBottom: "56px" }}>
+      <Typography textAlign="center" variant="h3">
+        Join Code: {game.joinInfo && game.joinInfo.code}
+      </Typography>
       <Typography textAlign="center" variant="h1">
         {game.title}
       </Typography>
@@ -76,9 +79,6 @@ const GameView: FC<GameViewProps> = ({ id }) => {
         spacing={1}
         sx={{ marginBottom: 2 }}
       >
-        <Typography textAlign="center" variant="h3">
-          Join Code: {game.joinInfo && game.joinInfo.code}
-        </Typography>
         {!game.joinInfo && (
           <Button variant="blue" onClick={generateNewCode}>
             Generate

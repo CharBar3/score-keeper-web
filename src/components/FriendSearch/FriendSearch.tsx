@@ -80,7 +80,7 @@ const FriendSearch: FC<SearchAddFriendProps> = () => {
         Add New Friends
       </Typography>
       <SearchBar
-        placeholder="Search"
+        placeholder="Search Username"
         onChangeSearch={handleSearch}
         debounce={1000}
         setIsSearching={setIsSearching}

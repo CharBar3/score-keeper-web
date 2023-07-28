@@ -65,8 +65,8 @@ const AnonSignupDialog: FC<AnonSignupDialogProps> = () => {
           margin: "auto",
         }}
       >
-        <Typography variant="h2" textAlign="center">
-          Pick a username to get started!
+        <Typography variant="body1" textAlign="center">
+          Or just pick a username to continue without setting up an account
         </Typography>
         <SpicyTextField
           placeholder="Username"

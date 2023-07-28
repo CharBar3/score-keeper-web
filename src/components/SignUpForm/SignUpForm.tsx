@@ -4,9 +4,9 @@ import { useAuth } from "@/providers/Auth";
 import { useToast } from "@/providers/ToastProvider";
 import { Button, Stack, Typography } from "@mui/material";
 import { redirect } from "next/navigation";
-import { ChangeEvent, FC, useEffect, useState } from "react";
-import InputBar from "../InputBar/InputBar";
+import { FC, useEffect, useState } from "react";
 import AnonSignupDialog from "../AnonSignupForm/AnonSignupDialog";
+import InputBar from "../InputBar/InputBar";
 
 const SignUpFrom: FC = () => {
   const { fireUser, createAccount } = useAuth();
@@ -25,23 +25,11 @@ const SignUpFrom: FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (fireUser) {
-  //     redirect("/dashboard");
-  //   }
-  // }, [fireUser]);
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (e.target.name === "Email") {
-      setEmail(e.target.value);
-    } else if (e.target.name === "Password") {
-      setPassword(e.target.value);
-    } else if (e.target.name === "Username") {
-      setUsername(e.target.value);
+  useEffect(() => {
+    if (fireUser) {
+      redirect("/dashboard");
     }
-  };
+  }, [fireUser]);
 
   return (
     <Stack
@@ -52,7 +40,6 @@ const SignUpFrom: FC = () => {
       }}
       spacing={2}
     >
-      <AnonSignupDialog />
       <Typography variant="h2" textAlign="center">
         Sign Up
       </Typography>
@@ -78,6 +65,7 @@ const SignUpFrom: FC = () => {
       <Button variant="blue" onClick={() => handleSignUp()}>
         Sign Up
       </Button>
+      <AnonSignupDialog />
     </Stack>
   );
 };

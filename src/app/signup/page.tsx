@@ -1,4 +1,3 @@
-import AnonSignupDialog from "@/components/AnonSignupForm/AnonSignupDialog";
 import SignUpFrom from "@/components/SignUpForm/SignUpForm";
 import { FC } from "react";
 

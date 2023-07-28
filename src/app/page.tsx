@@ -1,14 +1,9 @@
-import AnonSignupDialog from "@/components/AnonSignupForm/AnonSignupDialog";
-import { Color } from "@/models";
-import { GameService } from "@/services/game-service";
+import About from "@/components/About/About";
 
 export default function Home() {
   return (
     <main>
-      <div>
-        <h1>About section coming soon!</h1>
-        <AnonSignupDialog />
-      </div>
+      <About />
     </main>
   );
 }
